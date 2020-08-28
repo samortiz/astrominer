@@ -1,4 +1,4 @@
-import { world, GAME_STATE } from './init.js';
+import { world, GAME_STATE, TAKEOFF_BOOST, TAKEOFF_SPEED } from './init.js';
 import { changeGameState } from './game.js';
 import { calcGravity } from './utils.js';
 
@@ -11,11 +11,11 @@ export function manageLoop(delta) {
   if (world.keys.up.isDown) {
     let ship = world.ship;
     changeGameState(GAME_STATE.FLY);
-    let gravity = calcGravity(ship.sprite.x, ship.sprite.y, world.selectedPlanet);
-    ship.vx = gravity.x * -2;
-    ship.vy = gravity.y * -2;
-    ship.sprite.x += ship.vx * 5;
-    ship.sprite.y += ship.vy * 5;
+    let gravity = calcGravity(ship.x, ship.y, world.selectedPlanet);
+    ship.vx = gravity.x * -TAKEOFF_SPEED;
+    ship.vy = gravity.y * -TAKEOFF_SPEED;
+    ship.x += ship.vx * TAKEOFF_BOOST;
+    ship.y += ship.vy * TAKEOFF_BOOST;
   }
 }
 
