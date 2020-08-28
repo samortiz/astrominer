@@ -1,0 +1,14 @@
+#minimap {
+  height:250px;
+  width:250px;
+}
+
+#infopanel {
+  width:250px;
+  height:250px;
+  border:1px solid black;
+}
+
+.resource-list {
+  padding-top:10px;
+}
