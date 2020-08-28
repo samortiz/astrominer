@@ -54,7 +54,7 @@ function detectCollisions(ship) {
     collisionPoints.push(midPoint(collisionPoints[3], collisionPoints[0]));
     for (let point of collisionPoints) {
       let dist = distanceBetween(point[0], point[1], planet.x, planet.y);
-      let planetRadius = planet.width/2;
+      let planetRadius = planet.sprite.width/2;
       if (dist < planetRadius - ALLOWED_OVERLAP) { 
         if (successfulLanding(ship, planet)) {
           landShip(ship, planet);
@@ -82,7 +82,7 @@ function landShip(ship, planet) {
   ship.vy = 0;
   //Set ship position and angle on the planet surface
   let dir = normalizeRadian(Math.atan2(ship.sprite.y - planet.y, ship.sprite.x - planet.x));
-  let r = planet.width/2 + ship.sprite.height/2 + 5; 
+  let r = planet.sprite.width/2 + ship.sprite.height/2 + 5; 
   let x = planet.x + (r * Math.cos(dir));
   let y = planet.y + (r * Math.sin(dir));
   ship.sprite.x = x;
