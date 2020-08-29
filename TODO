@@ -1,13 +1,13 @@
 JS Game
 
-- Scroll screen on move
-- Draw minimap
+- Crash icon
+- Build mine
 
 - log / ticker
 - landing flag (claim planet)
 - load planets with sprite sheet
-- Crash icon
 - toast with image/text
+- background image w stars to show movement
 
 Questions: 
  - Mining loop/timer

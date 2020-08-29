@@ -1,7 +1,8 @@
 import { changeGameState } from "./game.js";
 import { distanceBetween, normalizeRadian, midPoint, calcGravity } from "./utils.js";
 import { GAME_STATE, world, SCREEN_HEIGHT, HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT, CRASH_SPEED,  MINIMAP_HEIGHT, MINIMAP_WIDTH,
-  CRASH_ANGLE, ALLOWED_OVERLAP, SHIP_START_X, SHIP_START_Y, DARK_GREY, MED_GREY, LIGHT_GREY, WHITE, RED, MINIMAP_VIEW_WIDTH, HALF_MINIMAP_VIEW_WIDTH, HALF_MINIMAP_VIEW_HEIGHT, MINIMAP_VIEW_HEIGHT, MINIMAP_SCALE_X, HALF_MINIMAP_WIDTH, HALF_MINIMAP_HEIGHT, MINIMAP_SCALE_Y } from './init.js';
+  CRASH_ANGLE, ALLOWED_OVERLAP,DARK_GREY, MED_GREY, LIGHT_GREY, WHITE, RED, HALF_MINIMAP_VIEW_WIDTH, 
+  HALF_MINIMAP_VIEW_HEIGHT, MINIMAP_SCALE_X, HALF_MINIMAP_WIDTH, HALF_MINIMAP_HEIGHT, MINIMAP_SCALE_Y } from './init.js';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -142,8 +143,8 @@ function brakeShip(ship) {
 }
 
 function crash(ship) {
-  ship.x = SHIP_START_X;
-  ship.y = SHIP_START_Y;
+  ship.x = world.shipStartX;
+  ship.y = world.shipStartY;
   ship.vx = 0;
   ship.vy = 0;
   ship.sprite.rotation = 0;

@@ -1,4 +1,4 @@
-import { GRAVITATIONAL_CONST, HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT } from './init.js';
+import { GRAVITATIONAL_CONST } from './init.js';
 
 /**
  * Returns the distance between two points 

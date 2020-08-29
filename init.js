@@ -10,17 +10,19 @@ export const MINIMAP_HEIGHT = 100;
 export const HALF_MINIMAP_WIDTH = MINIMAP_WIDTH / 2; 
 export const HALF_MINIMAP_HEIGHT = MINIMAP_HEIGHT / 2;
 // how far the minimap can view
-export const MINIMAP_VIEW_WIDTH = 1500; 
-export const MINIMAP_VIEW_HEIGHT = 1500; 
+export const MINIMAP_VIEW_WIDTH = 2500; 
+export const MINIMAP_VIEW_HEIGHT = 2500; 
 export const HALF_MINIMAP_VIEW_WIDTH = MINIMAP_VIEW_WIDTH / 2;
 export const HALF_MINIMAP_VIEW_HEIGHT = MINIMAP_VIEW_HEIGHT / 2;
 // convert minimap pixels to real pixels
 export const MINIMAP_SCALE_X = MINIMAP_WIDTH / MINIMAP_VIEW_WIDTH;  
 export const MINIMAP_SCALE_Y = MINIMAP_HEIGHT / MINIMAP_VIEW_HEIGHT; 
 
-export const SHIP_START_X = 420;
-export const SHIP_START_Y = 250;
-export const SHIP_SCALE = 0.25;
+export const NUM_PLANETS = 100;
+export const MIN_PLANET_DIST = 300;
+export const UNIVERSE_WIDTH = 15000;
+export const UNIVERSE_HEIGHT = 5000;
+export const SHIP_START_MIN_DIST_TO_PLANET = 300;
 
 export const BLACK = 0X000000;
 export const RED = 0xFF0000;
@@ -30,6 +32,7 @@ export const DARK_GREY = 0x303030;
 export const LIGHT_GREY = 0x909090;
 
 export const PLAYER = "player";
+export const SHIP_SCALE = 0.25;
 export const GRAVITATIONAL_CONST = 2;
 export const CRASH_SPEED = 2; // speed crash happens at
 export const CRASH_ANGLE = 0.5; // angle crash happens at
@@ -68,30 +71,59 @@ export function setupWorld(container) {
   createPlanets(container);
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
+  setShipStartXy();
   world.ship = createShip(container);
   setupMiniMap(container);
 }
 
 export function createPlanets(container) {
-  // Setup the Rock planet
-  createPlanet(ROCK_PLANET_FILE, "X21325", 250, 250, 0.3, 300, {
-    titanium : 300,
-    gold : 150,
-    uranium : 0,
-  }, container);
+  let fileNames = [ROCK_PLANET_FILE, RED_PLANET_FILE];
 
-  createPlanet(RED_PLANET_FILE, "X25225", 450, 450, 0.1, 100, {
-    titanium : 20,
-    gold : 50,
-    uranium : 100,
-  }, container);
+  for (let i=0; i<=NUM_PLANETS; i++) {
+    let index = randomNumberBetween(0, fileNames.length-1);
+    let fileName = fileNames[index];
+    let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + randomNumberBetween(1000,999999);
+    let {x,y} = generateXy();
+    let scale = randomNumberBetween(15,80) / 100;
+    let mass = scale * 500;
+    // Setup the Rock planet
+    createPlanet(fileName, name, x, y, scale, mass, {
+      titanium : randomNumberBetween(0,1000),
+      gold : randomNumberBetween(0,1000),
+      uranium : randomNumberBetween(0,1000),
+    }, container);
+  }
 
-   // Setup the Rock planet
-   createPlanet(ROCK_PLANET_FILE, "FarAway", 1250, 250, 0.5, 600, {
-    titanium : 450,
-    gold : 350,
-    uranium : 100,
-  }, container);
+}
+
+/**
+ * Find a free spot of space to stick a planet. 
+ * This will recurse until it finds a free spot.
+ * @return {x,y}
+ */
+function generateXy() {
+  let x = randomNumberBetween(0,UNIVERSE_WIDTH);
+  let y = randomNumberBetween(0,UNIVERSE_HEIGHT);
+  for (let planet of world.planets) {
+    // Still might overlap because we aren't counting the to-be-created planet's radius
+    let dist = distanceBetween(x,y, planet.x, planet.y) - planet.radius;
+    if (dist < MIN_PLANET_DIST) {
+      return generateXy();
+    }
+  } // for
+  return {x:x,y:y};
+}
+
+function setShipStartXy() {
+  let y = randomNumberBetween(500,UNIVERSE_HEIGHT-500);
+  for (let planet of world.planets) {
+    if ((distanceBetween(0,y, planet.x, planet.y) - planet.radius) < SHIP_START_MIN_DIST_TO_PLANET) {
+      setShipStartXy();
+      return; // try again and exit
+    }
+  }
+  world.shipStartX = 0;
+  world.shipStartY = y;
 }
 
 // Creates and returns a planet (and adds it to the app)
@@ -135,8 +167,8 @@ export function createShip(container) {
     uranium : 0,
   };
   ship.armor = 100;
-  ship.x = SHIP_START_X;
-  ship.y = SHIP_START_Y;
+  ship.x = world.shipStartX;
+  ship.y = world.shipStartY;
   // Graphics Sprite
   ship.sprite = new Sprite(loader.resources[SHIP_FILE].texture);
   ship.sprite.position.set(HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT);
@@ -163,4 +195,22 @@ export function setupMiniMap(container) {
   miniMapContainer.addChild(g);  
   world.miniMapGraphics = g;
 
+}
+
+// ---  Utils : cannot use utils.js as that hasn't been loaded yet. 
+
+/**
+ * @return an int between min and max inclusive
+ */
+export function randomNumberBetween(minP, maxP) {
+    let min = Math.ceil(minP);
+    let max = Math.floor(maxP);
+    return Math.floor(Math.random() * (max - min +1) + min); 
+}
+
+/**
+ * Returns the distance between two points 
+ */
+export function distanceBetween(ax, ay, bx, by) {
+  return Math.sqrt(Math.pow(ax - bx, 2) + Math.pow(ay - by, 2));
 }
