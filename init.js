@@ -6,13 +6,14 @@ export const SCREEN_HEIGHT = 500;
 export const HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
 export const SHIP_START_X = 500;
 export const SHIP_START_Y = 250;
+export const SHIP_SCALE = 0.25;
 export const BLACK = 0X000000;
 
 export const GRAVITATIONAL_CONST = 2;
 export const CRASH_SPEED = 2; // speed crash happens at
-export const CRASH_ANGLE = 0.3; // angle crash happens at
+export const CRASH_ANGLE = 0.5; // angle crash happens at
 export const ALLOWED_OVERLAP = 10; // overlap for fudging collision detection
-export const TAKEOFF_BOOST = 15; // multiple of vx/vy to start away from the surface
+export const TAKEOFF_BOOST = 10; // multiple of vx/vy to start away from the surface
 export const TAKEOFF_SPEED = 10; // in units of planet gravity
 
 export const SHIP_FILE = "images/spaceship.png";
@@ -117,7 +118,7 @@ export function createShip(app) {
   ship.sprite = new Sprite(loader.resources[SHIP_FILE].texture);
   ship.sprite.position.set(HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT);
   ship.sprite.anchor.set(0.5, 0.5);  // pivot on ship center
-  ship.sprite.scale.set(0.35, 0.35);
+  ship.sprite.scale.set(SHIP_SCALE, SHIP_SCALE);
   app.stage.addChild(ship.sprite);
   return ship;
 }

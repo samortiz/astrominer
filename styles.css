@@ -1,11 +1,6 @@
-#minimap {
-  height:250px;
-  width:250px;
-}
-
 #infopanel {
-  width:250px;
-  height:250px;
+  width:300px;
+  height:500px;
   border:1px solid black;
 }
 
