@@ -1,4 +1,4 @@
-import { GRAVITATIONAL_CONST } from './init.js';
+import { GRAVITATIONAL_CONST, HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT } from './init.js';
 
 /**
  * Returns the distance between two points 
@@ -43,7 +43,6 @@ export function calcGravity(x, y, planet) {
   let gravityY = GRAVITATIONAL_CONST * planet.mass / Math.pow(distance, 2) * -Math.cos(gravityDirection);
   return {x:gravityX, y:gravityY, dir:gravityDirection};
 }
-
 
 /**
  * Sets up a keyboard listener

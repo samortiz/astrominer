@@ -18,7 +18,7 @@ PIXI.loader
   .load(setup);
 
 function setup() {
-  setupWorld(app);
+  setupWorld(app.stage);
   setupKeyboard();
   changeGameState(GAME_STATE.FLY);
   app.ticker.add(delta => mainLoop(delta));

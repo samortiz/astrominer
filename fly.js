@@ -1,6 +1,7 @@
 import { changeGameState } from "./game.js";
 import { distanceBetween, normalizeRadian, midPoint, calcGravity } from "./utils.js";
-import { GAME_STATE, world, HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT, CRASH_SPEED, CRASH_ANGLE, ALLOWED_OVERLAP, SHIP_START_X, SHIP_START_Y } from './init.js';
+import { GAME_STATE, world, SCREEN_HEIGHT, HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT, CRASH_SPEED,  MINIMAP_HEIGHT, MINIMAP_WIDTH,
+  CRASH_ANGLE, ALLOWED_OVERLAP, SHIP_START_X, SHIP_START_Y, DARK_GREY, MED_GREY, LIGHT_GREY, WHITE, RED, MINIMAP_VIEW_WIDTH, HALF_MINIMAP_VIEW_WIDTH, HALF_MINIMAP_VIEW_HEIGHT, MINIMAP_VIEW_HEIGHT, MINIMAP_SCALE_X, HALF_MINIMAP_WIDTH, HALF_MINIMAP_HEIGHT, MINIMAP_SCALE_Y } from './init.js';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -49,9 +50,14 @@ export function flyLoop(delta) {
       return; // exit loop
     }
   }
+  drawMiniMap();
 }
 
-function planetInView(ship, planet) {
+/**
+ * @return true if the planet is in view of the ship, false otherwise
+ * NOTE: This will set the sprite.visible and sprite x/y attributes for the planet
+ */
+export function planetInView(ship, planet) {
   // Right side
   if ((ship.x + HALF_SCREEN_WIDTH + planet.radius < planet.x) || // Right
       (ship.x - HALF_SCREEN_WIDTH - planet.radius > planet.x) || // Left
@@ -141,4 +147,48 @@ function crash(ship) {
   ship.vx = 0;
   ship.vy = 0;
   ship.sprite.rotation = 0;
+}
+
+function drawMiniMap() {
+ let g = world.miniMapGraphics;
+ let ship = world.ship;
+ let l = 0;
+ let t = SCREEN_HEIGHT - MINIMAP_HEIGHT;
+ let r = MINIMAP_WIDTH;
+ let b = SCREEN_HEIGHT;
+
+  g.clear();
+
+  // Background
+  g.beginFill(DARK_GREY);
+  g.lineStyle(1, MED_GREY); 
+  g.drawRect(l, t, r, b);
+  g.endFill();
+
+  // Ship
+  g.lineStyle(1, WHITE);
+  g.drawCircle(l+MINIMAP_WIDTH/2,t+MINIMAP_HEIGHT/2, 2);
+
+  // Planets
+  for (let planet of world.planets) {
+    if (planetOnMap(ship, planet)) {
+      let x = l + HALF_MINIMAP_WIDTH + ((planet.x - ship.x) * MINIMAP_SCALE_X);
+      let y = t + HALF_MINIMAP_HEIGHT + ((planet.y - ship.y) * MINIMAP_SCALE_Y);
+      g.lineStyle(1, LIGHT_GREY);
+      g.drawCircle(x,y, planet.radius * MINIMAP_SCALE_X);
+    }
+  }
+
+}
+
+function planetOnMap(ship, planet) {
+
+  // Right side
+  if ((ship.x + HALF_MINIMAP_VIEW_WIDTH + planet.radius < planet.x) || // Right
+      (ship.x - HALF_MINIMAP_VIEW_WIDTH - planet.radius > planet.x) || // Left
+      (ship.y + HALF_MINIMAP_VIEW_HEIGHT + planet.radius < planet.y) || // Bottom
+      (ship.y - HALF_MINIMAP_VIEW_HEIGHT - planet.radius > planet.y)) { // Top
+    return false;
+  }
+  return true;
 }
