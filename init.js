@@ -32,22 +32,30 @@ export const DARK_GREY = 0x303030;
 export const LIGHT_GREY = 0x909090;
 
 export const PLAYER = "player";
-export const SHIP_SCALE = 0.25;
 export const GRAVITATIONAL_CONST = 2;
 export const CRASH_SPEED = 2; // speed crash happens at
 export const CRASH_ANGLE = 0.5; // angle crash happens at
 export const ALLOWED_OVERLAP = 10; // overlap for fudging collision detection
 export const TAKEOFF_BOOST = 10; // multiple of vx/vy to start away from the surface
 export const TAKEOFF_SPEED = 10; // in units of planet gravity
+export const SHIP_SCALE = 0.25; 
+export const MINE_SCALE = 0.25;
+export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
 
-export const SHIP_FILE = "images/spaceship.png";
-export const ROCK_PLANET_FILE = "images/rockPlanet.png";
-export const RED_PLANET_FILE = "images/redPlanet.png";
+export const BUILDING_TYPE_MINE = "mine";
+export const BUILDING_TYPE_FACTORY = "factory";
+
+// Files
+export const SPRITESHEET_JSON = "images/spritesheet.json";
+export const SHIP_FILE = "spaceship.png";
+export const ROCK_PLANET_FILE = "rockPlanet.png";
+export const RED_PLANET_FILE = "redPlanet.png";
+export const MINE_FILE = "mine";
 
 // PIXI Aliases
-let loader = PIXI.loader;
-let Sprite = PIXI.Sprite;
-let TextureCache = PIXI.utils.TextureCache
+export const loader = PIXI.loader;
+export const Sprite = PIXI.Sprite;
+export const TextureCache = PIXI.utils.TextureCache;
 
 export const GAME_STATE = {
   INIT: "init",
@@ -61,6 +69,7 @@ export let world = {
   planets:[],
   // Global keypress handlers
   keys: {}, 
+  app: null,
 
   // Curent game state 
   gameState: GAME_STATE.INIT,
@@ -93,7 +102,6 @@ export function createPlanets(container) {
       uranium : randomNumberBetween(0,1000),
     }, container);
   }
-
 }
 
 /**
@@ -128,20 +136,26 @@ function setShipStartXy() {
 
 // Creates and returns a planet (and adds it to the app)
 export function createPlanet(fileName, name, x, y, scale, mass, resources, container) {
-  let texture = TextureCache[fileName];
-  texture.frame = new PIXI.Rectangle(0,0, 750, 750);
-  let planetSprite = new Sprite(texture);
   let planet = {};
-  planet.sprite = planetSprite;
   planet.name = name; 
   planet.x = x;
   planet.y = y;
-  planet.sprite.x = x;
-  planet.sprite.y = y;
   planet.mass = mass;
   planet.resources = resources;
-  planet.sprite.anchor.set(0.5, 0.5);
-  planet.sprite.scale.set(scale, scale);
+
+  // Setup the planet container sprite (contains planet plus buildings)
+  planet.sprite = new PIXI.Container();
+  planet.sprite.x = x; // wrong value will be set on every draw
+  planet.sprite.y = y; 
+
+  // Setup the planet sprite itself
+  let planetSprite = new PIXI.Sprite(PIXI.loader.resources[SPRITESHEET_JSON].textures[fileName]);
+  planetSprite.anchor.set(0.5, 0.5);
+  planetSprite.scale.set(scale, scale);
+  planet.sprite.addChild(planetSprite);
+
+  planet.buildings = [];
+
   planet.radius = planet.sprite.width / 2; // save the calculation later
   container.addChild(planet.sprite);
   world.planets.push(planet);
@@ -170,7 +184,8 @@ export function createShip(container) {
   ship.x = world.shipStartX;
   ship.y = world.shipStartY;
   // Graphics Sprite
-  ship.sprite = new Sprite(loader.resources[SHIP_FILE].texture);
+  let spritesheet = PIXI.loader.resources[SPRITESHEET_JSON];
+  ship.sprite = new PIXI.Sprite(spritesheet.textures[SHIP_FILE]);
   ship.sprite.position.set(HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT);
   ship.sprite.anchor.set(0.5, 0.5);  // pivot on ship center
   ship.sprite.scale.set(SHIP_SCALE, SHIP_SCALE);

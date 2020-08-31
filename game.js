@@ -2,21 +2,17 @@ import { keyboard } from './utils.js';
 import { flyLoop, enterFlyState } from './fly.js';
 import { enterManageState, manageLoop } from './manage.js';
 import { infoPanelComponent } from './info.js';
-import { world, GAME_STATE, setupWorld, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, SHIP_FILE, ROCK_PLANET_FILE, RED_PLANET_FILE } from './init.js';
+import { world, GAME_STATE, setupWorld, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, SPRITESHEET_JSON} from './init.js';
 
-// This is created in game.js
-let app = null;
-
-// Setup the App
-app = new PIXI.Application({width: SCREEN_WIDTH, height: SCREEN_HEIGHT});
+export let app = new PIXI.Application({width: SCREEN_WIDTH, height: SCREEN_HEIGHT});
 app.renderer.backgroundColor = BLACK;
 document.getElementById("mainview").appendChild(app.view);
 PIXI.loader
-  .add(SHIP_FILE)
-  .add(ROCK_PLANET_FILE)
-  .add(RED_PLANET_FILE)
+  .add(SPRITESHEET_JSON)
   .load(setup);
+world.app = app;
 
+// Setup the App
 function setup() {
   setupWorld(app.stage);
   setupKeyboard();

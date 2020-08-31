@@ -1,8 +1,11 @@
 JS Game
 
-- Crash icon
-- Build mine
+- Planet | Mine tabs
+- Build mine button
+- Check for overlapping mines
+- Mining loop resource collection
 
+- Crash icon
 - log / ticker
 - landing flag (claim planet)
 - load planets with sprite sheet
@@ -10,4 +13,4 @@ JS Game
 - background image w stars to show movement
 
 Questions: 
- - Mining loop/timer
+ - Crash into mines?

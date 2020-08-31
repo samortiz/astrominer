@@ -1,4 +1,5 @@
 import { GAME_STATE, world } from './init.js';
+import { buildMine } from './manage.js';
 'use strict';
 
 const e = React.createElement;
@@ -13,6 +14,7 @@ class InfoPanel extends React.Component {
     if (world.gameState === GAME_STATE.MANAGE) {
       return e('div', null,
         e('div', null, `Planet ${world.selectedPlanet.name}`),
+        e('button',  { onClick: () => buildMine() }, `Build Mine`),
         e('div', {className:"resource-list"}, `Resources`),
         e('div', null, `Titatium ${world.selectedPlanet.resources.titanium}`),
         e('div', null, `Gold ${world.selectedPlanet.resources.gold}`),
