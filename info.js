@@ -16,9 +16,9 @@ class InfoPanel extends React.Component {
         e('div', null, `Planet ${world.selectedPlanet.name}`),
         e('button',  { onClick: () => buildMine() }, `Build Mine`),
         e('div', {className:"resource-list"}, `Resources`),
-        e('div', null, `Titatium ${world.selectedPlanet.resources.titanium}`),
-        e('div', null, `Gold ${world.selectedPlanet.resources.gold}`),
-        e('div', null, `Uranium ${world.selectedPlanet.resources.uranium}`),
+        e('div', null, `Titatium ${Math.floor(world.selectedPlanet.resources.stored.titanium)} / ${Math.floor(world.selectedPlanet.resources.raw.titanium)}`),
+        e('div', null, `Gold ${Math.floor(world.selectedPlanet.resources.stored.gold)} / ${Math.floor(world.selectedPlanet.resources.raw.gold)}`),
+        e('div', null, `Uranium ${Math.floor(world.selectedPlanet.resources.stored.uranium)} / ${Math.floor(world.selectedPlanet.resources.raw.uranium)}`),
       );
 
     } else if (world.gameState === GAME_STATE.FLY) {

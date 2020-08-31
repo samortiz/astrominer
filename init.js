@@ -38,9 +38,14 @@ export const CRASH_ANGLE = 0.5; // angle crash happens at
 export const ALLOWED_OVERLAP = 10; // overlap for fudging collision detection
 export const TAKEOFF_BOOST = 10; // multiple of vx/vy to start away from the surface
 export const TAKEOFF_SPEED = 10; // in units of planet gravity
-export const SHIP_SCALE = 0.25; 
+export const SHIP_SCALE = 0.25;
+
 export const MINE_SCALE = 0.25;
 export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
+export const MINE_ANIMATION_SPEED = 0.5;
+export const MINE_SPEED_TITATIUM = 0.0166; // 1 every sec
+export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
+export const MINE_SPEED_URANIUM = 0.0033; // 1 every 5 sec
 
 export const BUILDING_TYPE_MINE = "mine";
 export const BUILDING_TYPE_FACTORY = "factory";
@@ -93,7 +98,7 @@ export function createPlanets(container) {
     let fileName = fileNames[index];
     let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + randomNumberBetween(1000,999999);
     let {x,y} = generateXy();
-    let scale = randomNumberBetween(15,80) / 100;
+    let scale = randomNumberBetween(10,80) / 100;
     let mass = scale * 500;
     // Setup the Rock planet
     createPlanet(fileName, name, x, y, scale, mass, {
@@ -141,7 +146,10 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
   planet.x = x;
   planet.y = y;
   planet.mass = mass;
-  planet.resources = resources;
+  planet.resources = {
+    stored: {titanium:0, gold:0, uranium:0},
+    raw: resources
+  };
 
   // Setup the planet container sprite (contains planet plus buildings)
   planet.sprite = new PIXI.Container();

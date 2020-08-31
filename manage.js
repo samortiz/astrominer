@@ -1,5 +1,5 @@
 import { world, GAME_STATE, TAKEOFF_BOOST, TAKEOFF_SPEED, SPRITESHEET_JSON, MINE_FILE, MINE_SCALE, HALF_SCREEN_WIDTH, 
-  HALF_SCREEN_HEIGHT, MINE_PLACEMENT_FROM_SHIP, BUILDING_TYPE_MINE } from './init.js';
+  HALF_SCREEN_HEIGHT, MINE_PLACEMENT_FROM_SHIP, BUILDING_TYPE_MINE, MINE_ANIMATION_SPEED } from './init.js';
 import { changeGameState } from './game.js';
 import { calcGravity, normalizeRadian } from './utils.js';
 
@@ -32,7 +32,7 @@ export function buildMine() {
   //Setup the graphics
   let sheet = PIXI.Loader.shared.resources[SPRITESHEET_JSON].spritesheet;
   mine.sprite = new PIXI.AnimatedSprite(sheet.animations[MINE_FILE]);
-  mine.sprite.animationSpeed = 0.02; 
+  mine.sprite.animationSpeed = MINE_ANIMATION_SPEED; 
   mine.sprite.play();
   mine.sprite.anchor.set(0.5, 0.5);
   mine.sprite.scale.set(MINE_SCALE, MINE_SCALE);
