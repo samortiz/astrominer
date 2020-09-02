@@ -32,7 +32,7 @@ export function runBuildings() {
         if (planet.resources.raw.gold > 0) {
           planet.resources.raw.gold -= c.MINE_SPEED_GOLD;
           planet.resources.stored.gold += c.MINE_SPEED_GOLD;
-          if (planet.resources.raw.gold > 0) {
+          if (planet.resources.raw.gold < 0) {
             planet.resources.raw.gold = 0;
           }
         }

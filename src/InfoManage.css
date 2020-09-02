@@ -1,0 +1,11 @@
+.transfer-input {
+  width:30px;
+  max-width:30px;
+}
+
+.transfer-button {
+  font-weight:bold;
+  padding-left:3px;
+  padding-right:3px;
+}
+

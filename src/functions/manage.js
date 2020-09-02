@@ -100,3 +100,27 @@ export function buildingFits(planet, ship, rotation, buildingWidth) {
   } 
   return (minDist > (buildingWidth/2 + minBuildingWidth/2 + 15));
 }
+
+/**
+ * Move a resource ship <-> planet 
+ */
+export function transferResource(source, target, resourceType, requestedAmtStr, maxCapacity) {
+  let requestedAmt = Number(requestedAmtStr);
+  if (isNaN(requestedAmt)) {
+    requestedAmt = 0;
+  }
+  let amt = requestedAmt;
+  // requesting '' is requesting the entire source (same as requesting too much)
+  if (requestedAmtStr === '' || (source[resourceType] - requestedAmt < 0)) {
+    amt = source[resourceType];
+  }
+  // Cap to max capacity of target
+  let spaceLeft =  maxCapacity - (target.titanium + target.gold + target.uranium);
+  if ((maxCapacity > 0) && (spaceLeft < amt)) {
+    amt = spaceLeft;
+  }
+  
+  target[resourceType] += amt;
+  source[resourceType] -= amt;
+}
+
