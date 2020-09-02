@@ -1,0 +1,19 @@
+JS Game
+
+- stop mines when resources run out (stop animation too)
+- add mines to minimap
+
+- Planet | Mine tabs
+- CSS on info screens 
+- Check for overlapping mines
+
+- Crash icon
+- log / ticker
+- landing flag (claim planet)
+- load planets with sprite sheet
+- toast with image/text
+- background image w stars to show movement
+
+Questions: 
+ - Crash into mines?
+
