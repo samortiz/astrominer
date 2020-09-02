@@ -47,6 +47,7 @@ export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
 export const MINE_SPEED_URANIUM = 0.0033; // 1 every 5 sec
 export const MINE_COST = {titanium:20, gold:10, uranium:0};
 
+export const BUILDING_PLACEMENT_ROTATION_INCREMENT = 0.1;
 export const BUILDING_TYPE_MINE = "mine";
 export const BUILDING_TYPE_FACTORY = "factory";
 
