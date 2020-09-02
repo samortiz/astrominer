@@ -49,7 +49,11 @@ export function buildMine() {
   mine.sprite.x = (mine.x - planet.x);
   mine.sprite.y = (mine.y - planet.y);
 
+  game.payBuildingCost(planet, ship, c.MINE_COST);
+
   // TODO : Check for collision with other building and adjust position further along planet
 
   planet.buildings.push(mine);
 }
+
+

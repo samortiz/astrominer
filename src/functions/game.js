@@ -22,14 +22,37 @@ export function runBuildings() {
   for (let planet of world.planets) {
     for (let building of planet.buildings) {
       if (building.type === c.BUILDING_TYPE_MINE) {
-        planet.resources.raw.titanium -= c.MINE_SPEED_TITATIUM;
-        planet.resources.stored.titanium += c.MINE_SPEED_TITATIUM;
-        planet.resources.raw.gold -= c.MINE_SPEED_GOLD;
-        planet.resources.stored.gold += c.MINE_SPEED_GOLD;
-        planet.resources.raw.uranium -= c.MINE_SPEED_URANIUM;
-        planet.resources.stored.uranium += c.MINE_SPEED_URANIUM;
+        if (planet.resources.raw.titanium > 0) {
+          planet.resources.raw.titanium -= c.MINE_SPEED_TITATIUM;
+          planet.resources.stored.titanium += c.MINE_SPEED_TITATIUM;
+          if (planet.resources.raw.titanium <= 0) {
+            planet.resources.raw.titanium = 0;
+          }
+        }
+        if (planet.resources.raw.gold > 0) {
+          planet.resources.raw.gold -= c.MINE_SPEED_GOLD;
+          planet.resources.stored.gold += c.MINE_SPEED_GOLD;
+          if (planet.resources.raw.gold > 0) {
+            planet.resources.raw.gold = 0;
+          }
+        }
+        if (planet.resources.raw.uranium > 0) {
+          planet.resources.raw.uranium -= c.MINE_SPEED_URANIUM;
+          planet.resources.stored.uranium += c.MINE_SPEED_URANIUM;
+          if (planet.resources.raw.uranium < 0) {
+            planet.resources.raw.uranium = 0;
+          }
+        }
       }
     } // for building
+    // If planet is out of resources stop the mine animations
+    if ( (planet.resources.raw.titanium === 0) 
+      && (planet.resources.raw.gold === 0)
+      && (planet.resources.raw.uranium === 0)) {
+        for (let building of planet.buildings) {
+          building.sprite.animationSpeed = 0;
+        }
+    }
   } // for planet
 }
 
@@ -152,8 +175,8 @@ export function createShip(container) {
   ship.brakeSpeedPct = 0.04;
   // best between 0.3 - 0.07
   ship.turnSpeed = 0.05;
-  ship.cargoMax = 50;
-  ship.cargo = {
+  ship.resourcesMax = 50;
+  ship.resources = {
     titanium : 20,
     gold : 20,
     uranium : 0,
@@ -187,5 +210,33 @@ export function setupMiniMap(container) {
   var g = new window.PIXI.Graphics();
   miniMapContainer.addChild(g);  
   window.world.miniMapGraphics = g;
+}
 
+
+export function canAfford(planet, ship, resources) {
+  return (planet.resources.stored.titanium + ship.resources.titanium >= resources.titanium)
+  && (planet.resources.stored.gold + ship.resources.gold >= resources.gold)
+  && (planet.resources.stored.uranium + ship.resources.uranium >= resources.uranium);
+}
+
+export function payBuildingCost(planet, ship, resources) {
+  payResource(planet, ship, 'titanium', resources.titanium);
+  payResource(planet, ship, 'gold', resources.gold);
+  payResource(planet, ship, 'uranium', resources.uranium);
+}
+
+export function payResource(planet, ship, resourceType, amount) {
+  let paid = planet.resources.stored[resourceType] - amount; 
+  if (paid >= 0) {
+    planet.resources.stored[resourceType] -= amount;
+    return;
+  } else {
+    // Planet can't afford this purchase, take some from the ship
+    planet.resources.stored[resourceType] = 0;
+  }
+  ship.resources[resourceType] = ship.resources[resourceType] + paid;
+  if (ship.resources[resourceType] < 0) {
+    console.warn("Ship is in debt "+ship.resources[resourceType]+" "+resourceType);
+  }
+  
 }
