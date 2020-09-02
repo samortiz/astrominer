@@ -1,0 +1,16 @@
+.planet-info {
+  width:100%;
+  height:100%;
+  border:1px solid red;
+}
+
+.ship-info {
+  width:100%;
+  height:100%;
+  vertical-align: top;
+  border:1px solid blue;
+}
+
+.resource-list {
+  padding-top:10px;
+}

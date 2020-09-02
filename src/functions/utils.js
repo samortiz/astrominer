@@ -1,5 +1,4 @@
-import { GRAVITATIONAL_CONST } from './init.js';
-
+import { c } from './';
 /**
  * Returns the distance between two points 
  */
@@ -39,15 +38,24 @@ export function calcGravity(x, y, planet) {
     distance = 10;
   }
   let gravityDirection = Math.atan2(x - planet.x, y - planet.y);
-  let gravityX = GRAVITATIONAL_CONST * planet.mass / Math.pow(distance, 2) * -Math.sin(gravityDirection);
-  let gravityY = GRAVITATIONAL_CONST * planet.mass / Math.pow(distance, 2) * -Math.cos(gravityDirection);
+  let gravityX = c.GRAVITATIONAL_CONST * planet.mass / Math.pow(distance, 2) * -Math.sin(gravityDirection);
+  let gravityY = c.GRAVITATIONAL_CONST * planet.mass / Math.pow(distance, 2) * -Math.cos(gravityDirection);
   return {x:gravityX, y:gravityY, dir:gravityDirection};
+}
+
+/**
+ * @return an int between min and max inclusive
+ */
+export function randomInt(minP, maxP) {
+  let min = Math.ceil(minP);
+  let max = Math.floor(maxP);
+  return Math.floor(Math.random() * (max - min +1) + min); 
 }
 
 /**
  * Sets up a keyboard listener
  */
-export function keyboard(value) {
+export function keyboardListener(value) {
   let key = {};
   key.value = value;
   key.isDown = false;

@@ -1,8 +1,4 @@
-import { changeGameState } from "./game.js";
-import { distanceBetween, normalizeRadian, midPoint, calcGravity } from "./utils.js";
-import { GAME_STATE, world, SCREEN_HEIGHT, HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT, CRASH_SPEED,  MINIMAP_HEIGHT, MINIMAP_WIDTH,
-  CRASH_ANGLE, ALLOWED_OVERLAP,DARK_GREY, MED_GREY, LIGHT_GREY, WHITE, RED, HALF_MINIMAP_VIEW_WIDTH, 
-  HALF_MINIMAP_VIEW_HEIGHT, MINIMAP_SCALE_X, HALF_MINIMAP_WIDTH, HALF_MINIMAP_HEIGHT, MINIMAP_SCALE_Y } from './init.js';
+import { utils, c, game } from './';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -10,6 +6,7 @@ export function enterFlyState() {
 
 // Main play mode - flying
 export function flyLoop(delta) {
+  let world = window.world;
   let ship = world.ship;
   // Keypress handling
   if (world.keys.left.isDown) {
@@ -33,7 +30,7 @@ export function flyLoop(delta) {
   }
   // Gravity
   for (let planet of planetsInView) {
-    let grav = calcGravity(ship.x, ship.y, planet);
+    let grav = utils.calcGravity(ship.x, ship.y, planet);
     ship.vx += grav.x;
     ship.vy += grav.y;
   }
@@ -60,17 +57,17 @@ export function flyLoop(delta) {
  */
 export function planetInView(ship, planet) {
   // Right side
-  if ((ship.x + HALF_SCREEN_WIDTH + planet.radius < planet.x) || // Right
-      (ship.x - HALF_SCREEN_WIDTH - planet.radius > planet.x) || // Left
-      (ship.y + HALF_SCREEN_HEIGHT + planet.radius < planet.y) || // Bottom
-      (ship.y - HALF_SCREEN_HEIGHT - planet.radius > planet.y)) { // Top
+  if ((ship.x + c.HALF_SCREEN_WIDTH + planet.radius < planet.x) || // Right
+      (ship.x - c.HALF_SCREEN_WIDTH - planet.radius > planet.x) || // Left
+      (ship.y + c.HALF_SCREEN_HEIGHT + planet.radius < planet.y) || // Bottom
+      (ship.y - c.HALF_SCREEN_HEIGHT - planet.radius > planet.y)) { // Top
      planet.sprite.visible = false;
     return false;
   }
   planet.sprite.visible = true;
   // Set planet relative to the ship's viewport
-  planet.sprite.x = (planet.x - ship.x) + HALF_SCREEN_WIDTH;
-  planet.sprite.y = (planet.y - ship.y) + HALF_SCREEN_HEIGHT;
+  planet.sprite.x = (planet.x - ship.x) + c.HALF_SCREEN_WIDTH;
+  planet.sprite.y = (planet.y - ship.y) + c.HALF_SCREEN_HEIGHT;
   return true;
 }
 
@@ -83,13 +80,13 @@ function detectCollision(ship, planet) {
   collisionPoints.push(toGlobal(ship, ship.sprite.vertexData[4], ship.sprite.vertexData[5])); // bottom right
   collisionPoints.push(toGlobal(ship, ship.sprite.vertexData[6], ship.sprite.vertexData[7])); // bottom left
   // Add a few points between to help with border collisions (these have already been converted to global)
-  collisionPoints.push(midPoint(collisionPoints[0], collisionPoints[1]));
-  collisionPoints.push(midPoint(collisionPoints[1], collisionPoints[2]));
-  collisionPoints.push(midPoint(collisionPoints[2], collisionPoints[3]));
-  collisionPoints.push(midPoint(collisionPoints[3], collisionPoints[0]));
+  collisionPoints.push(utils.midPoint(collisionPoints[0], collisionPoints[1]));
+  collisionPoints.push(utils.midPoint(collisionPoints[1], collisionPoints[2]));
+  collisionPoints.push(utils.midPoint(collisionPoints[2], collisionPoints[3]));
+  collisionPoints.push(utils.midPoint(collisionPoints[3], collisionPoints[0]));
   for (let point of collisionPoints) {
-    let dist = distanceBetween(point[0], point[1], planet.x, planet.y);
-    if (dist < planet.radius - ALLOWED_OVERLAP) { 
+    let dist = utils.distanceBetween(point[0], point[1], planet.x, planet.y);
+    if (dist < planet.radius - c.ALLOWED_OVERLAP) { 
       return true;
     } 
   }
@@ -101,35 +98,35 @@ function detectCollision(ship, planet) {
  * @return [x,y] in global map coordinates
  */
 export function toGlobal(ship, x,y) {
-  return [ship.x + (x-HALF_SCREEN_WIDTH), ship.y + (y-HALF_SCREEN_HEIGHT)];
+  return [ship.x + (x-c.HALF_SCREEN_WIDTH), ship.y + (y-c.HALF_SCREEN_HEIGHT)];
 }
 
 function successfulLanding(ship, planet) {
   // atan2 has parameters (y,x)
-  let planetDir = normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
+  let planetDir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
   let dirDiff = Math.abs(ship.sprite.rotation - planetDir);
   let speed = Math.abs(ship.vx) + Math.abs(ship.vy);
   // 0 and PI*2 are right beside each other, so large values are very close to small values
-  return ((dirDiff < CRASH_ANGLE) || (dirDiff > (Math.PI * 2 - CRASH_ANGLE)))
-         && (speed < CRASH_SPEED);
+  return ((dirDiff < c.CRASH_ANGLE) || (dirDiff > (Math.PI * 2 - c.CRASH_ANGLE)))
+         && (speed < c.CRASH_SPEED);
 }
 
 function landShip(ship, planet) {
-  world.selectedPlanet = planet;
+  window.world.selectedPlanet = planet;
   // Stop moving (even though the event loop stops movement)
   ship.vx = 0;
   ship.vy = 0;
   //Set ship position and angle on the planet surface
-  let dir = normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
+  let dir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
   let r = planet.radius + ship.sprite.height/2 + 5; 
   ship.x = planet.x + (r * Math.cos(dir));
   ship.y = planet.y + (r * Math.sin(dir));
   ship.sprite.rotation = dir;
-  changeGameState(GAME_STATE.MANAGE);
+  game.changeGameState(c.GAME_STATE.MANAGE);
 }
 
 function turnShip(ship, left) {
-  ship.sprite.rotation = normalizeRadian(ship.sprite.rotation + ship.turnSpeed * (left ? -1 : 1));
+  ship.sprite.rotation = utils.normalizeRadian(ship.sprite.rotation + ship.turnSpeed * (left ? -1 : 1));
 }
 
 function propelShip(ship) {
@@ -143,40 +140,40 @@ function brakeShip(ship) {
 }
 
 function crash(ship) {
-  ship.x = world.shipStartX;
-  ship.y = world.shipStartY;
+  ship.x = window.world.shipStartX;
+  ship.y = window.world.shipStartY;
   ship.vx = 0;
   ship.vy = 0;
   ship.sprite.rotation = 0;
 }
 
 function drawMiniMap() {
- let g = world.miniMapGraphics;
- let ship = world.ship;
+ let g = window.world.miniMapGraphics;
+ let ship = window.world.ship;
  let l = 0;
- let t = SCREEN_HEIGHT - MINIMAP_HEIGHT;
- let r = MINIMAP_WIDTH;
- let b = SCREEN_HEIGHT;
+ let t = c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT;
+ let r = c.MINIMAP_WIDTH;
+ let b = c.SCREEN_HEIGHT;
 
   g.clear();
 
   // Background
-  g.beginFill(DARK_GREY);
-  g.lineStyle(1, MED_GREY); 
+  g.beginFill(c.DARK_GREY);
+  g.lineStyle(1, c.MED_GREY); 
   g.drawRect(l, t, r, b);
   g.endFill();
 
   // Ship
-  g.lineStyle(1, WHITE);
-  g.drawCircle(l+MINIMAP_WIDTH/2,t+MINIMAP_HEIGHT/2, 2);
+  g.lineStyle(1, c.WHITE);
+  g.drawCircle(l+c.MINIMAP_WIDTH/2,t+c.MINIMAP_HEIGHT/2, 2);
 
   // Planets
-  for (let planet of world.planets) {
+  for (let planet of window.world.planets) {
     if (planetOnMap(ship, planet)) {
-      let x = l + HALF_MINIMAP_WIDTH + ((planet.x - ship.x) * MINIMAP_SCALE_X);
-      let y = t + HALF_MINIMAP_HEIGHT + ((planet.y - ship.y) * MINIMAP_SCALE_Y);
-      g.lineStyle(1, LIGHT_GREY);
-      g.drawCircle(x,y, planet.radius * MINIMAP_SCALE_X);
+      let x = l + c.HALF_MINIMAP_WIDTH + ((planet.x - ship.x) * c.MINIMAP_SCALE_X);
+      let y = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - ship.y) * c.MINIMAP_SCALE_Y);
+      g.lineStyle(1, c.LIGHT_GREY);
+      g.drawCircle(x,y, planet.radius * c.MINIMAP_SCALE_X);
     }
   }
 
@@ -185,10 +182,10 @@ function drawMiniMap() {
 function planetOnMap(ship, planet) {
 
   // Right side
-  if ((ship.x + HALF_MINIMAP_VIEW_WIDTH + planet.radius < planet.x) || // Right
-      (ship.x - HALF_MINIMAP_VIEW_WIDTH - planet.radius > planet.x) || // Left
-      (ship.y + HALF_MINIMAP_VIEW_HEIGHT + planet.radius < planet.y) || // Bottom
-      (ship.y - HALF_MINIMAP_VIEW_HEIGHT - planet.radius > planet.y)) { // Top
+  if ((ship.x + c.HALF_MINIMAP_VIEW_WIDTH + planet.radius < planet.x) || // Right
+      (ship.x - c.HALF_MINIMAP_VIEW_WIDTH - planet.radius > planet.x) || // Left
+      (ship.y + c.HALF_MINIMAP_VIEW_HEIGHT + planet.radius < planet.y) || // Bottom
+      (ship.y - c.HALF_MINIMAP_VIEW_HEIGHT - planet.radius > planet.y)) { // Top
     return false;
   }
   return true;
