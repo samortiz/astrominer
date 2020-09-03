@@ -1,20 +1,18 @@
 import React from 'react';
-import { c, manage, game } from './functions';
-import './InfoManage.css';
+import { c, manage, game } from '../functions';
+import './ManagePlanet.css';
 
-export class InfoManage extends React.Component {
+export class ManagePlanet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {titanium:'', gold:'', uranium:''};
-    console.log("state reset");
   }
 
 
   valueChanged(event, resourceType) {
     let newState = Object.assign({}, this.state);
     newState[resourceType] = event.target.value;
-    console.log("setting state to ", newState);
-    this.setState(newState);
+    this.setState({newState});
   }
 
   render() {
@@ -23,7 +21,7 @@ export class InfoManage extends React.Component {
     let ship = window.world.ship;
     return (
       <div className='planet-info'> 
-        <div>Planet {world.selectedPlanet.name}</div>
+        <div>Name {world.selectedPlanet.name}</div>
         <button 
           disabled={!game.canAfford(planet, ship, c.MINE_COST)} 
           onClick={() => manage.buildMine()}>Build Mine</button>

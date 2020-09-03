@@ -2,75 +2,107 @@
 
 "factory.png":
 {
-	"frame": {"x":0,"y":0,"w":420,"h":296},
+	"frame": {"x":1501,"y":260,"w":296,"h":420},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":420,"h":296},
-	"sourceSize": {"w":420,"h":296},
-	"anchor": {"x":0.5,"y":0.5}
+	"spriteSourceSize": {"x":0,"y":0,"w":296,"h":420},
+	"sourceSize": {"w":296,"h":420}
 },
 "mine1.png":
 {
-	"frame": {"x":420,"y":0,"w":300,"h":260},
+	"frame": {"x":910,"y":0,"w":300,"h":260},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
-	"sourceSize": {"w":300,"h":260},
-	"anchor": {"x":0.5,"y":0.5}
+	"sourceSize": {"w":300,"h":260}
 },
 "mine2.png":
 {
-	"frame": {"x":720,"y":0,"w":300,"h":260},
+	"frame": {"x":1210,"y":0,"w":300,"h":260},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
-	"sourceSize": {"w":300,"h":260},
-	"anchor": {"x":0.5,"y":0.5}
+	"sourceSize": {"w":300,"h":260}
 },
 "mine3.png":
 {
-	"frame": {"x":1020,"y":0,"w":300,"h":260},
+	"frame": {"x":1510,"y":0,"w":300,"h":260},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
-	"sourceSize": {"w":300,"h":260},
-	"anchor": {"x":0.5,"y":0.5}
+	"sourceSize": {"w":300,"h":260}
 },
 "mine4.png":
 {
-	"frame": {"x":1320,"y":0,"w":301,"h":260},
+	"frame": {"x":0,"y":260,"w":301,"h":260},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":301,"h":260},
-	"sourceSize": {"w":301,"h":260},
-	"anchor": {"x":0.5,"y":0.5}
+	"sourceSize": {"w":301,"h":260}
 },
-"redPlanet.png":
+"purple_planet.png":
 {
-	"frame": {"x":0,"y":296,"w":750,"h":750},
+	"frame": {"x":301,"y":260,"w":400,"h":400},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":750,"h":750},
-	"sourceSize": {"w":750,"h":750},
-	"anchor": {"x":0.5,"y":0.5}
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
+	"sourceSize": {"w":400,"h":400}
 },
-"rockPlanet.png":
+"red_planet.png":
 {
-	"frame": {"x":750,"y":296,"w":750,"h":750},
+	"frame": {"x":701,"y":260,"w":400,"h":400},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":750,"h":750},
-	"sourceSize": {"w":750,"h":750},
-	"anchor": {"x":0.5,"y":0.5}
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
+	"sourceSize": {"w":400,"h":400}
 },
-"spaceship.png":
+"rock_planet.png":
 {
-	"frame": {"x":1500,"y":296,"w":182,"h":99},
+	"frame": {"x":1101,"y":260,"w":400,"h":400},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":182,"h":99},
-	"sourceSize": {"w":182,"h":99},
-	"anchor": {"x":0.5,"y":0.5}
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
+	"sourceSize": {"w":400,"h":400}
+},
+"ship_cargo.png":
+{
+	"frame": {"x":0,"y":0,"w":276,"h":62},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":62},
+	"sourceSize": {"w":276,"h":62}
+},
+"ship_explorer.png":
+{
+	"frame": {"x":276,"y":0,"w":61,"h":84},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":84},
+	"sourceSize": {"w":61,"h":84}
+},
+"ship_fast.png":
+{
+	"frame": {"x":660,"y":0,"w":250,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":250,"h":184},
+	"sourceSize": {"w":250,"h":184}
+},
+"ship_fighter.png":
+{
+	"frame": {"x":337,"y":0,"w":118,"h":116},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":118,"h":116},
+	"sourceSize": {"w":118,"h":116}
+},
+"ship_heavy.png":
+{
+	"frame": {"x":455,"y":0,"w":205,"h":132},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":205,"h":132},
+	"sourceSize": {"w":205,"h":132}
 }},
 "animations": {
 	"mine": ["mine1.png","mine2.png","mine3.png","mine4.png"]
@@ -80,8 +112,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":1682,"h":1046},
+	"size": {"w":1810,"h":680},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:e2b3f2667794a72c08494e7289669f7d:fc4ff2b0006973df91a0997554a0edd3:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:0c93ff2b269ce6b95e16b1bc49171dc2:67363ca5bf542df5f12112517b67a539:729adc6043343cfda41c447ce8f464d6$"
 }
 }

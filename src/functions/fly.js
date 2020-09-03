@@ -107,8 +107,8 @@ function successfulLanding(ship, planet) {
   let dirDiff = Math.abs(ship.sprite.rotation - planetDir);
   let speed = Math.abs(ship.vx) + Math.abs(ship.vy);
   // 0 and PI*2 are right beside each other, so large values are very close to small values
-  return ((dirDiff < c.CRASH_ANGLE) || (dirDiff > (Math.PI * 2 - c.CRASH_ANGLE)))
-         && (speed < c.CRASH_SPEED);
+  return ((dirDiff < ship.crashAngle) || (dirDiff > (Math.PI * 2 - ship.crashAngle)))
+         && (speed < ship.crashSpeed);
 }
 
 function landShip(ship, planet) {

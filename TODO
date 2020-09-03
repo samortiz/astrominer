@@ -2,10 +2,14 @@ JS Game
 
 - add buildings to minimap
 - Crash into buildings
-- Planet | Mine tabs
+- tabs: Planet | Factory | Warehouse
 - CSS on info screens 
 - background image w stars to show movement
 - Crash graphics
+- Build Factory
+- Build cargo ship in Factory
+- Build Warehouse
+- Switch ship in warehouse
 
 Ideas :
 - log / ticker

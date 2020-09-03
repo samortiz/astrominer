@@ -1,13 +1,9 @@
 .planet-info {
   width:300px;
-  height:500px;
-  border:1px solid red;
 }
 
-.ship-info {
+.factory-info {
   width:300px;
-  height:500px;
-  border:1px solid blue;
 }
 
 .resource-list {

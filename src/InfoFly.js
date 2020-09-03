@@ -1,11 +1,7 @@
 import React from 'react';
-import { c, manage, game } from './functions';
 import './InfoPanel.css';
 
 export class InfoFly extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     let world = window.world;

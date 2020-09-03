@@ -32,7 +32,7 @@
         <key>dpi</key>
         <uint>72</uint>
         <key>dataFormat</key>
-        <string>pixijs</string>
+        <string>pixijs4</string>
         <key>textureFileName</key>
         <filename></filename>
         <key>flipPVR</key>
@@ -177,7 +177,7 @@
             <key>defaultPivotPoint</key>
             <point_f>0,0</point_f>
             <key>writePivotPoints</key>
-            <true/>
+            <false/>
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
@@ -190,9 +190,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>105,74,210,148</rect>
+                <rect>74,105,148,210</rect>
                 <key>scale9Paddings</key>
-                <rect>105,74,210,148</rect>
+                <rect>74,105,148,210</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -228,8 +228,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">redPlanet.png</key>
-            <key type="filename">rockPlanet.png</key>
+            <key type="filename">purple_planet.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>156,156,311,311</rect>
+                <key>scale9Paddings</key>
+                <rect>156,156,311,311</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">red_planet.png</key>
+            <key type="filename">rock_planet.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -244,7 +259,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">spaceship.png</key>
+            <key type="filename">ship_cargo.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -253,9 +268,69 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>46,25,91,49</rect>
+                <rect>69,16,138,31</rect>
                 <key>scale9Paddings</key>
-                <rect>46,25,91,49</rect>
+                <rect>69,16,138,31</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ship_explorer.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>15,21,31,42</rect>
+                <key>scale9Paddings</key>
+                <rect>15,21,31,42</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ship_fast.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>63,46,125,92</rect>
+                <key>scale9Paddings</key>
+                <rect>63,46,125,92</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ship_fighter.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>30,29,59,58</rect>
+                <key>scale9Paddings</key>
+                <rect>30,29,59,58</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ship_heavy.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>51,33,103,66</rect>
+                <key>scale9Paddings</key>
+                <rect>51,33,103,66</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -267,9 +342,14 @@
             <filename>mine2.png</filename>
             <filename>mine3.png</filename>
             <filename>mine4.png</filename>
-            <filename>redPlanet.png</filename>
-            <filename>rockPlanet.png</filename>
-            <filename>spaceship.png</filename>
+            <filename>purple_planet.png</filename>
+            <filename>red_planet.png</filename>
+            <filename>rock_planet.png</filename>
+            <filename>ship_cargo.png</filename>
+            <filename>ship_explorer.png</filename>
+            <filename>ship_fast.png</filename>
+            <filename>ship_fighter.png</filename>
+            <filename>ship_heavy.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -78,19 +78,27 @@ export function setupWorld(container) {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   setShipStartXy();
-  world.ship = createShip(container);
+  world.ship = createShip(container, c.SHIP_EXPLORER);
+  // Initial Resources
+  world.ship.resources = {titanium:30, gold:10, uranium:0};
+  // landing planet
+  createPlanet(c.ROCK_PLANET_FILE, 'Home', -250, world.ship.y, 0.5, 250, {
+    titanium : 500,
+    gold : 500,
+    uranium : 500,
+  }, container);
   setupMiniMap(container);
 }
 
 export function createPlanets(container) {
-  let fileNames = [c.ROCK_PLANET_FILE, c.RED_PLANET_FILE];
+  let fileNames = [c.ROCK_PLANET_FILE, c.RED_PLANET_FILE, c.PURPLE_PLANET_FILE];
 
   for (let i=0; i<=c.NUM_PLANETS; i++) {
     let index = utils.randomInt(0, fileNames.length-1);
     let fileName = fileNames[index];
     let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + utils.randomInt(1000,999999);
     let {x,y} = generateXy();
-    let scale = utils.randomInt(10,80) / 100;
+    let scale = utils.randomInt(10,120) / 100;
     let mass = scale * 500;
     // Setup the Rock planet
     createPlanet(fileName, name, x, y, scale, mass, {
@@ -164,32 +172,19 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
 }
 
 // Creates and returns a ship object
-export function createShip(container) {
-  let ship = {};
+export function createShip(container, shipType) {
+  let ship = Object.assign({}, shipType);
   ship.owner = c.PLAYER;
   ship.vx = 0; // velocityX
   ship.vy = 0; // velocityY
-  // best bewteen 0.02 - 0.1
-  ship.propulsion = 0.05;
-  // best between 0.02 - 0.1 (higher is ok)  
-  ship.brakeSpeedPct = 0.04;
-  // best between 0.3 - 0.07
-  ship.turnSpeed = 0.05;
-  ship.resourcesMax = 50;
-  ship.resources = {
-    titanium : 20,
-    gold : 20,
-    uranium : 0,
-  };
-  ship.armor = 100;
   ship.x = window.world.shipStartX;
   ship.y = window.world.shipStartY;
   // Graphics Sprite
   let spritesheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
-  ship.sprite = new window.PIXI.Sprite(spritesheet.textures[c.SHIP_FILE]);
+  ship.sprite = new window.PIXI.Sprite(spritesheet.textures[ship.imageFile]);
   ship.sprite.position.set(c.HALF_SCREEN_WIDTH, c.HALF_SCREEN_HEIGHT);
   ship.sprite.anchor.set(0.5, 0.5);  // pivot on ship center
-  ship.sprite.scale.set(c.SHIP_SCALE, c.SHIP_SCALE);
+  ship.sprite.scale.set(ship.imageScale, ship.imageScale);
   container.addChild(ship.sprite);
   return ship;
 }

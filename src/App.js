@@ -25,7 +25,7 @@ render() {
         <td>
         <div ref={this.pixiRef} />
         </td>
-        <td>
+        <td className='info-panel'>
           <InfoPanel />
         </td>
       </tr>
