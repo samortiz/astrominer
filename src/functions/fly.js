@@ -37,6 +37,7 @@ export function flyLoop(delta) {
   // Momentum
   ship.x += ship.vx;
   ship.y += ship.vy;
+  moveBackground(ship);
   // Collisions
   for (let planet of planetsInView) {
     if (detectCollision(ship, planet)) {
@@ -49,6 +50,12 @@ export function flyLoop(delta) {
     }
   }
   drawMiniMap();
+}
+
+export function moveBackground(ship) {
+  let bgSprite = window.world.bgSprite;
+  bgSprite.tilePosition.x = (100 - ship.x) + c.HALF_SCREEN_WIDTH;
+  bgSprite.tilePosition.y = (100 - ship.y) + c.HALF_SCREEN_HEIGHT;
 }
 
 /**
@@ -118,7 +125,7 @@ function landShip(ship, planet) {
   ship.vy = 0;
   //Set ship position and angle on the planet surface
   let dir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
-  let r = planet.radius + ship.sprite.height/2 + 5; 
+  let r = planet.radius + ship.sprite.width/2; 
   ship.x = planet.x + (r * Math.cos(dir));
   ship.y = planet.y + (r * Math.sin(dir));
   ship.sprite.rotation = dir;
@@ -174,9 +181,15 @@ function drawMiniMap() {
       let y = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - ship.y) * c.MINIMAP_SCALE_Y);
       g.lineStyle(1, c.LIGHT_GREY);
       g.drawCircle(x,y, planet.radius * c.MINIMAP_SCALE_X);
+      // Buildings
+      for (let building of planet.buildings) {
+        let buildingX = l + c.HALF_MINIMAP_WIDTH + ((planet.x - ship.x) * c.MINIMAP_SCALE_X);
+        let buildingY = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - ship.y) * c.MINIMAP_SCALE_Y);
+        g.lineStyle(1, c.RED); 
+        g.drawRect(x,y,3,3);
+      }
     }
   }
-
 }
 
 function planetOnMap(ship, planet) {

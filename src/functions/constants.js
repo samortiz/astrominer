@@ -50,12 +50,12 @@ export const SHIP_EXPLORER_FILE = "ship_explorer.png";
 export const SHIP_FAST_FILE = "ship_FAST";
 export const SHIP_FIGHTER_FILE = "ship_fighter";
 export const SHIP_HEAVY_FILE = "ship_heavy";
+export const STAR_BACKGROUND_FILE = "images/stars.png";
 
 // Ships
 export const PLAYER = "player";
 export const GRAVITATIONAL_CONST = 2;
 export const ALLOWED_OVERLAP = 2; // overlap for fudging collision detection
-export const TAKEOFF_BOOST = 10; // multiple of vx/vy to start away from the surface
 export const TAKEOFF_SPEED = 10; // in units of planet gravity
 
 export const SHIP_EXPLORER = {
@@ -71,7 +71,7 @@ export const SHIP_EXPLORER = {
   armor: 100,
   crashSpeed: 2,
   crashAngle: 0.5,
-  imageScale: 0.8,
+  imageScale: 0.6,
   imageFile: SHIP_EXPLORER_FILE,
 };
 
@@ -101,12 +101,14 @@ export const BUILDING_TYPE_MINE = "mine";
 export const MINE_SCALE = 0.25;
 export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
 export const MINE_ANIMATION_SPEED = 0.5;
-export const MINE_SPEED_TITATIUM = 0.50166; // 1 every sec
-export const MINE_SPEED_GOLD = 0.50083;  // 1 every 2 sec
-export const MINE_SPEED_URANIUM = 0.50033; // 1 every 5 sec
+export const MINE_SPEED_TITATIUM = 0.90166; // 1 every sec
+export const MINE_SPEED_GOLD = 0.90083;  // 1 every 2 sec
+export const MINE_SPEED_URANIUM = 0.90033; // 1 every 5 sec
 export const MINE_COST = {titanium:20, gold:10, uranium:0};
 
 export const BUILDING_TYPE_FACTORY = "factory";
 export const FACTORY_COST = {titanium:100, gold:100, uranium:10};
 export const FACTORY_SCALE = 0.25;
-export const FACTORY_PLACEMENT_FROM_SHIP = 50; // factory is 50px to the right of the ship
+export const FACTORY_PLACEMENT_FROM_SHIP = 50; // how far factory is to the right of the ship TODO: should be based on sprite.height/2
+export const SHIP_CARGO_COST =  {titanium:100, gold:50, uranium:50};
+export const SHIP_EXPLORER_COST =  {titanium:40, gold:40, uranium:30};

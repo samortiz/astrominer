@@ -8,11 +8,10 @@ export class ManagePlanet extends React.Component {
     this.state = {titanium:'', gold:'', uranium:''};
   }
 
-
   valueChanged(event, resourceType) {
     let newState = Object.assign({}, this.state);
     newState[resourceType] = event.target.value;
-    this.setState({newState});
+    this.setState(newState);
   }
 
   render() {

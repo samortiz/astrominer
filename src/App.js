@@ -47,7 +47,7 @@ render() {
 
   // Setup the App
   setupGame = () => {
-    game.setupWorld(window.world.app.stage);
+    game.setupWorld();
     this.setupKeyboardListeners();
     game.changeGameState(c.GAME_STATE.FLY);
     window.world.app.ticker.add(delta => this.mainLoop(delta));

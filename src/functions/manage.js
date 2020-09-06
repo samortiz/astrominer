@@ -1,4 +1,4 @@
-import { c, utils, game } from './';
+import { c, utils, fly, game } from './';
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -18,9 +18,6 @@ function takeOff() {
   let gravity = utils.calcGravity(ship.x, ship.y, world.selectedPlanet);
   ship.vx = gravity.x * -c.TAKEOFF_SPEED;
   ship.vy = gravity.y * -c.TAKEOFF_SPEED;
-  // TODO: this needs to take into account ship height/2 (which is sprite.width)
-  ship.x += ship.vx * c.TAKEOFF_BOOST;
-  ship.y += ship.vy * c.TAKEOFF_BOOST;
 }
 
 export function buildMine() {
@@ -155,5 +152,32 @@ export function buildFactory() {
   planet.sprite.addChild(factory.sprite);
   game.payBuildingCost(planet, ship, c.FACTORY_COST);
   planet.buildings.push(factory);
-  console.log("Built factory at x="+factory.x+" y="+factory.y);
 } 
+
+export function buildShip(shipTemplate) {
+  let world = window.world;
+  let planet = world.selectedPlanet;
+  let ship = game.createShip(shipTemplate);
+  //planet.warehouse.add(ship);
+  changeShip(ship, planet);
+  return ship
+}
+
+export function changeShip(newShip, planet) {
+  let oldShip = window.world.ship;
+  let container = window.world.app.stage;
+  container.removeChild(oldShip.sprite);
+  window.world.ship = newShip;
+  newShip.sprite.rotation= oldShip.sprite.rotation;
+  let r = planet.radius + newShip.sprite.width/2; 
+  newShip.x = planet.x + (r * Math.cos(newShip.sprite.rotation));
+  newShip.y = planet.y + (r * Math.sin(newShip.sprite.rotation));
+  container.addChild(newShip.sprite);
+
+  // Set the sprite.x/y position of all the planets (moves your viewport slightly)
+  for (let planet of window.world.planets) {
+    fly.planetInView(newShip, planet);
+  }
+
+  //planet.warehouse.put(oldShip);
+}

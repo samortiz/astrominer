@@ -68,26 +68,39 @@ export function createEmptyWorld() {
     app: null, // Pixi App
     gameState: c.GAME_STATE.INIT, // Curent game state 
     gameLoop: null, // loop function in this state
-    selectedPlanet: {resources:{}}
+    selectedPlanet: {resources:{}}, 
+    bgSprite: null, // star background
   };
 }
 
-export function setupWorld(container) {
+export function setupWorld() {
+  let container = window.world.app.stage;
   const world = window.world;
+  createBackground(container);
   createPlanets(container);
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   setShipStartXy();
-  world.ship = createShip(container, c.SHIP_EXPLORER);
+  world.ship = createShip(c.SHIP_EXPLORER);
+  container.addChild(world.ship.sprite);
   // Initial Resources
   world.ship.resources = {titanium:30, gold:10, uranium:0};
   // landing planet
-  createPlanet(c.ROCK_PLANET_FILE, 'Home', -250, world.ship.y, 0.5, 250, {
+  createPlanet(c.ROCK_PLANET_FILE, 'Home', -200, world.ship.y, 0.5, 250, {
     titanium : 500,
     gold : 500,
     uranium : 500,
   }, container);
   setupMiniMap(container);
+}
+
+export function createBackground(container) {
+  window.world.bgSprite = new window.PIXI.TilingSprite(
+    window.PIXI.Texture.from(c.STAR_BACKGROUND_FILE),
+    500,
+    500,
+  );
+  container.addChild(window.world.bgSprite);
 }
 
 export function createPlanets(container) {
@@ -100,7 +113,7 @@ export function createPlanets(container) {
     let {x,y} = generateXy();
     let scale = utils.randomInt(10,120) / 100;
     let mass = scale * 500;
-    // Setup the Rock planet
+    // Setup the planet
     createPlanet(fileName, name, x, y, scale, mass, {
       titanium : utils.randomInt(0,1000),
       gold : utils.randomInt(0,1000),
@@ -136,7 +149,7 @@ function setShipStartXy() {
     }
   }
   window.world.shipStartX = 0;
-  window.world.shipStartY = y;
+  window.world.shipStartY = 0; // TODO y
 }
 
 // Creates and returns a planet (and adds it to the app)
@@ -150,6 +163,7 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
     stored: {titanium:0, gold:0, uranium:0},
     raw: resources
   };
+  planet.warehouse = []; // stored ships
 
   // Setup the planet container sprite (contains planet plus buildings)
   planet.sprite = new window.PIXI.Container();
@@ -172,7 +186,7 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
 }
 
 // Creates and returns a ship object
-export function createShip(container, shipType) {
+export function createShip(shipType) {
   let ship = Object.assign({}, shipType);
   ship.owner = c.PLAYER;
   ship.vx = 0; // velocityX
@@ -185,7 +199,6 @@ export function createShip(container, shipType) {
   ship.sprite.position.set(c.HALF_SCREEN_WIDTH, c.HALF_SCREEN_HEIGHT);
   ship.sprite.anchor.set(0.5, 0.5);  // pivot on ship center
   ship.sprite.scale.set(ship.imageScale, ship.imageScale);
-  container.addChild(ship.sprite);
   return ship;
 }
 
