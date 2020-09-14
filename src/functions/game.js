@@ -84,7 +84,7 @@ export function setupWorld() {
   world.ship = createShip(c.SHIP_EXPLORER);
   container.addChild(world.ship.sprite);
   // Initial Resources
-  world.ship.resources = {titanium:30, gold:10, uranium:0};
+  world.ship.resources = c.PLAYER_STARTING_RESOURCES;
   // landing planet
   createPlanet(c.ROCK_PLANET_FILE, 'Home', -200, world.ship.y, 0.5, 250, {
     titanium : 500,
@@ -180,6 +180,9 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
   planet.buildings = [];
 
   planet.radius = planet.sprite.width / 2; // save the calculation later
+  if (fileName === c.PURPLE_PLANET_FILE) {
+    planet.radius = planet.radius * 0.95; // atmosphere
+  }
   container.addChild(planet.sprite);
   window.world.planets.push(planet);
   return planet;

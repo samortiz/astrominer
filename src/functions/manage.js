@@ -52,6 +52,7 @@ export function buildMine() {
   planet.sprite.addChild(mine.sprite);
   game.payBuildingCost(planet, ship, c.MINE_COST);
   planet.buildings.push(mine);
+  fly.drawMiniMap(); // add building to minimap
 }
 
 /**
@@ -152,6 +153,7 @@ export function buildFactory() {
   planet.sprite.addChild(factory.sprite);
   game.payBuildingCost(planet, ship, c.FACTORY_COST);
   planet.buildings.push(factory);
+  fly.drawMiniMap(); // add to minimap
 } 
 
 export function buildShip(shipTemplate) {

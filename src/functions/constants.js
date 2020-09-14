@@ -1,6 +1,7 @@
 // Colors
 export const BLACK = 0X000000;
 export const RED = 0xFF0000;
+export const BLUE = 0x0000FF;
 export const WHITE = 0xFFFFFF;
 export const MED_GREY = 0x808080;
 export const DARK_GREY = 0x303030;
@@ -54,6 +55,7 @@ export const STAR_BACKGROUND_FILE = "images/stars.png";
 
 // Ships
 export const PLAYER = "player";
+export const PLAYER_STARTING_RESOURCES = {titanium:40, gold:20, uranium:0};
 export const GRAVITATIONAL_CONST = 2;
 export const ALLOWED_OVERLAP = 2; // overlap for fudging collision detection
 export const TAKEOFF_SPEED = 10; // in units of planet gravity
@@ -79,7 +81,7 @@ export const SHIP_CARGO = {
   propulsion: 0.025, // best bewteen 0.02 - 0.1
   brakeSpeedPct: 0.03, // best between 0.02 - 0.1 (higher is ok)  
   turnSpeed: 0.04, // // best between 0.3 - 0.07
-  resourcesMax: 300,
+  resourcesMax: 500,
   resources: {
     titanium : 0,
     gold : 0,
@@ -101,9 +103,9 @@ export const BUILDING_TYPE_MINE = "mine";
 export const MINE_SCALE = 0.25;
 export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
 export const MINE_ANIMATION_SPEED = 0.5;
-export const MINE_SPEED_TITATIUM = 0.90166; // 1 every sec
-export const MINE_SPEED_GOLD = 0.90083;  // 1 every 2 sec
-export const MINE_SPEED_URANIUM = 0.90033; // 1 every 5 sec
+export const MINE_SPEED_TITATIUM = 0.0166; // 1 every sec
+export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
+export const MINE_SPEED_URANIUM = 0.0033; // 1 every 5 sec
 export const MINE_COST = {titanium:20, gold:10, uranium:0};
 
 export const BUILDING_TYPE_FACTORY = "factory";

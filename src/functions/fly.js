@@ -154,7 +154,7 @@ function crash(ship) {
   ship.sprite.rotation = 0;
 }
 
-function drawMiniMap() {
+export function drawMiniMap() {
  let g = window.world.miniMapGraphics;
  let ship = window.world.ship;
  let l = 0;
@@ -170,10 +170,6 @@ function drawMiniMap() {
   g.drawRect(l, t, r, b);
   g.endFill();
 
-  // Ship
-  g.lineStyle(1, c.WHITE);
-  g.drawCircle(l+c.MINIMAP_WIDTH/2,t+c.MINIMAP_HEIGHT/2, 2);
-
   // Planets
   for (let planet of window.world.planets) {
     if (planetOnMap(ship, planet)) {
@@ -183,13 +179,17 @@ function drawMiniMap() {
       g.drawCircle(x,y, planet.radius * c.MINIMAP_SCALE_X);
       // Buildings
       for (let building of planet.buildings) {
-        let buildingX = l + c.HALF_MINIMAP_WIDTH + ((planet.x - ship.x) * c.MINIMAP_SCALE_X);
-        let buildingY = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - ship.y) * c.MINIMAP_SCALE_Y);
+        let buildingX = l + c.HALF_MINIMAP_WIDTH + ((building.x - ship.x) * c.MINIMAP_SCALE_X) -1.5; 
+        let buildingY = t + c.HALF_MINIMAP_HEIGHT + ((building.y - ship.y) * c.MINIMAP_SCALE_Y) -1.5;
         g.lineStyle(1, c.RED); 
-        g.drawRect(x,y,3,3);
+        g.drawRect(buildingX,buildingY,3,3); 
       }
     }
   }
+
+  // Ship
+  g.lineStyle(1, c.WHITE);
+  g.drawCircle(l+c.MINIMAP_WIDTH/2,t+c.MINIMAP_HEIGHT/2, 2);
 }
 
 function planetOnMap(ship, planet) {
