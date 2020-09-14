@@ -44,14 +44,16 @@ export const SPRITESHEET_JSON = "images/spritesheet.json";
 export const ROCK_PLANET_FILE = "rock_planet.png";
 export const RED_PLANET_FILE = "red_planet.png";
 export const PURPLE_PLANET_FILE = "purple_planet.png";
-export const MINE_FILE = "mine"; // animated
+export const MINE_FILE = "mine"; // animation name in json
 export const FACTORY_FILE = "factory.png";
 export const SHIP_CARGO_FILE = "ship_cargo.png";
 export const SHIP_EXPLORER_FILE = "ship_explorer.png";
-export const SHIP_FAST_FILE = "ship_FAST";
-export const SHIP_FIGHTER_FILE = "ship_fighter";
-export const SHIP_HEAVY_FILE = "ship_heavy";
+export const SHIP_FAST_FILE = "ship_fast.png";
+export const SHIP_FIGHTER_FILE = "ship_fighter.png";
+export const SHIP_HEAVY_FILE = "ship_heavy.png";
 export const STAR_BACKGROUND_FILE = "images/stars.png";
+export const CRASH_JSON = "images/crash.json";
+export const CRASH = "crash"; // animation name in json
 
 // Ships
 export const PLAYER = "player";
@@ -70,12 +72,13 @@ export const SHIP_EXPLORER = {
     gold : 0,
     uranium : 0,
   },
-  armor: 100,
+  armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
   imageScale: 0.6,
   imageFile: SHIP_EXPLORER_FILE,
 };
+export const SHIP_EXPLORER_COST =  {titanium:40, gold:40, uranium:30};
 
 export const SHIP_CARGO = {
   propulsion: 0.025, // best bewteen 0.02 - 0.1
@@ -88,13 +91,66 @@ export const SHIP_CARGO = {
     uranium : 0,
   },
   armor: 10,
-  crashSpeed: 2,
-  crashAngle: 0.5,
+  crashSpeed: 1.2,
+  crashAngle: 0.3,
   imageScale: 0.4,
   imageFile: SHIP_CARGO_FILE,
 };
+export const SHIP_CARGO_COST =  {titanium:100, gold:50, uranium:50};
 
-// TODO : fighter, fast, heavy
+export const SHIP_FAST = {
+  propulsion: 0.1, // best bewteen 0.02 - 0.1
+  brakeSpeedPct: 0.07, // best between 0.02 - 0.1 (higher is ok)  
+  turnSpeed: 0.08, // // best between 0.3 - 0.07
+  resourcesMax: 40,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  armor: 50,
+  crashSpeed: 2,
+  crashAngle: 0.5,
+  imageScale: 0.3,
+  imageFile: SHIP_FAST_FILE,
+};
+export const SHIP_FAST_COST =  {titanium:200, gold:100, uranium:50};
+
+export const SHIP_HEAVY = {
+  propulsion: 0.05, // best bewteen 0.02 - 0.1
+  brakeSpeedPct: 0.05, // best between 0.02 - 0.1 (higher is ok)  
+  turnSpeed: 0.05, // // best between 0.3 - 0.07
+  resourcesMax: 300,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  armor: 300,
+  crashSpeed: 1.5,
+  crashAngle: 0.4,
+  imageScale: 0.4,
+  imageFile: SHIP_HEAVY_FILE,
+};
+export const SHIP_HEAVY_COST =  {titanium:500, gold:300, uranium:150};
+
+export const SHIP_FIGHTER = {
+  propulsion: 0.08, // best bewteen 0.02 - 0.1
+  brakeSpeedPct: 0.1, // best between 0.02 - 0.1 (higher is ok)  
+  turnSpeed: 0.07, // // best between 0.3 - 0.07
+  resourcesMax: 100,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  armor: 100,
+  crashSpeed: 1.5,
+  crashAngle: 0.6,
+  imageScale: 0.5,
+  imageFile: SHIP_FIGHTER_FILE,
+};
+export const SHIP_FIGHTER_COST =  {titanium:500, gold:500, uranium:500};
 
 // Buildings
 export const BUILDING_PLACEMENT_ROTATION_INCREMENT = 0.1;
@@ -103,14 +159,12 @@ export const BUILDING_TYPE_MINE = "mine";
 export const MINE_SCALE = 0.25;
 export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
 export const MINE_ANIMATION_SPEED = 0.5;
-export const MINE_SPEED_TITATIUM = 0.0166; // 1 every sec
-export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
-export const MINE_SPEED_URANIUM = 0.0033; // 1 every 5 sec
+export const MINE_SPEED_TITATIUM = 10.0166; // 1 every sec
+export const MINE_SPEED_GOLD = 10.0083;  // 1 every 2 sec
+export const MINE_SPEED_URANIUM = 10.0033; // 1 every 5 sec
 export const MINE_COST = {titanium:20, gold:10, uranium:0};
 
 export const BUILDING_TYPE_FACTORY = "factory";
 export const FACTORY_COST = {titanium:100, gold:100, uranium:10};
 export const FACTORY_SCALE = 0.25;
 export const FACTORY_PLACEMENT_FROM_SHIP = 50; // how far factory is to the right of the ship TODO: should be based on sprite.height/2
-export const SHIP_CARGO_COST =  {titanium:100, gold:50, uranium:50};
-export const SHIP_EXPLORER_COST =  {titanium:40, gold:40, uranium:30};

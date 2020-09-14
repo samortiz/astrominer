@@ -1,14 +1,17 @@
 JS Game
-- Crash into buildings
-- Crash graphics
-- Fix purple planet atmosphere
-- CSS on info screens 
+- Display cargo max on planet screen
+- after crash don't allow acceleration
 - add tab Warehouse
 - Build Warehouse
 - Switch ship in warehouse
+- Jump view to planet from minimap
+- After crash lose current ship, focus on planet
+- Fix purple planet atmosphere
+- CSS on info screens 
 
 Ideas :
 - log / ticker
 - landing flag (claim planet)
 - toast with image/text
+- Crash into buildings (maybe damage to ship?)
 

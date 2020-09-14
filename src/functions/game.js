@@ -1,61 +1,5 @@
 import { c, utils, fly, manage } from './';
 
-export function changeGameState(newState) {
-  const world = window.world;
-  world.gameState = newState;
-  if (newState === c.GAME_STATE.FLY) {
-    fly.enterFlyState();
-    world.gameLoop = fly.flyLoop;
-  } else if (newState === c.GAME_STATE.MANAGE) {
-    manage.enterManageState();
-    world.gameLoop = manage.manageLoop;
-  } else {
-    world.gameLoop = null;
-  }
-}
-
-/**
- * Loop to run building, runs in any game mode (fly,manage)
- */
-export function runBuildings() {
-  const world = window.world;
-  for (let planet of world.planets) {
-    for (let building of planet.buildings) {
-      if (building.type === c.BUILDING_TYPE_MINE) {
-        if (planet.resources.raw.titanium > 0) {
-          planet.resources.raw.titanium -= c.MINE_SPEED_TITATIUM;
-          planet.resources.stored.titanium += c.MINE_SPEED_TITATIUM;
-          if (planet.resources.raw.titanium <= 0) {
-            planet.resources.raw.titanium = 0;
-          }
-        }
-        if (planet.resources.raw.gold > 0) {
-          planet.resources.raw.gold -= c.MINE_SPEED_GOLD;
-          planet.resources.stored.gold += c.MINE_SPEED_GOLD;
-          if (planet.resources.raw.gold < 0) {
-            planet.resources.raw.gold = 0;
-          }
-        }
-        if (planet.resources.raw.uranium > 0) {
-          planet.resources.raw.uranium -= c.MINE_SPEED_URANIUM;
-          planet.resources.stored.uranium += c.MINE_SPEED_URANIUM;
-          if (planet.resources.raw.uranium < 0) {
-            planet.resources.raw.uranium = 0;
-          }
-        }
-      }
-    } // for building
-    // If planet is out of resources stop the mine animations
-    if ( (planet.resources.raw.titanium === 0) 
-      && (planet.resources.raw.gold === 0)
-      && (planet.resources.raw.uranium === 0)) {
-        for (let building of planet.buildings) {
-          building.sprite.animationSpeed = 0;
-        }
-    }
-  } // for planet
-}
-
 /**
  * Creates an empty world object, with only basic properties. 
  * This will be populated by setupWorld()
@@ -70,6 +14,7 @@ export function createEmptyWorld() {
     gameLoop: null, // loop function in this state
     selectedPlanet: {resources:{}}, 
     bgSprite: null, // star background
+    crashSprite :null, //explosion
   };
 }
 
@@ -87,11 +32,12 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
   // landing planet
   createPlanet(c.ROCK_PLANET_FILE, 'Home', -200, world.ship.y, 0.5, 250, {
-    titanium : 500,
-    gold : 500,
-    uranium : 500,
+    titanium : 1500,
+    gold : 1500,
+    uranium : 1500,
   }, container);
   setupMiniMap(container);
+  setupExplosion();
 }
 
 export function createBackground(container) {
@@ -224,6 +170,62 @@ export function setupMiniMap(container) {
 }
 
 
+export function changeGameState(newState) {
+  const world = window.world;
+  world.gameState = newState;
+  if (newState === c.GAME_STATE.FLY) {
+    fly.enterFlyState();
+    world.gameLoop = fly.flyLoop;
+  } else if (newState === c.GAME_STATE.MANAGE) {
+    manage.enterManageState();
+    world.gameLoop = manage.manageLoop;
+  } else {
+    world.gameLoop = null;
+  }
+}
+
+/**
+ * Loop to run building, runs in any game mode (fly,manage)
+ */
+export function runBuildings() {
+  const world = window.world;
+  for (let planet of world.planets) {
+    for (let building of planet.buildings) {
+      if (building.type === c.BUILDING_TYPE_MINE) {
+        if (planet.resources.raw.titanium > 0) {
+          planet.resources.raw.titanium -= c.MINE_SPEED_TITATIUM;
+          planet.resources.stored.titanium += c.MINE_SPEED_TITATIUM;
+          if (planet.resources.raw.titanium <= 0) {
+            planet.resources.raw.titanium = 0;
+          }
+        }
+        if (planet.resources.raw.gold > 0) {
+          planet.resources.raw.gold -= c.MINE_SPEED_GOLD;
+          planet.resources.stored.gold += c.MINE_SPEED_GOLD;
+          if (planet.resources.raw.gold < 0) {
+            planet.resources.raw.gold = 0;
+          }
+        }
+        if (planet.resources.raw.uranium > 0) {
+          planet.resources.raw.uranium -= c.MINE_SPEED_URANIUM;
+          planet.resources.stored.uranium += c.MINE_SPEED_URANIUM;
+          if (planet.resources.raw.uranium < 0) {
+            planet.resources.raw.uranium = 0;
+          }
+        }
+      }
+    } // for building
+    // If planet is out of resources stop the mine animations
+    if ( (planet.resources.raw.titanium === 0) 
+      && (planet.resources.raw.gold === 0)
+      && (planet.resources.raw.uranium === 0)) {
+        for (let building of planet.buildings) {
+          building.sprite.animationSpeed = 0;
+        }
+    }
+  } // for planet
+}
+
 export function canAfford(planet, ship, resources) {
   return (planet.resources.stored.titanium + ship.resources.titanium >= resources.titanium)
   && (planet.resources.stored.gold + ship.resources.gold >= resources.gold)
@@ -249,5 +251,19 @@ export function payResource(planet, ship, resourceType, amount) {
   if (ship.resources[resourceType] < 0) {
     console.warn("Ship is in debt "+ship.resources[resourceType]+" "+resourceType);
   }
-  
+}
+
+export function setupExplosion() {
+  //Setup the graphics
+  let sheet = window.PIXI.Loader.shared.resources[c.CRASH_JSON].spritesheet;
+  window.world.crashSprite = new window.PIXI.AnimatedSprite(sheet.animations[c.CRASH]);
+  let crashSprite = window.world.crashSprite;
+  crashSprite.animationSpeed = 0.4;
+  crashSprite.loop = false;
+  crashSprite.anchor.set(0.5, 0.5);
+  crashSprite.scale.set(2, 2);
+  crashSprite.x = c.HALF_SCREEN_WIDTH;
+  crashSprite.y = c.HALF_SCREEN_HEIGHT;
+  crashSprite.loop = true;
+  window.world.app.stage.addChild(crashSprite);
 }

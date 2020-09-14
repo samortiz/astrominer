@@ -41,6 +41,7 @@ render() {
     this.pixiRef.current.appendChild(app.view);
     window.PIXI.loader
       .add(c.SPRITESHEET_JSON)
+      .add(c.CRASH_JSON)
       .load(this.setupGame);
     window.world.app = app;
   }

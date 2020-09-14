@@ -180,6 +180,17 @@ export function changeShip(newShip, planet) {
   for (let planet of window.world.planets) {
     fly.planetInView(newShip, planet);
   }
-
   //planet.warehouse.put(oldShip);
+}
+
+/**
+ * @return true if the planet has a factory for the player
+ */
+export function hasFactory(planet) {
+  for (let building of planet.buildings) {
+    if (building.type === c.BUILDING_TYPE_FACTORY) {
+      return true;
+    }
+  }
+  return false;
 }

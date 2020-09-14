@@ -34,7 +34,7 @@ export function flyLoop(delta) {
     ship.vx += grav.x;
     ship.vy += grav.y;
   }
-  // Momentum
+  // move the ship
   ship.x += ship.vx;
   ship.y += ship.vy;
   moveBackground(ship);
@@ -147,11 +147,19 @@ function brakeShip(ship) {
 }
 
 function crash(ship) {
-  ship.x = window.world.shipStartX;
-  ship.y = window.world.shipStartY;
   ship.vx = 0;
   ship.vy = 0;
-  ship.sprite.rotation = 0;
+  window.world.ship.sprite.visible = false;
+  let crashSprite = window.world.crashSprite;
+  crashSprite.play();
+  // This function runs after the animation finishes a loop
+  crashSprite.onLoop= () => {
+    ship.x = window.world.shipStartX;
+    ship.y = window.world.shipStartY;
+    ship.sprite.rotation = 0;
+    crashSprite.stop(); // pause until we crash again
+    window.world.ship.sprite.visible = true;
+  };
 }
 
 export function drawMiniMap() {
@@ -193,7 +201,6 @@ export function drawMiniMap() {
 }
 
 function planetOnMap(ship, planet) {
-
   // Right side
   if ((ship.x + c.HALF_MINIMAP_VIEW_WIDTH + planet.radius < planet.x) || // Right
       (ship.x - c.HALF_MINIMAP_VIEW_WIDTH - planet.radius > planet.x) || // Left
