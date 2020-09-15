@@ -8,6 +8,7 @@ export function enterFlyState() {
 export function flyLoop(delta) {
   let world = window.world;
   let ship = world.ship;
+  coolWeapons(ship);
   // Keypress handling
   if (world.keys.left.isDown) {
     turnShip(ship, true);
@@ -20,6 +21,9 @@ export function flyLoop(delta) {
   }
   if (world.keys.down.isDown) {
     brakeShip(ship);
+  }
+  if (world.keys.space.isDown) {
+    firePrimaryWeapon(ship);
   }
   // Find planets in view
   let planetsInView = [];
@@ -38,7 +42,7 @@ export function flyLoop(delta) {
   ship.x += ship.vx;
   ship.y += ship.vy;
   moveBackground(ship);
-  // Collisions
+  // Ship-Planet Collisions
   for (let planet of planetsInView) {
     if (detectCollision(ship, planet)) {
       if (successfulLanding(ship, planet)) {
@@ -50,6 +54,14 @@ export function flyLoop(delta) {
     }
   }
   drawMiniMap();
+}
+
+function coolWeapons(ship) {
+  for (let equip of ship.equip) {
+    if ((equip.type == c.EQUIP_TYPE_PRIMARY_WEAPON) && (equip.cool > 0)) {
+      equip.cool -= 1;
+    }
+  }
 }
 
 export function moveBackground(ship) {
@@ -142,8 +154,87 @@ function propelShip(ship) {
 }
 
 function brakeShip(ship) {
-  ship.vx -= ship.vx * ship.brakeSpeedPct;
-  ship.vy -= ship.vy * ship.brakeSpeedPct;
+  let brake = getEquip(ship, c.EQUIP_TYPE_BRAKE);
+  if (brake) {
+    ship.vx -= ship.vx * brake.brakeSpeedPct;
+    ship.vy -= ship.vy * brake.brakeSpeedPct;
+  }
+}
+
+function firePrimaryWeapon(ship) {
+  let gun = getEquip(ship, c.EQUIP_TYPE_PRIMARY_WEAPON);
+  if (gun && (gun.cool <= 0)) {
+    fireBullet(ship, gun);
+    gun.cool = gun.coolTime; // this is decremented in coolWeapons
+  }
+}
+
+/**
+ * Fires a bullet from the ship
+ */
+export function fireBullet(ship, gun) {
+  let bullet = findOrCreateBullet();
+  bullet.lifetime = gun.lifetime;
+  bullet.vx = ship.vx + gun.speed * Math.cos(ship.sprite.rotation);
+  bullet.vy = ship.vy + gun.speed * Math.sin(ship.sprite.rotation);
+  bullet.x = ship.x + ship.sprite.width/2 * Math.cos(ship.sprite.rotation);
+  bullet.y = ship.y + ship.sprite.width/2 * Math.sin(ship.sprite.rotation);
+}
+
+/**
+ * Gets the next available bullet (one that is not visible)
+ */
+export function findOrCreateBullet() {
+  for (let bullet of window.world.bullets) {
+    if (!bullet.active) {
+      bullet.active = true;
+      bullet.sprite.visible = true;
+      return bullet;
+    }
+  }
+  // Create a new bullet
+  let bullet = {active:true, damage:0, x:0, y:0, vx:0, vy:0, lifetime:1};
+  // Setup sprite
+  let spritesheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
+  let sprite = new window.PIXI.Sprite(spritesheet.textures[c.BULLET_FILE]);
+  sprite.anchor.set(0.5, 0.5);
+  sprite.scale.set(0.5, 0.5);
+  window.world.app.stage.addChild(sprite);
+  bullet.sprite = sprite;
+  window.world.bullets.push(bullet);
+  return bullet;
+}
+
+/**
+ * Moves all the bullets (called every draw cycle from app.js mainLoop)
+ */
+export function moveBullets() {
+  let ship = window.world.ship;
+  for (let bullet of window.world.bullets) {
+    if (bullet.active) {
+      bullet.x = bullet.x + bullet.vx;
+      bullet.y = bullet.y + bullet.vy;
+      bullet.sprite.x = (bullet.x - ship.x) + c.HALF_SCREEN_WIDTH;
+      bullet.sprite.y = (bullet.y - ship.y) + c.HALF_SCREEN_HEIGHT;
+      bullet.lifetime =  bullet.lifetime - 1;
+      if (bullet.lifetime <= 0) {
+        bullet.active = false;
+        bullet.sprite.visible = false;
+      }
+    }
+  } // for bullet
+}
+
+/**
+ * @return matching acc equipment type if it is found, null otherwise
+ */
+export function getEquip(ship, equipType) {
+  for (let equip of ship.equip) {
+    if (equip.type === equipType) {
+      return equip;
+    }
+  }
+  return null;
 }
 
 function crash(ship) {

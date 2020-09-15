@@ -1,5 +1,8 @@
 JS Game
+- shooting
+- draw ship stats when flying : dmg, crit, eq, speed, 
 - Display cargo max on planet screen
+
 - after crash don't allow acceleration
 - add tab Warehouse
 - Build Warehouse

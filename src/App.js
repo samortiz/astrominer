@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { InfoPanel } from './InfoPanel';
-import { utils, c, game } from './functions';
+import { utils, c, game, fly } from './functions';
 
 export default class App extends React.Component {
 
@@ -58,6 +58,7 @@ render() {
   mainLoop = (delta) => {
     if (window.world.gameLoop) {
       game.runBuildings();
+      fly.moveBullets();
       window.world.gameLoop(delta);
     }
     this.forceUpdate()
@@ -68,6 +69,7 @@ render() {
     window.world.keys.right = utils.keyboardListener("ArrowRight");
     window.world.keys.up = utils.keyboardListener("ArrowUp");
     window.world.keys.down = utils.keyboardListener("ArrowDown");
+    window.world.keys.space = utils.keyboardListener(" ");
   }
   
 }

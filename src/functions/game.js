@@ -7,6 +7,8 @@ import { c, utils, fly, manage } from './';
 export function createEmptyWorld() {
   return {
     ship:null, 
+    otherShips:[],
+    bullets: [],
     planets:[],
     keys: {}, // Global keypress handlers
     app: null, // Pixi App

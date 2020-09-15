@@ -1,5 +1,13 @@
 {"frames": {
 
+"bullet.png":
+{
+	"frame": {"x":0,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
 "factory.png":
 {
 	"frame": {"x":1501,"y":260,"w":296,"h":420},
@@ -10,7 +18,7 @@
 },
 "mine1.png":
 {
-	"frame": {"x":910,"y":0,"w":300,"h":260},
+	"frame": {"x":942,"y":0,"w":300,"h":260},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
@@ -18,7 +26,7 @@
 },
 "mine2.png":
 {
-	"frame": {"x":1210,"y":0,"w":300,"h":260},
+	"frame": {"x":1242,"y":0,"w":300,"h":260},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
@@ -26,7 +34,7 @@
 },
 "mine3.png":
 {
-	"frame": {"x":1510,"y":0,"w":300,"h":260},
+	"frame": {"x":1542,"y":0,"w":300,"h":260},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
@@ -66,7 +74,7 @@
 },
 "ship_cargo.png":
 {
-	"frame": {"x":0,"y":0,"w":276,"h":62},
+	"frame": {"x":32,"y":0,"w":276,"h":62},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":62},
@@ -74,7 +82,7 @@
 },
 "ship_explorer.png":
 {
-	"frame": {"x":276,"y":0,"w":61,"h":84},
+	"frame": {"x":308,"y":0,"w":61,"h":84},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":84},
@@ -82,7 +90,7 @@
 },
 "ship_fast.png":
 {
-	"frame": {"x":660,"y":0,"w":250,"h":184},
+	"frame": {"x":692,"y":0,"w":250,"h":184},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":250,"h":184},
@@ -90,7 +98,7 @@
 },
 "ship_fighter.png":
 {
-	"frame": {"x":337,"y":0,"w":118,"h":116},
+	"frame": {"x":369,"y":0,"w":118,"h":116},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":118,"h":116},
@@ -98,7 +106,7 @@
 },
 "ship_heavy.png":
 {
-	"frame": {"x":455,"y":0,"w":205,"h":132},
+	"frame": {"x":487,"y":0,"w":205,"h":132},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":205,"h":132},
@@ -112,8 +120,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":1810,"h":680},
+	"size": {"w":1842,"h":680},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:1c3b8a43d02b91ecde4a16ec4af83007:6c5ebd851bace9534b0566d9a91adf50:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:65e20d8962d2f94fcde84ac2ddbc5113:88f3d2121a2d6e6ed79263288d368344:729adc6043343cfda41c447ce8f464d6$"
 }
 }
