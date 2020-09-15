@@ -74,11 +74,11 @@ export const EQUIP_TYPE_PRIMARY_WEAPON = "Primary Weapon";
 // brakeSpeedPct is best between 0.02 - 0.1 (higher is ok)  
 export const EQUIP_BRAKE = {name: "Brake", type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
                             crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95} };
-export const EQUIP_BLASTER = {name: "Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:25, cool:0, damage:10, speed:3, lifetime:75,
+export const EQUIP_BLASTER = {name: "Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:25, cool:0, damage:10, speed:2.5, lifetime:75,
                             crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0}};
 export const EQUIP_FAST_BLASTER = {name: "Fast Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:10, cool:0, damage:10, speed:4, lifetime:60,
                             crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0}};
-export const EQUIP_SHORT_BLASTER = {name: "Short-Range Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:5, speed:4, lifetime:40,
+export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:5, speed:5, lifetime:40,
                             crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0}};
 export const EQUIP_TYPE_THRUSTERS = "Thrusters";
 export const EQUIP_TYPE_REPAIR_DROID = "Repair Droid";
@@ -99,6 +99,7 @@ export const SHIP_EXPLORER = {
         , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
         , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
   ],
+  armorMax: 50,
   armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
@@ -118,7 +119,8 @@ export const SHIP_CARGO = {
   },
   equipMax: 1,
   equip : [EQUIP_BRAKE],
-  armor: 10,
+  armorMax: 20,
+  armor: 20,
   crashSpeed: 1.2,
   crashAngle: 0.3,
   imageScale: 0.4,
@@ -136,8 +138,9 @@ export const SHIP_FAST = {
     uranium : 0,
   },
   equipMax: 2,
-  equip : [EQUIP_BRAKE],
-  armor: 50,
+  equip : [EQUIP_BRAKE, EQUIP_BLASTER],
+  armorMax : 60,
+  armor: 60,
   crashSpeed: 2,
   crashAngle: 0.5,
   imageScale: 0.3,
@@ -156,6 +159,7 @@ export const SHIP_HEAVY = {
   },
   equipMax: 5,
   equip : [EQUIP_BRAKE, EQUIP_FAST_BLASTER],
+  armorMax : 300,
   armor: 300,
   crashSpeed: 1.5,
   crashAngle: 0.4,
@@ -174,8 +178,9 @@ export const SHIP_FIGHTER = {
     uranium : 0,
   },
   equipMax: 4,
-  equip : [EQUIP_BRAKE, EQUIP_SHORT_BLASTER],
-  armor: 100,
+  equip : [EQUIP_BRAKE, EQUIP_STREAM_BLASTER],
+  armorMax : 150,
+  armor: 150,
   crashSpeed: 1.5,
   crashAngle: 0.6,
   imageScale: 0.5,

@@ -159,23 +159,26 @@ export function buildFactory() {
 export function buildShip(shipTemplate) {
   let world = window.world;
   let planet = world.selectedPlanet;
-  let ship = game.createShip(shipTemplate);
-  //planet.warehouse.add(ship);
+  let ship = loadNewShip(shipTemplate);
   changeShip(ship, planet);
   return ship
 }
 
-export function changeShip(newShip, planet) {
+export function loadNewShip(shipTemplate) {
+  let newShip = game.createShip(shipTemplate);
   let oldShip = window.world.ship;
   let container = window.world.app.stage;
-  container.removeChild(oldShip.sprite);
   window.world.ship = newShip;
   newShip.sprite.rotation= oldShip.sprite.rotation;
+  container.removeChild(oldShip.sprite);
+  container.addChild(newShip.sprite);
+  return newShip;
+}
+
+export function changeShip(newShip, planet) {
   let r = planet.radius + newShip.sprite.width/2; 
   newShip.x = planet.x + (r * Math.cos(newShip.sprite.rotation));
   newShip.y = planet.y + (r * Math.sin(newShip.sprite.rotation));
-  container.addChild(newShip.sprite);
-
   // Set the sprite.x/y position of all the planets (moves your viewport slightly)
   for (let planet of window.world.planets) {
     fly.planetInView(newShip, planet);

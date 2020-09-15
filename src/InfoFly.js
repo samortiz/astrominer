@@ -8,6 +8,8 @@ export class InfoFly extends React.Component {
     return (
     <div className='ship-info'>
       <div>Ship</div>
+      <div>Armor {world.ship.armor} / {world.ship.armorMax} </div>
+
       <div className='resource-list'>Resources</div>
       <div> Titatium {world.ship.resources.titanium}</div>
       <div> Gold {world.ship.resources.gold}</div>

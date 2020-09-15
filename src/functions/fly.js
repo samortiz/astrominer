@@ -1,4 +1,4 @@
-import { utils, c, game } from './';
+import { utils, c, game, manage } from './';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -9,21 +9,24 @@ export function flyLoop(delta) {
   let world = window.world;
   let ship = world.ship;
   coolWeapons(ship);
-  // Keypress handling
-  if (world.keys.left.isDown) {
-    turnShip(ship, true);
-  }
-  if (world.keys.right.isDown) {
-    turnShip(ship, false);
-  }
-  if (world.keys.up.isDown) {
-    propelShip(ship);
-  }
-  if (world.keys.down.isDown) {
-    brakeShip(ship);
-  }
-  if (world.keys.space.isDown) {
-    firePrimaryWeapon(ship);
+  // When sprite.visible is false the ship is exploding
+  if (ship.sprite.visible) {
+    // Keypress handling
+    if (world.keys.left.isDown) {
+      turnShip(ship, true);
+    }
+    if (world.keys.right.isDown) {
+      turnShip(ship, false);
+    }
+    if (world.keys.up.isDown) {
+      propelShip(ship);
+    }
+    if (world.keys.down.isDown) {
+      brakeShip(ship);
+    }
+    if (world.keys.space.isDown) {
+      firePrimaryWeapon(ship);
+    }
   }
   // Find planets in view
   let planetsInView = [];
@@ -56,10 +59,21 @@ export function flyLoop(delta) {
   drawMiniMap();
 }
 
+/**
+ * called in flyLoop to cool weapons
+ */
 function coolWeapons(ship) {
   for (let equip of ship.equip) {
     if ((equip.type == c.EQUIP_TYPE_PRIMARY_WEAPON) && (equip.cool > 0)) {
       equip.cool -= 1;
+    }
+  }
+}
+
+function resetWeaponsCool(ship) {
+  for (let equip of ship.equip) {
+    if ((equip.type == c.EQUIP_TYPE_PRIMARY_WEAPON) && (equip.cool > 0)) {
+      equip.cool = 0;
     }
   }
 }
@@ -141,8 +155,30 @@ function landShip(ship, planet) {
   ship.x = planet.x + (r * Math.cos(dir));
   ship.y = planet.y + (r * Math.sin(dir));
   ship.sprite.rotation = dir;
+  resetWeaponsCool(ship);
   game.changeGameState(c.GAME_STATE.MANAGE);
 }
+
+function crash(ship) {
+  // Hit a planet so stop moving suddenly
+  ship.vx = 0;
+  ship.vy = 0;
+  destroyShip(ship);
+}
+
+function destroyShip(ship) {
+  ship.sprite.visible = false;
+  let crashSprite = window.world.crashSprite;
+  crashSprite.play();
+  // This function runs after the animation finishes a loop
+  crashSprite.onLoop= () => {
+    crashSprite.stop(); // pause until we crash again
+    let newShip = manage.loadNewShip(c.SHIP_EXPLORER);
+    newShip.sprite.rotation = 0;
+    ship.sprite.visible = true;
+  };
+}
+
 
 function turnShip(ship, left) {
   ship.sprite.rotation = utils.normalizeRadian(ship.sprite.rotation + ship.turnSpeed * (left ? -1 : 1));
@@ -175,16 +211,17 @@ function firePrimaryWeapon(ship) {
 export function fireBullet(ship, gun) {
   let bullet = findOrCreateBullet();
   bullet.lifetime = gun.lifetime;
+  bullet.damage = gun.damage;
   bullet.vx = ship.vx + gun.speed * Math.cos(ship.sprite.rotation);
   bullet.vy = ship.vy + gun.speed * Math.sin(ship.sprite.rotation);
-  bullet.x = ship.x + ship.sprite.width/2 * Math.cos(ship.sprite.rotation);
-  bullet.y = ship.y + ship.sprite.width/2 * Math.sin(ship.sprite.rotation);
+  bullet.x = ship.x + Math.max(ship.sprite.width, ship.sprite.height)/2 * Math.cos(ship.sprite.rotation);
+  bullet.y = ship.y + Math.max(ship.sprite.width, ship.sprite.height)/2 * Math.sin(ship.sprite.rotation);
 }
 
 /**
  * Gets the next available bullet (one that is not visible)
  */
-export function findOrCreateBullet() {
+function findOrCreateBullet(ship) {
   for (let bullet of window.world.bullets) {
     if (!bullet.active) {
       bullet.active = true;
@@ -197,12 +234,23 @@ export function findOrCreateBullet() {
   // Setup sprite
   let spritesheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
   let sprite = new window.PIXI.Sprite(spritesheet.textures[c.BULLET_FILE]);
+  sprite.x = -100;
+  sprite.y = -100;
   sprite.anchor.set(0.5, 0.5);
   sprite.scale.set(0.5, 0.5);
   window.world.app.stage.addChild(sprite);
   bullet.sprite = sprite;
   window.world.bullets.push(bullet);
   return bullet;
+}
+
+function killBullet(bullet) {
+  bullet.active = false;
+  bullet.sprite.visible = false;
+  bullet.sprite.x = -100;
+  bullet.sprite.y = -100;
+  bullet.vx = 0;
+  bullet.vy = 0;
 }
 
 /**
@@ -218,11 +266,39 @@ export function moveBullets() {
       bullet.sprite.y = (bullet.y - ship.y) + c.HALF_SCREEN_HEIGHT;
       bullet.lifetime =  bullet.lifetime - 1;
       if (bullet.lifetime <= 0) {
-        bullet.active = false;
-        bullet.sprite.visible = false;
+        killBullet(bullet);
       }
+      checkForBulletCollision(bullet);
     }
   } // for bullet
+}
+
+function checkForBulletCollision(bullet) {
+  // Collision with planet
+  for (let planet of window.world.planets) {
+    if (utils.distanceBetween(planet.x, planet.y, bullet.x, bullet.y) < planet.radius) {
+      // TODO: Check for building damage
+      killBullet(bullet);
+    }
+  }
+  // Collision with ship
+  let ship = window.world.ship;
+  if (ship.sprite.containsPoint({x:bullet.sprite.x, y:bullet.sprite.y})) {
+    bulletHitShip(bullet, ship);
+  } 
+}
+
+/**
+ * Apply damage from bullet to ship, also kills the bullet
+ */
+function bulletHitShip(bullet, ship) {
+  ship.armor = ship.armor - bullet.damage;
+  console.log("armor "+ship.armor+" bullet.damage="+bullet.damage);
+  if (ship.armor <= 0) {
+    ship.armor = 0;
+    destroyShip(ship);
+  }
+  killBullet(bullet);
 }
 
 /**
@@ -235,22 +311,6 @@ export function getEquip(ship, equipType) {
     }
   }
   return null;
-}
-
-function crash(ship) {
-  ship.vx = 0;
-  ship.vy = 0;
-  window.world.ship.sprite.visible = false;
-  let crashSprite = window.world.crashSprite;
-  crashSprite.play();
-  // This function runs after the animation finishes a loop
-  crashSprite.onLoop= () => {
-    ship.x = window.world.shipStartX;
-    ship.y = window.world.shipStartY;
-    ship.sprite.rotation = 0;
-    crashSprite.stop(); // pause until we crash again
-    window.world.ship.sprite.visible = true;
-  };
 }
 
 export function drawMiniMap() {
