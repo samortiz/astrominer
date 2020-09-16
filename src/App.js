@@ -59,6 +59,8 @@ render() {
     if (window.world.gameLoop) {
       game.runBuildings();
       fly.moveBullets();
+      fly.coolAllWeapons();
+      fly.moveAliens();
       window.world.gameLoop(delta);
     }
     this.forceUpdate()

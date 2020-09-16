@@ -1,16 +1,13 @@
 JS Game
-- shooting
-- draw ship stats when flying : dmg, crit, eq, speed, 
-- Display cargo max on planet screen
-
-- after crash don't allow acceleration
-- add tab Warehouse
-- Build Warehouse
-- Switch ship in warehouse
+- Build ship in storage
+- Switch to ship in storage
 - Jump view to planet from minimap
-- After crash lose current ship, focus on planet
+- After crash focus on planet
 - Fix purple planet atmosphere
 - CSS on info screens 
+Bugs
+ - bullets show through minimap
+ - restart in land mode doesn't redraw
 
 Ideas :
 - log / ticker

@@ -16,7 +16,8 @@ export function createEmptyWorld() {
     gameLoop: null, // loop function in this state
     selectedPlanet: {resources:{}}, 
     bgSprite: null, // star background
-    crashSprite :null, //explosion
+    explosions : [], //contains sprites
+    explosionSheet: null // spritesheet for explosions
   };
 }
 
@@ -27,19 +28,20 @@ export function setupWorld() {
   createPlanets(container);
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
-  setShipStartXy();
-  world.ship = createShip(c.SHIP_EXPLORER);
+  setShipStartXy(-200, 2500);
+  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   container.addChild(world.ship.sprite);
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
   // landing planet
-  createPlanet(c.ROCK_PLANET_FILE, 'Home', -200, world.ship.y, 0.5, 250, {
+  createPlanet(c.ROCK_PLANET_FILE, 'Home', -400, world.ship.y, 0.5, 250, {
     titanium : 1500,
     gold : 1500,
     uranium : 1500,
   }, container);
+  createAliens(container);
   setupMiniMap(container);
-  setupExplosion();
+  setupExplosionSheet();
 }
 
 export function createBackground(container) {
@@ -52,7 +54,7 @@ export function createBackground(container) {
 }
 
 export function createPlanets(container) {
-  let fileNames = [c.ROCK_PLANET_FILE, c.RED_PLANET_FILE, c.PURPLE_PLANET_FILE];
+  let fileNames = [c.ROCK_PLANET_FILE, c.RED_PLANET_FILE, c.PURPLE_PLANET_FILE, c.GREEN_PLANET_FILE];
 
   for (let i=0; i<=c.NUM_PLANETS; i++) {
     let index = utils.randomInt(0, fileNames.length-1);
@@ -88,16 +90,15 @@ function generateXy() {
   return {x:x,y:y};
 }
 
-function setShipStartXy() {
-  let y = utils.randomInt(500, c.UNIVERSE_HEIGHT-500);
+function setShipStartXy(x,y) {
   for (let planet of window.world.planets) {
     if ((utils.distanceBetween(0,y, planet.x, planet.y) - planet.radius) < c.SHIP_START_MIN_DIST_TO_PLANET) {
-      setShipStartXy();
+      setShipStartXy(x, y+10);
       return; // try again and exit
     }
   }
-  window.world.shipStartX = 0;
-  window.world.shipStartY = 0; // TODO y
+  window.world.shipStartX = x;
+  window.world.shipStartY = y;
 }
 
 // Creates and returns a planet (and adds it to the app)
@@ -111,7 +112,7 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
     stored: {titanium:0, gold:0, uranium:0},
     raw: resources
   };
-  planet.warehouse = []; // stored ships
+  planet.storage = []; // stored ships
 
   // Setup the planet container sprite (contains planet plus buildings)
   planet.sprite = new window.PIXI.Container();
@@ -128,8 +129,9 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
   planet.buildings = [];
 
   planet.radius = planet.sprite.width / 2; // save the calculation later
-  if (fileName === c.PURPLE_PLANET_FILE) {
-    planet.radius = planet.radius * 0.95; // atmosphere
+  // Planets with atmosphere are a little smaller
+  if ((fileName === c.PURPLE_PLANET_FILE) || (fileName === c.GREEN_PLANET_FILE)) {
+    planet.radius = planet.radius * 0.93; 
   }
   container.addChild(planet.sprite);
   window.world.planets.push(planet);
@@ -137,9 +139,9 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
 }
 
 // Creates and returns a ship object
-export function createShip(shipType) {
+export function createShip(shipType, owner) {
   let ship = Object.assign({}, shipType);
-  ship.owner = c.PLAYER;
+  ship.owner = owner;
   ship.vx = 0; // velocityX
   ship.vy = 0; // velocityY
   ship.x = window.world.shipStartX;
@@ -151,6 +153,16 @@ export function createShip(shipType) {
   ship.sprite.anchor.set(0.5, 0.5);  // pivot on ship center
   ship.sprite.scale.set(ship.imageScale, ship.imageScale);
   return ship;
+}
+
+export function createAliens(container) {
+  let alien = createShip(c.SHIP_ALIEN, c.ALIEN);
+  window.world.otherShips.push(alien);
+  alien.x = window.world.shipStartX + 300;
+  alien.y = window.world.shipStartY;
+  alien.radius = alien.sprite.width/2; // Only for circular aliens
+  alien.sprite.x += 100;
+  container.addChild(alien.sprite);
 }
 
 export function setupMiniMap(container) {
@@ -255,17 +267,24 @@ export function payResource(planet, ship, resourceType, amount) {
   }
 }
 
-export function setupExplosion() {
-  //Setup the graphics
-  let sheet = window.PIXI.Loader.shared.resources[c.CRASH_JSON].spritesheet;
-  window.world.crashSprite = new window.PIXI.AnimatedSprite(sheet.animations[c.CRASH]);
-  let crashSprite = window.world.crashSprite;
-  crashSprite.animationSpeed = 0.4;
-  crashSprite.loop = false;
-  crashSprite.anchor.set(0.5, 0.5);
-  crashSprite.scale.set(2, 2);
-  crashSprite.x = c.HALF_SCREEN_WIDTH;
-  crashSprite.y = c.HALF_SCREEN_HEIGHT;
-  crashSprite.loop = true;
-  window.world.app.stage.addChild(crashSprite);
+export function setupExplosionSheet() {
+  window.world.explosionSheet = window.PIXI.Loader.shared.resources[c.CRASH_JSON].spritesheet;
+  // Preload an explosion sprite animation (these will be cached and reused in world.explosions)
+  window.world.explosions.push(createExplosionSprite());
 }
+
+export function createExplosionSprite() {
+  let sprite = new window.PIXI.AnimatedSprite(window.world.explosionSheet.animations[c.CRASH]);
+  sprite.animationSpeed = 0.4;
+  sprite.loop = false;
+  sprite.anchor.set(0.5, 0.5);
+  sprite.scale.set(2, 2);
+  sprite.x = c.HALF_SCREEN_WIDTH;
+  sprite.y = c.HALF_SCREEN_WIDTH;
+  sprite.loop = true;
+  sprite.visible = false;
+  window.world.explosions.push(sprite);
+  window.world.app.stage.addChild(sprite);
+  return sprite;
+}
+

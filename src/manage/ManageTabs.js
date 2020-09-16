@@ -2,6 +2,7 @@ import React from 'react';
 import { ManagePlanet } from './ManagePlanet';
 import './ManageTabs.css';
 import { ManageFactory } from './ManageFactory';
+import { ManageStorage } from './ManageStorage';
 
 export class ManageTabs extends React.Component {
   constructor(props) {
@@ -22,12 +23,17 @@ export class ManageTabs extends React.Component {
         <span className={`tab ${this.state.activeTab==='factory'?'active-tab':'non-active-tab'}`}
               onClick={() => this.setState({activeTab:'factory'})}
            >Factory</span>
-
+        <span className={`tab ${this.state.activeTab==='storage'?'active-tab':'non-active-tab'}`}
+              onClick={() => this.setState({activeTab:'storage'})}
+           >Storage</span>
         <div className={`tab-body ${this.state.activeTab==='planet'?'':'tab-hidden'}`}>
           <ManagePlanet/> 
         </div>
         <div className={`tab-body ${this.state.activeTab==='factory'?'':'tab-hidden'}`}>
           <ManageFactory/> 
+        </div>
+        <div className={`tab-body ${this.state.activeTab==='storage'?'':'tab-hidden'}`}>
+          <ManageStorage/> 
         </div>
 
       </div>);

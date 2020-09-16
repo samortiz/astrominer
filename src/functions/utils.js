@@ -53,6 +53,33 @@ export function randomInt(minP, maxP) {
 }
 
 /**
+ * @return a collection of points [[x,y],[x,y]] on a rectangular sprite that can be used for collision detection
+ * @param x,y global x,y position of sprite (on main map, not in viewport)
+ */
+export function getVertexData(x,y, sprite) {
+  sprite.calculateVertices();
+  let collisionPoints = []; // [[x,y],[x,y]]
+  collisionPoints.push(toGlobal(x, y, sprite.vertexData[0], sprite.vertexData[1])); // top left
+  collisionPoints.push(toGlobal(x, y, sprite.vertexData[2], sprite.vertexData[3])); // top right
+  collisionPoints.push(toGlobal(x, y, sprite.vertexData[4], sprite.vertexData[5])); // bottom right
+  collisionPoints.push(toGlobal(x, y, sprite.vertexData[6], sprite.vertexData[7])); // bottom left
+  // Add a few points between to help with border collisions (these have already been converted to global)
+  collisionPoints.push(midPoint(collisionPoints[0], collisionPoints[1]));
+  collisionPoints.push(midPoint(collisionPoints[1], collisionPoints[2]));
+  collisionPoints.push(midPoint(collisionPoints[2], collisionPoints[3]));
+  collisionPoints.push(midPoint(collisionPoints[3], collisionPoints[0]));
+  return collisionPoints;
+}
+
+/**
+ * Converts the local sprite-based x,y to global based on ship's position
+ * @return [x,y] in global map coordinates
+ */
+export function toGlobal(globalX, globalY, spriteX,spriteY) {
+  return [globalX + (spriteX - c.HALF_SCREEN_WIDTH), globalY+ (spriteY - c.HALF_SCREEN_HEIGHT)];
+}
+
+/**
  * Sets up a keyboard listener
  */
 export function keyboardListener(value) {

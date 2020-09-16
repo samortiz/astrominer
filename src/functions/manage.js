@@ -170,6 +170,7 @@ export function loadNewShip(shipTemplate) {
   let container = window.world.app.stage;
   window.world.ship = newShip;
   newShip.sprite.rotation= oldShip.sprite.rotation;
+  fly.resetWeaponsCool(newShip);
   container.removeChild(oldShip.sprite);
   container.addChild(newShip.sprite);
   return newShip;
@@ -183,7 +184,6 @@ export function changeShip(newShip, planet) {
   for (let planet of window.world.planets) {
     fly.planetInView(newShip, planet);
   }
-  //planet.warehouse.put(oldShip);
 }
 
 /**
