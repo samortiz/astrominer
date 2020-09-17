@@ -81,6 +81,9 @@ export const CRIT_TYPE_GUN = "Engine";
 // Equipment
 export const EQUIP_TYPE_BRAKE = "Brake";
 export const EQUIP_TYPE_PRIMARY_WEAPON = "Primary Weapon";
+export const EQUIP_TYPE_THRUSTER = "Thruster";
+export const EQUIP_TYPE_REPAIR_DROID = "Repair Droid";
+
 // brakeSpeedPct is best between 0.02 - 0.1 (higher is ok)  
 export const EQUIP_BRAKE = {name: "Brake", type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
                             crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95} };
@@ -90,13 +93,16 @@ export const EQUIP_FAST_BLASTER = {name: "Fast Blaster", type:EQUIP_TYPE_PRIMARY
                             crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0}};
 export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:5, speed:5, lifetime:70, bulletFile:BULLET_FILE,
                             crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0}};
-//export const EQUIP_TYPE_THRUSTERS = "Thrusters";
-//export const EQUIP_TYPE_REPAIR_DROID = "Repair Droid"; 
+export const EQUIP_THRUSTER = {name: "Thruster", type:EQUIP_TYPE_THRUSTER, thrustSpeed:0.08, 
+                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95}};
+export const EQUIP_R2D2 = {name: "R2D2 Repair Droid", type:EQUIP_TYPE_REPAIR_DROID, repairSpeed:0.03, 
+                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:1}};
 export const EQUIP_ALIEN_BLASTER = {name: "Alien Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:15, cool:0, damage:4, speed:2, lifetime:120, bulletFile:BULLET_BLUE_FILE,
                             crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0}};
 
 // Ships
 export const SHIP_EXPLORER = {
+  name: "Explorer",
   propulsion: 0.05, // best bewteen 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 50,
@@ -105,7 +111,7 @@ export const SHIP_EXPLORER = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 2,
+  equipMax: 4,
   equip : [EQUIP_BRAKE, EQUIP_BLASTER],
   crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
         , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
@@ -121,6 +127,7 @@ export const SHIP_EXPLORER = {
 export const SHIP_EXPLORER_COST =  {titanium:40, gold:40, uranium:30};
 
 export const SHIP_CARGO = {
+  name: "Cargo",
   propulsion: 0.025, // best bewteen 0.02 - 0.1
   turnSpeed: 0.04, // // best between 0.3 - 0.07
   resourcesMax: 600,
@@ -141,6 +148,7 @@ export const SHIP_CARGO = {
 export const SHIP_CARGO_COST =  {titanium:100, gold:50, uranium:50};
 
 export const SHIP_FAST = {
+  name: "Fast",
   propulsion: 0.1, // best bewteen 0.02 - 0.1
   turnSpeed: 0.08, // // best between 0.3 - 0.07
   resourcesMax: 30,
@@ -161,6 +169,7 @@ export const SHIP_FAST = {
 export const SHIP_FAST_COST =  {titanium:200, gold:100, uranium:50};
 
 export const SHIP_HEAVY = {
+  name: "Heavy",
   propulsion: 0.05, // best bewteen 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 300,
@@ -181,6 +190,7 @@ export const SHIP_HEAVY = {
 export const SHIP_HEAVY_COST =  {titanium:500, gold:300, uranium:150};
 
 export const SHIP_FIGHTER = {
+  name: "Fighter",
   propulsion: 0.08, // best bewteen 0.02 - 0.1
   turnSpeed: 0.07, // // best between 0.3 - 0.07
   resourcesMax: 100,
@@ -201,6 +211,7 @@ export const SHIP_FIGHTER = {
 export const SHIP_FIGHTER_COST =  {titanium:500, gold:500, uranium:500};
 
 export const SHIP_ALIEN = {
+  name: "Alien",
   propulsion: 0.05, // best bewteen 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 100,

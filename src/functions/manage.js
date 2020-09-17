@@ -50,7 +50,7 @@ export function buildMine() {
   mine.sprite.y = (mine.y - planet.y);
 
   planet.sprite.addChild(mine.sprite);
-  game.payBuildingCost(planet, ship, c.MINE_COST);
+  game.payResourceCost(planet, ship, c.MINE_COST);
   planet.buildings.push(mine);
   fly.drawMiniMap(); // add building to minimap
 }
@@ -151,32 +151,33 @@ export function buildFactory() {
   factory.sprite.y = (factory.y - planet.y);
 
   planet.sprite.addChild(factory.sprite);
-  game.payBuildingCost(planet, ship, c.FACTORY_COST);
+  game.payResourceCost(planet, ship, c.FACTORY_COST);
   planet.buildings.push(factory);
   fly.drawMiniMap(); // add to minimap
 } 
 
+/**
+ * Called when the factory finishes building a new ship 
+ */
 export function buildShip(shipTemplate) {
   let world = window.world;
   let planet = world.selectedPlanet;
-  let ship = loadNewShip(shipTemplate);
-  changeShip(ship, planet);
-  return ship
-}
-
-export function loadNewShip(shipTemplate) {
   let newShip = game.createShip(shipTemplate);
-  let oldShip = window.world.ship;
-  let container = window.world.app.stage;
-  window.world.ship = newShip;
-  newShip.sprite.rotation= oldShip.sprite.rotation;
-  fly.resetWeaponsCool(newShip);
-  container.removeChild(oldShip.sprite);
-  container.addChild(newShip.sprite);
-  return newShip;
+  planet.ships.push(newShip);
 }
 
-export function changeShip(newShip, planet) {
+/**
+ * Called when the user clicks to switch to a new ship 
+ * NOTE: the new ship should already be created and stored in a planet
+ */
+export function switchToShip(newShip, planet) {
+  let oldShip = window.world.ship;
+  if (!removeShipFromStorage(newShip, planet)) {
+    console.warn("Unable to remove ship from planet ",newShip," planet=",planet);
+    return;
+  }
+  addShipToStorage(oldShip, planet);
+  beginUsingShip(newShip);
   let r = planet.radius + newShip.sprite.width/2; 
   newShip.x = planet.x + (r * Math.cos(newShip.sprite.rotation));
   newShip.y = planet.y + (r * Math.sin(newShip.sprite.rotation));
@@ -184,6 +185,34 @@ export function changeShip(newShip, planet) {
   for (let planet of window.world.planets) {
     fly.planetInView(newShip, planet);
   }
+}
+
+/**
+ * Removes a ship from the planet, returns null if no matching ship was found
+ */
+export function removeShipFromStorage(ship, planet) {
+  let ships = planet.ships.filter((s) => s !== ship);
+  let removedShip = ships.length < planet.ships.length;
+  planet.ships = ships;
+  return removedShip;
+}
+
+export function addShipToStorage(ship, planet) {
+  planet.ships.push(ship);
+}
+
+export function beginUsingShip(newShip) {
+  let container = window.world.app.stage;
+  let oldShip = window.world.ship;
+  window.world.ship = newShip;
+  // oldShip might have been destroyed
+  if (oldShip) {
+    newShip.sprite.rotation= oldShip.sprite.rotation;
+    fly.resetWeaponsCool(oldShip);
+    container.removeChild(oldShip.sprite);
+  }
+  container.addChild(newShip.sprite);
+  return newShip;
 }
 
 /**

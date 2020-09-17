@@ -72,6 +72,12 @@ render() {
     window.world.keys.up = utils.keyboardListener("ArrowUp");
     window.world.keys.down = utils.keyboardListener("ArrowDown");
     window.world.keys.space = utils.keyboardListener(" ");
+    window.world.keys.w = utils.keyboardListener("w"); // up
+    window.world.keys.a = utils.keyboardListener("a"); // left
+    window.world.keys.s = utils.keyboardListener("s"); // down
+    window.world.keys.d = utils.keyboardListener("d"); // right
+    window.world.keys.q = utils.keyboardListener("q"); // thrust left
+    window.world.keys.e = utils.keyboardListener("e"); // thrust right
   }
   
 }

@@ -10,21 +10,28 @@ export function flyLoop(delta) {
   let ship = world.ship;
   // When sprite.visible is false the ship is exploding
   if (ship.sprite.visible) {
+    runRepairDroids(ship);
     // Keypress handling
-    if (world.keys.left.isDown) {
+    if (world.keys.left.isDown || world.keys.a.isDown) {
       turnShip(ship, true);
     }
-    if (world.keys.right.isDown) {
+    if (world.keys.right.isDown || world.keys.d.isDown) {
       turnShip(ship, false);
     }
-    if (world.keys.up.isDown) {
+    if (world.keys.up.isDown || world.keys.w.isDown) {
       propelShip(ship);
     }
-    if (world.keys.down.isDown) {
+    if (world.keys.down.isDown || world.keys.s.isDown) {
       brakeShip(ship);
     }
     if (world.keys.space.isDown) {
       firePrimaryWeapon(ship);
+    }
+    if (world.keys.q.isDown) {
+      thrustShip(ship, true);
+    }
+    if (world.keys.e.isDown) {
+      thrustShip(ship, false);
     }
   }
   // Find planets in view
@@ -97,6 +104,18 @@ export function resetWeaponsCool(ship) {
       equip.cool = 0;
     }
   }
+}
+
+export function runRepairDroids(ship) {
+  for (let droid of ship.equip) {
+    if ((droid.type === c.EQUIP_TYPE_REPAIR_DROID) && (ship.armor < ship.armorMax)) {
+      let cost = {titanium:droid.repairSpeed, gold:0, uranium:0};
+      if (game.canAfford(null, ship, cost)) {
+        ship.armor += droid.repairSpeed;
+        game.payResourceCost(null, ship, cost);
+      }
+    }
+  } // for
 }
 
 export function moveBackground(ship) {
@@ -225,7 +244,8 @@ function destroyShip(ship, afterExplosion) {
 
 function resetGame() {
   // loadNewShip will setup a new ship but not position it
-  let newShip = manage.loadNewShip(c.SHIP_EXPLORER);
+  let newShip = game.createShip(c.SHIP_EXPLORER);
+  manage.beginUsingShip(newShip);
   newShip.sprite.rotation = 0;
   newShip.x = window.world.shipStartX;
   newShip.y = window.world.shipStartY;
@@ -258,6 +278,18 @@ function brakeShip(ship) {
   if (brake) {
     ship.vx -= ship.vx * brake.brakeSpeedPct;
     ship.vy -= ship.vy * brake.brakeSpeedPct;
+  }
+}
+
+function thrustShip(ship, left) {
+  console.log("Thrust");
+  let thruster = getEquip(ship, c.EQUIP_TYPE_THRUSTER);
+  if (thruster) {
+    let dir =utils.normalizeRadian(ship.sprite.rotation + ((left ? -1 : 1) * Math.PI/2)); // 90 deg turn
+    console.log("pushed "+thruster.thrustSpeed);
+    ship.vx += thruster.thrustSpeed * Math.cos(dir);
+    ship.vy += thruster.thrustSpeed * Math.sin(dir);
+    
   }
 }
 

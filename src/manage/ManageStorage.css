@@ -1,3 +1,41 @@
-storage-section {
+.storage-section {
   padding-top:10px;
+  padding-bottom:10px;
 }
+
+.ship-title {
+  font-weight:bold;
+  padding-bottom:10px;
+}
+
+.ship-list {
+  border-left:1px solid black;
+  border-top:1px solid black;
+  border-bottom:1px solid black;
+  display: inline-block;
+  vertical-align:top
+}
+
+.ship {
+  padding:5px;
+}
+
+.selected-ship {
+  font-weight:bold;
+}
+
+.non-selected-ship {
+  font-weight:normal;
+  background-color: #CECECE;  
+}
+
+.ship-details {
+  border:1px solid black;
+  display:inline-block;
+  vertical-align:top;
+}
+
+.ship-attr {
+  padding:5px;
+}
+

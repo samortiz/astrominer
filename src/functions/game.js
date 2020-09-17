@@ -112,7 +112,9 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
     stored: {titanium:0, gold:0, uranium:0},
     raw: resources
   };
-  planet.storage = []; // stored ships
+  planet.ships = []; // stored ships 
+  planet.equip = []; // stored equipment
+  planet.buildings = []; // mines, factories
 
   // Setup the planet container sprite (contains planet plus buildings)
   planet.sprite = new window.PIXI.Container();
@@ -125,8 +127,6 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
   planetSprite.anchor.set(0.5, 0.5);
   planetSprite.scale.set(scale, scale);
   planet.sprite.addChild(planetSprite);
-
-  planet.buildings = [];
 
   planet.radius = planet.sprite.width / 2; // save the calculation later
   // Planets with atmosphere are a little smaller
@@ -241,29 +241,50 @@ export function runBuildings() {
 }
 
 export function canAfford(planet, ship, resources) {
-  return (planet.resources.stored.titanium + ship.resources.titanium >= resources.titanium)
-  && (planet.resources.stored.gold + ship.resources.gold >= resources.gold)
-  && (planet.resources.stored.uranium + ship.resources.uranium >= resources.uranium);
+  let titanium = 0;
+  let gold = 0;
+  let uranium = 0;
+  if (planet) {
+    titanium += planet.resources.stored.titanium;
+    gold += planet.resources.stored.gold;
+    uranium += planet.resources.stored.uranium;
+  }
+  if (ship) {
+    titanium += ship.resources.titanium;
+    gold += ship.resources.gold;
+    uranium += ship.resources.uranium;
+  }
+  return (titanium >= resources.titanium)
+      && (gold >= resources.gold)
+      && (uranium >= resources.uranium);
 }
 
-export function payBuildingCost(planet, ship, resources) {
+export function payResourceCost(planet, ship, resources) {
   payResource(planet, ship, 'titanium', resources.titanium);
   payResource(planet, ship, 'gold', resources.gold);
   payResource(planet, ship, 'uranium', resources.uranium);
 }
 
 export function payResource(planet, ship, resourceType, amount) {
-  let paid = planet.resources.stored[resourceType] - amount; 
-  if (paid >= 0) {
-    planet.resources.stored[resourceType] -= amount;
-    return;
-  } else {
-    // Planet can't afford this purchase, take some from the ship
-    planet.resources.stored[resourceType] = 0;
+  let paid = -amount; // amount owing (overwritten if some payment comes from the planet)
+  if (planet) {
+    paid = planet.resources.stored[resourceType] - amount; 
+    if (paid >= 0) {
+      planet.resources.stored[resourceType] -= amount;
+      return;
+    } else {
+      // Planet can't afford this purchase, take some from the ship
+      planet.resources.stored[resourceType] = 0;
+    }
   }
-  ship.resources[resourceType] = ship.resources[resourceType] + paid;
-  if (ship.resources[resourceType] < 0) {
-    console.warn("Ship is in debt "+ship.resources[resourceType]+" "+resourceType);
+  if (ship) { 
+    ship.resources[resourceType] = ship.resources[resourceType] + paid;
+    if (ship.resources[resourceType] < 0) {
+      console.warn("Ship is in debt "+ship.resources[resourceType]+" "+resourceType);
+    }
+  } else if (paid < 0) {
+    planet.resources.stored[resourceType] = planet.resources.stored[resourceType] + paid;
+    console.warn("Planet is in debt "+planet.resources.stored[resourceType]+" "+resourceType);
   }
 }
 

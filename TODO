@@ -1,5 +1,12 @@
 JS Game
 - Build ship in storage
+- Storage display ships and details
+- Storage edit ship name
+- Storage ship edit equip
+- Factory progress bar
+- Factory build equip
+- Planet change name
+- Planet build turret
 - Switch to ship in storage
 - Jump view to planet from minimap
 - After crash focus on planet
@@ -10,6 +17,7 @@ Bugs
  - restart in land mode doesn't redraw
 
 Ideas :
+- Equip : autoLander, gunnery droid, missiles, mines
 - log / ticker
 - landing flag (claim planet)
 - toast with image/text
