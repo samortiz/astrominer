@@ -1,5 +1,7 @@
 import { c, utils, fly, manage } from './';
 
+import lodash from 'lodash';
+
 /**
  * Creates an empty world object, with only basic properties. 
  * This will be populated by setupWorld()
@@ -7,7 +9,7 @@ import { c, utils, fly, manage } from './';
 export function createEmptyWorld() {
   return {
     ship:null, 
-    otherShips:[],
+    aliens:[],
     bullets: [],
     planets:[],
     keys: {}, // Global keypress handlers
@@ -87,6 +89,12 @@ function generateXy() {
       return generateXy();
     }
   } // for
+  for (let alien of window.world.aliens) {
+    let dist = utils.distanceBetween(x,y, alien.x, alien.y) - alien.radius;
+    if (dist < 100) {
+      return generateXy();
+    }
+  } // for
   return {x:x,y:y};
 }
 
@@ -140,12 +148,17 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
 
 // Creates and returns a ship object
 export function createShip(shipType, owner) {
-  let ship = Object.assign({}, shipType);
+  let ship = lodash.cloneDeep(shipType);
+  ship.id = lodash.uniqueId();
+  for (let equip of ship.equip) {
+    equip.id = lodash.uniqueId();
+  }
   ship.owner = owner;
   ship.vx = 0; // velocityX
   ship.vy = 0; // velocityY
   ship.x = window.world.shipStartX;
   ship.y = window.world.shipStartY;
+
   // Graphics Sprite
   let spritesheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
   ship.sprite = new window.PIXI.Sprite(spritesheet.textures[ship.imageFile]);
@@ -156,13 +169,16 @@ export function createShip(shipType, owner) {
 }
 
 export function createAliens(container) {
-  let alien = createShip(c.SHIP_ALIEN, c.ALIEN);
-  window.world.otherShips.push(alien);
-  alien.x = window.world.shipStartX + 300;
-  alien.y = window.world.shipStartY;
-  alien.radius = alien.sprite.width/2; // Only for circular aliens
-  alien.sprite.x += 100;
-  container.addChild(alien.sprite);
+  for (let i=0; i<c.NUM_ALIENS; i++) {
+    let {x,y} = generateXy();
+    let alien = createShip(c.SHIP_ALIEN, c.ALIEN);
+    window.world.aliens.push(alien);
+    alien.x = x;
+    alien.y = y;
+    alien.radius = alien.sprite.width/2; // Only for circular aliens
+    alien.sprite.x += 100;
+    container.addChild(alien.sprite);
+  }
 }
 
 export function setupMiniMap(container) {

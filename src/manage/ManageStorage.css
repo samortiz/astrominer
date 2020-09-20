@@ -3,12 +3,12 @@
   padding-bottom:10px;
 }
 
-.ship-title {
+.title {
   font-weight:bold;
   padding-bottom:10px;
 }
 
-.ship-list {
+.item-list {
   border-left:1px solid black;
   border-top:1px solid black;
   border-bottom:1px solid black;
@@ -16,26 +16,26 @@
   vertical-align:top
 }
 
-.ship {
+.item {
   padding:5px;
 }
 
-.selected-ship {
+.selected-item {
   font-weight:bold;
 }
 
-.non-selected-ship {
+.non-selected-item {
   font-weight:normal;
   background-color: #CECECE;  
 }
 
-.ship-details {
+.item-details {
   border:1px solid black;
   display:inline-block;
   vertical-align:top;
 }
 
-.ship-attr {
+.item-attr {
   padding:5px;
 }
 

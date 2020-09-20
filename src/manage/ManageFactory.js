@@ -1,56 +1,35 @@
 import React from 'react';
 import { c, manage, game } from '../functions';
 import './ManageFactory.css';
+import { FactoryButton } from './FactoryButton';
 
 export class ManageFactory extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {selectedType:'ship'};
   }
 
   render() {
-    let world = window.world;
-    let planet = world.selectedPlanet;
-    let ship = world.ship;
-    
     return (
       <div className='factory-info'> 
-        <div className='build-button'>
-          <button 
-            disabled={!game.canAfford(planet, ship, c.FACTORY_COST)} 
-            onClick={() => manage.buildFactory()}>Build Factory</button>
-            Cost: T:{c.FACTORY_COST.titanium} G:{c.FACTORY_COST.gold} U:{c.FACTORY_COST.uranium}
-        </div>  
-        <div className='build-button'>
-          <button 
-            disabled={!manage.hasFactory(planet) || !game.canAfford(planet, ship, c.SHIP_CARGO_COST)} 
-            onClick={() => manage.buildShip(c.SHIP_CARGO)}>Build Cargo Ship</button>
-            Cost: T:{c.SHIP_CARGO_COST.titanium} G:{c.SHIP_CARGO_COST.gold} U:{c.SHIP_CARGO_COST.uranium}
-        </div>  
-        <div className='build-button'>
-          <button 
-            disabled={!manage.hasFactory(planet) || !game.canAfford(planet, ship, c.SHIP_EXPLORER_COST)} 
-            onClick={() => manage.buildShip(c.SHIP_EXPLORER)}>Build Explorer Ship</button>
-            Cost: T:{c.SHIP_EXPLORER_COST.titanium} G:{c.SHIP_EXPLORER_COST.gold} U:{c.SHIP_EXPLORER_COST.uranium}
-        </div>  
-        <div className='build-button'>
-          <button 
-            disabled={!manage.hasFactory(planet) || !game.canAfford(planet, ship, c.SHIP_FAST_COST)} 
-            onClick={() => manage.buildShip(c.SHIP_FAST)}>Build Fast Ship</button>
-            Cost: T:{c.SHIP_FAST_COST.titanium} G:{c.SHIP_FAST_COST.gold} U:{c.SHIP_FAST_COST.uranium}
-        </div>  
-        <div className='build-button'>
-          <button 
-            disabled={!manage.hasFactory(planet) || !game.canAfford(planet, ship, c.SHIP_HEAVY_COST)} 
-            onClick={() => manage.buildShip(c.SHIP_HEAVY)}>Build Heavy Ship</button>
-            Cost: T:{c.SHIP_HEAVY_COST.titanium} G:{c.SHIP_HEAVY_COST.gold} U:{c.SHIP_HEAVY_COST.uranium}
+        <div className='build-ship'>
+          <FactoryButton type='ship' template={c.SHIP_CARGO} name='Cargo'/>
+          <FactoryButton type='ship' template={c.SHIP_EXPLORER} name='Explorer'/>
+          <FactoryButton type='ship' template={c.SHIP_FAST} name='Fast'/>
+          <FactoryButton type='ship' template={c.SHIP_HEAVY} name='Heavy'/>
+          <FactoryButton type='ship' template={c.SHIP_FIGHTER} name='Fighter'/>
         </div>
-        <div className='build-button'>
-          <button 
-            disabled={!manage.hasFactory(planet) || !game.canAfford(planet, ship, c.SHIP_FIGHTER_COST)} 
-            onClick={() => manage.buildShip(c.SHIP_FIGHTER)}>Build Fighter Ship</button>
-            Cost: T:{c.SHIP_FIGHTER_COST.titanium} G:{c.SHIP_FIGHTER_COST.gold} U:{c.SHIP_FIGHTER_COST.uranium}
+
+        <div className='build-equip'>
+          <FactoryButton type='equip' template={c.EQUIP_BRAKE} name='Brake'/>
+          <FactoryButton type='equip' template={c.EQUIP_BLASTER} name='Blaster'/>
+          <FactoryButton type='equip' template={c.EQUIP_FAST_BLASTER} name='Fast Blaster'/>
+          <FactoryButton type='equip' template={c.EQUIP_STREAM_BLASTER} name='Stream Blaster'/>
+          <FactoryButton type='equip' template={c.EQUIP_THRUSTER} name='Thruster'/>
+          <FactoryButton type='equip' template={c.EQUIP_R2D2} name='R2D2'/>
+          <FactoryButton type='equip' template={c.EQUIP_ALIEN_BLASTER} name='Alien Blaster'/>
         </div>
+
       </div>);
   }
 }

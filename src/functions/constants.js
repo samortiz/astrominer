@@ -70,6 +70,7 @@ export const PLAYER_STARTING_RESOURCES = {titanium:40, gold:10, uranium:0};
 export const GRAVITATIONAL_CONST = 2;
 export const ALLOWED_OVERLAP = 2; // overlap for fudging collision detection
 export const TAKEOFF_SPEED = 10; // in units of planet gravity
+export const NUM_ALIENS = 300;
 
 // Critical Hits
 export const CRIT_TYPE_BRAKE = "Brake"
@@ -86,19 +87,26 @@ export const EQUIP_TYPE_REPAIR_DROID = "Repair Droid";
 
 // brakeSpeedPct is best between 0.02 - 0.1 (higher is ok)  
 export const EQUIP_BRAKE = {name: "Brake", type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
-                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95} };
-export const EQUIP_BLASTER = {name: "Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:25, cool:0, damage:10, speed:2, lifetime:100, bulletFile:BULLET_FILE,
-                            crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0}};
-export const EQUIP_FAST_BLASTER = {name: "Fast Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:10, cool:0, damage:10, speed:4, lifetime:90, bulletFile:BULLET_FILE,
-                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0}};
-export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:5, speed:5, lifetime:70, bulletFile:BULLET_FILE,
-                            crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0}};
+                            crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95},
+                            cost: {titanium:20, gold:10, uranium:0} };
+export const EQUIP_BLASTER = {name: "Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:25, cool:0, damage:10, speed:2.5, lifetime:100, bulletFile:BULLET_FILE,
+                            crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0},
+                            cost: {titanium:10, gold:0, uranium:20}};
+export const EQUIP_FAST_BLASTER = {name: "Fast Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:10, cool:0, damage:10, speed:4, lifetime:80, bulletFile:BULLET_FILE,
+                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
+                            cost: {titanium:20, gold:20, uranium:40}};
+export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:7, speed:6, lifetime:70, bulletFile:BULLET_FILE,
+                            crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0},
+                            cost: {titanium:30, gold:30, uranium:60}};
 export const EQUIP_THRUSTER = {name: "Thruster", type:EQUIP_TYPE_THRUSTER, thrustSpeed:0.08, 
-                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95}};
+                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95},
+                            cost: {titanium:40, gold:40, uranium:10}};
 export const EQUIP_R2D2 = {name: "R2D2 Repair Droid", type:EQUIP_TYPE_REPAIR_DROID, repairSpeed:0.03, 
-                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:1}};
-export const EQUIP_ALIEN_BLASTER = {name: "Alien Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:15, cool:0, damage:4, speed:2, lifetime:120, bulletFile:BULLET_BLUE_FILE,
-                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0}};
+                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:1},
+                            cost: {titanium:20, gold:100, uranium:50}};
+export const EQUIP_ALIEN_BLASTER = {name: "Alien Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:20, cool:0, damage:4, speed:2, lifetime:120, bulletFile:BULLET_BLUE_FILE,
+                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
+                            cost: {titanium:10, gold:30, uranium:50}};
 
 // Ships
 export const SHIP_EXPLORER = {
@@ -111,20 +119,20 @@ export const SHIP_EXPLORER = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 4,
-  equip : [EQUIP_BRAKE, EQUIP_BLASTER],
+  equipMax: 2,
+  equip : [EQUIP_BRAKE],
   crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
         , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
         , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
   ],
   armorMax: 50,
-  armor: 50,
+  armor: 20,
   crashSpeed: 2,
   crashAngle: 0.5,
   imageScale: 0.6,
   imageFile: SHIP_EXPLORER_FILE,
+  cost: {titanium:40, gold:40, uranium:30},
 };
-export const SHIP_EXPLORER_COST =  {titanium:40, gold:40, uranium:30};
 
 export const SHIP_CARGO = {
   name: "Cargo",
@@ -144,8 +152,8 @@ export const SHIP_CARGO = {
   crashAngle: 0.3,
   imageScale: 0.4,
   imageFile: SHIP_CARGO_FILE,
+  cost: {titanium:100, gold:50, uranium:50},
 };
-export const SHIP_CARGO_COST =  {titanium:100, gold:50, uranium:50};
 
 export const SHIP_FAST = {
   name: "Fast",
@@ -158,15 +166,15 @@ export const SHIP_FAST = {
     uranium : 0,
   },
   equipMax: 2,
-  equip : [EQUIP_BRAKE, EQUIP_BLASTER],
+  equip : [EQUIP_BRAKE],
   armorMax : 60,
   armor: 60,
   crashSpeed: 2,
   crashAngle: 0.5,
   imageScale: 0.3,
   imageFile: SHIP_FAST_FILE,
+  cost: {titanium:200, gold:100, uranium:50},
 };
-export const SHIP_FAST_COST =  {titanium:200, gold:100, uranium:50};
 
 export const SHIP_HEAVY = {
   name: "Heavy",
@@ -179,15 +187,15 @@ export const SHIP_HEAVY = {
     uranium : 0,
   },
   equipMax: 5,
-  equip : [EQUIP_BRAKE, EQUIP_FAST_BLASTER],
+  equip : [EQUIP_BRAKE],
   armorMax : 300,
   armor: 300,
   crashSpeed: 1.5,
   crashAngle: 0.4,
   imageScale: 0.4,
   imageFile: SHIP_HEAVY_FILE,
+  cost: {titanium:500, gold:300, uranium:150},
 };
-export const SHIP_HEAVY_COST =  {titanium:500, gold:300, uranium:150};
 
 export const SHIP_FIGHTER = {
   name: "Fighter",
@@ -200,15 +208,15 @@ export const SHIP_FIGHTER = {
     uranium : 0,
   },
   equipMax: 4,
-  equip : [EQUIP_BRAKE, EQUIP_STREAM_BLASTER],
+  equip : [EQUIP_BRAKE],
   armorMax : 150,
   armor: 150,
   crashSpeed: 1.5,
   crashAngle: 0.6,
   imageScale: 0.5,
   imageFile: SHIP_FIGHTER_FILE,
+  cost: {titanium:500, gold:500, uranium:500},
 };
-export const SHIP_FIGHTER_COST =  {titanium:500, gold:500, uranium:500};
 
 export const SHIP_ALIEN = {
   name: "Alien",
@@ -232,8 +240,8 @@ export const SHIP_ALIEN = {
   crashAngle: 10,
   imageScale: 0.8,
   imageFile: ALIEN_SHIP_FILE,
+  cost: {titanium:50, gold:50, uranium:50},
 };
-export const SHIP_ALIEN_COST =  {titanium:50, gold:50, uranium:50};
 
 
 // Buildings

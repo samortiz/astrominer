@@ -1,4 +1,5 @@
 import { c, utils, fly, game } from './';
+import lodash from 'lodash';
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -6,7 +7,7 @@ export function enterManageState() {
 
 // When managing planet resources - loop runs 60/s
 export function manageLoop(delta) {
-  if (window.world.keys.up.isDown) {
+  if (window.world.keys.up.isDown || window.world.keys.w.isDown) {
     takeOff();
   }
 }
@@ -225,4 +226,21 @@ export function hasFactory(planet) {
     }
   }
   return false;
+}
+
+export function buildEquip(equipTemplate) {
+  let planet = window.world.selectedPlanet;
+  let equip = lodash.cloneDeep(equipTemplate);
+  equip.id = lodash.uniqueId();
+  planet.equip.push(equip);
+}
+
+export function costToRepair(ship) {
+  return {titanium:(ship.armorMax - ship.armor), gold:0, uranium:0};
+}
+
+export function repairShip(planet, ship) {
+  let cost = costToRepair(ship);
+  ship.armor = ship.armorMax;
+  game.payResourceCost(planet, ship, cost);
 }

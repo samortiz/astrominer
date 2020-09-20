@@ -68,7 +68,7 @@ export function flyLoop(delta) {
       }
     } // for planet
     // Ship-Alien collision
-    for (let alien of world.otherShips) {
+    for (let alien of world.aliens) {
       if (alien.sprite.visible && detectCollisionWithAlien(ship, alien)) {
         shipsCollide(ship, alien);
       }
@@ -82,7 +82,7 @@ export function flyLoop(delta) {
  */
 export function coolAllWeapons() {
   coolWeapons(window.world.ship);
-  for (let alien of window.world.otherShips) {
+  for (let alien of window.world.aliens) {
     coolWeapons(alien);
   }
 }
@@ -109,6 +109,7 @@ export function resetWeaponsCool(ship) {
 export function runRepairDroids(ship) {
   for (let droid of ship.equip) {
     if ((droid.type === c.EQUIP_TYPE_REPAIR_DROID) && (ship.armor < ship.armorMax)) {
+
       let cost = {titanium:droid.repairSpeed, gold:0, uranium:0};
       if (game.canAfford(null, ship, cost)) {
         ship.armor += droid.repairSpeed;
@@ -282,11 +283,9 @@ function brakeShip(ship) {
 }
 
 function thrustShip(ship, left) {
-  console.log("Thrust");
   let thruster = getEquip(ship, c.EQUIP_TYPE_THRUSTER);
   if (thruster) {
     let dir =utils.normalizeRadian(ship.sprite.rotation + ((left ? -1 : 1) * Math.PI/2)); // 90 deg turn
-    console.log("pushed "+thruster.thrustSpeed);
     ship.vx += thruster.thrustSpeed * Math.cos(dir);
     ship.vy += thruster.thrustSpeed * Math.sin(dir);
     
@@ -383,7 +382,7 @@ function checkForBulletCollision(bullet) {
     bulletHitShip(bullet, ship, resetGame);
   } 
   // Collision with alien ship
-  for (let alien of window.world.otherShips) {
+  for (let alien of window.world.aliens) {
     // This check will only work with circular aliens, need a separate check for rectangular ones
     if (alien.sprite.visible && alien.radius && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius) {
       bulletHitShip(bullet, alien, null);
@@ -485,7 +484,7 @@ function planetOnMap(ship, planet) {
 
 export function moveAliens() {
   let ship = window.world.ship;
-  for (let alien of window.world.otherShips) {
+  for (let alien of window.world.aliens) {
     if (!alien.sprite.visible) {
       continue;
     }

@@ -21,11 +21,18 @@ export class ManagePlanet extends React.Component {
     return (
       <div className='planet-info'> 
         <div className='section'><b>Name</b> {world.selectedPlanet.name}</div>
-        <button 
-          disabled={!game.canAfford(planet, ship, c.MINE_COST)} 
-          onClick={() => manage.buildMine()}>Build Mine</button>
-          Cost: T:{c.MINE_COST.titanium} G:{c.MINE_COST.gold}
-
+        <div className='build-button'>
+          <button 
+            disabled={!game.canAfford(planet, ship, c.MINE_COST)} 
+            onClick={() => manage.buildMine()}>Build Mine</button>
+            Cost: T:{c.MINE_COST.titanium} G:{c.MINE_COST.gold}
+        </div>
+        <div className='build-button'>
+          <button 
+            disabled={!game.canAfford(planet, ship, c.FACTORY_COST)} 
+            onClick={() => manage.buildFactory()}>Build Factory</button>
+            Cost: T:{c.FACTORY_COST.titanium} G:{c.FACTORY_COST.gold} U:{c.FACTORY_COST.uranium}
+        </div>
         <div className='section'><b>Resources</b></div>
         <div>Titatium {Math.floor(planet.resources.raw.titanium)}</div>
         <div>Gold {Math.floor(planet.resources.raw.gold)}</div>

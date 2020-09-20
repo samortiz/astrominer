@@ -1,22 +1,17 @@
 JS Game
-- Build ship in storage
-- Storage display ships and details
-- Storage edit ship name
-- Storage ship edit equip
-- Factory progress bar
-- Factory build equip
-- Planet change name
-- Planet build turret
-- Switch to ship in storage
 - Jump view to planet from minimap
 - After crash focus on planet
-- Fix purple planet atmosphere
 - CSS on info screens 
 Bugs
  - bullets show through minimap
  - restart in land mode doesn't redraw
 
 Ideas :
+- Self Destruct on FlyInfo
+- Factory progress bar
+- Planet change name
+- Storage edit ship name
+- Planet build turret
 - Equip : autoLander, gunnery droid, missiles, mines
 - log / ticker
 - landing flag (claim planet)
