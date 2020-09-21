@@ -1,20 +1,26 @@
 JS Game
+- Don't allow equipping two of the same type
+
+- Circular world
 - Jump view to planet from minimap
 - After crash focus on planet
 - CSS on info screens 
 Bugs
+ - repair should not go negative (set max repair)
+ - Storage -> UseShip button should disable when already selected
  - bullets show through minimap
  - restart in land mode doesn't redraw
+ - Scroll long lists
 
 Ideas :
 - Self Destruct on FlyInfo
 - Factory progress bar
+- Alien drop (resources), pickup drops
 - Planet change name
 - Storage edit ship name
 - Planet build turret
-- Equip : autoLander, gunnery droid, missiles, mines
+- Equip : extra storage, multi-shot, autoLander, gunnery droid, missiles, mines, 
 - log / ticker
 - landing flag (claim planet)
 - toast with image/text
 - Crash into buildings (maybe damage to ship?)
-

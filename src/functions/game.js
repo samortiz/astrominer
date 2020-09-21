@@ -19,7 +19,15 @@ export function createEmptyWorld() {
     selectedPlanet: {resources:{}}, 
     bgSprite: null, // star background
     explosions : [], //contains sprites
-    explosionSheet: null // spritesheet for explosions
+    explosionSheet: null, // spritesheet for explosions
+    blueprints: {
+      ship:[c.SHIP_EXPLORER],
+      equip:[c.EQUIP_BRAKE],
+      miningXp: 0, // total amount mined
+      miningXpLevels: lodash.cloneDeep(c.MINING_XP_LEVELS),
+      alienXp: 0, // aliens killed 
+      alienXpLevels: lodash.cloneDeep(c.ALIEN_XP_LEVELS),
+    },
   };
 }
 
@@ -36,11 +44,12 @@ export function setupWorld() {
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
   // landing planet
-  createPlanet(c.ROCK_PLANET_FILE, 'Home', -400, world.ship.y, 0.5, 250, {
+  let home = createPlanet(c.ROCK_PLANET_FILE, 'Home', -400, world.ship.y, 0.5, 250, {
     titanium : 1500,
     gold : 1500,
     uranium : 1500,
   }, container);
+  home.resources.stored =  {titanium : 1000, gold: 1000,uranium : 1000};
   createAliens(container);
   setupMiniMap(container);
   setupExplosionSheet();
@@ -222,27 +231,9 @@ export function runBuildings() {
   for (let planet of world.planets) {
     for (let building of planet.buildings) {
       if (building.type === c.BUILDING_TYPE_MINE) {
-        if (planet.resources.raw.titanium > 0) {
-          planet.resources.raw.titanium -= c.MINE_SPEED_TITATIUM;
-          planet.resources.stored.titanium += c.MINE_SPEED_TITATIUM;
-          if (planet.resources.raw.titanium <= 0) {
-            planet.resources.raw.titanium = 0;
-          }
-        }
-        if (planet.resources.raw.gold > 0) {
-          planet.resources.raw.gold -= c.MINE_SPEED_GOLD;
-          planet.resources.stored.gold += c.MINE_SPEED_GOLD;
-          if (planet.resources.raw.gold < 0) {
-            planet.resources.raw.gold = 0;
-          }
-        }
-        if (planet.resources.raw.uranium > 0) {
-          planet.resources.raw.uranium -= c.MINE_SPEED_URANIUM;
-          planet.resources.stored.uranium += c.MINE_SPEED_URANIUM;
-          if (planet.resources.raw.uranium < 0) {
-            planet.resources.raw.uranium = 0;
-          }
-        }
+        mineResource(planet, 'titanium', c.MINE_SPEED_TITATIUM);
+        mineResource(planet, 'gold', c.MINE_SPEED_GOLD);
+        mineResource(planet, 'uranium', c.MINE_SPEED_URANIUM);
       }
     } // for building
     // If planet is out of resources stop the mine animations
@@ -254,6 +245,51 @@ export function runBuildings() {
         }
     }
   } // for planet
+}
+
+function mineResource(planet, resourceType, amount) {
+  if (planet.resources.raw[resourceType] > 0) {
+    planet.resources.raw[resourceType] -= amount;
+    planet.resources.stored[resourceType] += amount;
+    if (planet.resources.raw[resourceType] <= 0) {
+      planet.resources.raw[resourceType] = 0;
+    }
+    addMiningXp(amount);
+  }
+}
+
+function addMiningXp(amount) {
+  let blueprints = window.world.blueprints;
+  blueprints.miningXp += amount;
+  let nextLevel = blueprints.miningXpLevels[0];
+  if (nextLevel && (nextLevel.xp <= blueprints.miningXp)) {
+    addBlueprint(nextLevel);
+    // Remove the item
+    blueprints.miningXpLevels.shift();
+  }
+}
+
+export function addAlienXp(ship) {
+  let blueprints = window.world.blueprints;
+  blueprints.alienXp += ship.armorMax;
+  let nextLevel = blueprints.alienXpLevels[0];
+  if (nextLevel && (nextLevel.xp <= blueprints.alienXp)) {
+    addBlueprint(nextLevel);
+    // Remove the item
+    blueprints.alienXpLevels.shift();
+  }
+}
+
+export function addBlueprint(nextLevel) {
+  console.log("Level up ",nextLevel.obj.name); // TODO Toast
+  let blueprints = window.world.blueprints;
+  if (nextLevel.obj.objType === c.OBJ_EQUIP) {
+    blueprints.equip.push(nextLevel.obj);
+  } else if (nextLevel.obj.objType === c.OBJ_SHIP) {
+    blueprints.ship.push(nextLevel.obj);
+  } else {
+    console.warn("Could not find blueprint of type "+nextLevel.obj.objType+" nextLevel=",nextLevel);
+  }
 }
 
 export function canAfford(planet, ship, resources) {

@@ -109,7 +109,6 @@ export function resetWeaponsCool(ship) {
 export function runRepairDroids(ship) {
   for (let droid of ship.equip) {
     if ((droid.type === c.EQUIP_TYPE_REPAIR_DROID) && (ship.armor < ship.armorMax)) {
-
       let cost = {titanium:droid.repairSpeed, gold:0, uranium:0};
       if (game.canAfford(null, ship, cost)) {
         ship.armor += droid.repairSpeed;
@@ -173,14 +172,33 @@ function detectCollisionWithAlien(ship, alien) {
   return false;
 }
 
+/**
+ * @return true if the landing was successful
+ * NOTE: This will cause damage to the ship attempting to land (side-effects)
+ */
 function successfulLanding(ship, planet) {
   // atan2 has parameters (y,x)
   let planetDir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
   let dirDiff = Math.abs(ship.sprite.rotation - planetDir);
   let speed = Math.abs(ship.vx) + Math.abs(ship.vy);
   // 0 and PI*2 are right beside each other, so large values are very close to small values
-  return ((dirDiff < ship.crashAngle) || (dirDiff > (Math.PI * 2 - ship.crashAngle)))
-         && (speed < ship.crashSpeed);
+  let success = ((dirDiff < ship.crashAngle) || (dirDiff > (Math.PI * 2 - ship.crashAngle)))
+                && (speed < ship.crashSpeed)
+  if (success) {
+    // The landing was good - no damage done
+    return success;
+  }
+  // damage ship for poor landing
+  let speedDiff = Math.max(speed - ship.crashSpeed, 0); // 0 if negative
+  let dirDiffAdj = Math.max(dirDiff - ship.crashAngle, 0); // 0 if negative
+  if (dirDiffAdj > Math.PI) {
+    dirDiffAdj = (Math.PI * 2) - dirDiff - ship.crashAngle;
+  }
+  let dmgPct = (speedDiff/3) + dirDiffAdj;
+  let dmg = dmgPct * ship.armorMax;
+  damageShip(ship, dmg, resetGame);
+  // If the ship survived return true
+  return ship.armor > 0;
 }
 
 function landShip(ship, planet) {
@@ -230,6 +248,9 @@ export function getExplosionSprite(ship) {
  * @param afterExplosion : function to run after exploding (or null if nothing to do)
  */
 function destroyShip(ship, afterExplosion) {
+  if (ship !== window.world.ship) {
+    game.addAlienXp(ship);
+  }
   let explosionSprite = getExplosionSprite(ship);
   ship.sprite.visible = false;
   explosionSprite.play();
@@ -266,19 +287,35 @@ function moveExplosions() {
 }
 
 function turnShip(ship, left) {
-  ship.sprite.rotation = utils.normalizeRadian(ship.sprite.rotation + ship.turnSpeed * (left ? -1 : 1));
+  let turnSpeed = ship.turnSpeed;
+  let turnBooster = getEquip(ship, c.EQUIP_TYPE_TURN);
+  if (turnBooster) {
+    turnSpeed += turnBooster.boostSpeed;
+  }
+  ship.sprite.rotation = utils.normalizeRadian(ship.sprite.rotation + turnSpeed * (left ? -1 : 1));
 }
 
 function propelShip(ship) {
-  ship.vx += ship.propulsion * Math.cos(ship.sprite.rotation);
-  ship.vy += ship.propulsion * Math.sin(ship.sprite.rotation);
+  let propulsion = ship.propulsion;
+  let booster = getEquip(ship, c.EQUIP_TYPE_TURN);
+  if (booster) {
+    propulsion += booster.boostSpeed;
+  }
+  ship.vx += propulsion * Math.cos(ship.sprite.rotation);
+  ship.vy += propulsion * Math.sin(ship.sprite.rotation);
 }
 
 function brakeShip(ship) {
   let brake = getEquip(ship, c.EQUIP_TYPE_BRAKE);
   if (brake) {
-    ship.vx -= ship.vx * brake.brakeSpeedPct;
-    ship.vy -= ship.vy * brake.brakeSpeedPct;
+    if (brake.brakeSpeedPct > 0) {
+      ship.vx -= ship.vx * brake.brakeSpeedPct;
+      ship.vy -= ship.vy * brake.brakeSpeedPct;
+    } else {
+      // Blink brake pct is 0, immediate stop (no momentum)
+      ship.vx = 0;
+      ship.vy = 0;
+    }
   }
 }
 
@@ -286,9 +323,15 @@ function thrustShip(ship, left) {
   let thruster = getEquip(ship, c.EQUIP_TYPE_THRUSTER);
   if (thruster) {
     let dir =utils.normalizeRadian(ship.sprite.rotation + ((left ? -1 : 1) * Math.PI/2)); // 90 deg turn
-    ship.vx += thruster.thrustSpeed * Math.cos(dir);
-    ship.vy += thruster.thrustSpeed * Math.sin(dir);
-    
+    if (thruster.thrustType === c.THRUST_MOMENTUM) {
+      ship.vx += thruster.thrustSpeed * Math.cos(dir);
+      ship.vy += thruster.thrustSpeed * Math.sin(dir);
+    } else if (thruster.thrustType === c.THRUST_BLINK) {
+      ship.x += thruster.thrustSpeed * Math.cos(dir);
+      ship.y += thruster.thrustSpeed * Math.sin(dir);
+    } else {
+      console.warn("Unable to use thruster with type "+thruster.thrustType);
+    }
   }
 }
 
@@ -398,7 +441,10 @@ function bulletHitShip(bullet, ship, afterExplosion) {
   killBullet(bullet);
 }
 
-function damageShip(ship, damage, afterExplosion) {
+/**
+ * applies damage to the ship, destroying the ship if needed
+ */
+export function damageShip(ship, damage, afterExplosion) {
   ship.armor = ship.armor - damage;
   if (ship.armor <= 0) {
     ship.armor = 0;

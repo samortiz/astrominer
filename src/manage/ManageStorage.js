@@ -1,7 +1,6 @@
 import React from 'react';
-import { c, manage, game } from '../functions';
+import { manage, game } from '../functions';
 import './ManageStorage.css';
-import lodash from 'lodash';
 import { EquipSelect } from './EquipSelect';
 
 export class ManageStorage extends React.Component {

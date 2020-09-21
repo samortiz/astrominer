@@ -78,39 +78,92 @@ export const CRIT_TYPE_STEER_LEFT = "Steer Left";
 export const CRIT_TYPE_STEER_RIGHT = "Steer Right";
 export const CRIT_TYPE_ENGINE = "Engine";
 export const CRIT_TYPE_GUN = "Engine";
+export const CRIT_TYPE_THRUSTER = "Thruster";
+export const CRIT_TYPE_MISC = "Misc";
+
+// Buildings
+export const BUILDING_PLACEMENT_ROTATION_INCREMENT = 0.1;
+// Mine
+export const BUILDING_TYPE_MINE = "mine";
+export const MINE_SCALE = 0.25;
+export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
+export const MINE_ANIMATION_SPEED = 0.5;
+export const MINE_SPEED_TITATIUM = 0.0166; // 1 every sec
+export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
+export const MINE_SPEED_URANIUM = 0.0033; // 1 every 5 sec
+export const MINE_COST = {titanium:20, gold:10, uranium:0};
+// Factory
+export const BUILDING_TYPE_FACTORY = "factory";
+export const FACTORY_COST = {titanium:100, gold:100, uranium:10};
+export const FACTORY_SCALE = 0.25;
+export const FACTORY_PLACEMENT_FROM_SHIP = 50; // how far factory is to the right of the ship TODO: should be based on sprite.height/2
 
 // Equipment
 export const EQUIP_TYPE_BRAKE = "Brake";
 export const EQUIP_TYPE_PRIMARY_WEAPON = "Primary Weapon";
 export const EQUIP_TYPE_THRUSTER = "Thruster";
+export const EQUIP_TYPE_ARMOR = "Armor";
 export const EQUIP_TYPE_REPAIR_DROID = "Repair Droid";
+export const EQUIP_TYPE_MISC = "Misc";
+export const EQUIP_TYPE_SPEED = "Speed";
+export const EQUIP_TYPE_TURN = "Turn";
+export const EQUIP_TYPE_STORAGE = "Storage";
+
+export const THRUST_MOMENTUM = "Thrust Momentum";
+export const THRUST_BLINK = "Thrust Blink";
+
+// Object type
+export const OBJ_EQUIP = "Equip";
+export const OBJ_SHIP = "Ship";
 
 // brakeSpeedPct is best between 0.02 - 0.1 (higher is ok)  
-export const EQUIP_BRAKE = {name: "Brake", type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
+export const EQUIP_BRAKE = {name: "Brake", objType:OBJ_EQUIP, type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
                             crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95},
                             cost: {titanium:20, gold:10, uranium:0} };
-export const EQUIP_BLASTER = {name: "Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:25, cool:0, damage:10, speed:2.5, lifetime:100, bulletFile:BULLET_FILE,
-                            crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0},
+export const EQUIP_BLINK_BRAKE = {name: "Blink Brake", objType:OBJ_EQUIP, type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0, 
+                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:1},
+                            cost: {titanium:50, gold:50, uranium:30}};
+export const EQUIP_SPEED_BOOST = {name: "Speed Booster", objType:OBJ_EQUIP, type:EQUIP_TYPE_SPEED, boostSpeed:0.05, 
+                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
+                            cost: {titanium:0, gold:10, uranium:20}};
+export const EQUIP_TURN_BOOST = {name: "Turn Booster", objType:OBJ_EQUIP, type:EQUIP_TYPE_TURN, boostSpeed:0.05, 
+                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
+                            cost: {titanium:0, gold:10, uranium:20}};
+export const EQUIP_STORAGE = {name: "Storage", objType:OBJ_EQUIP, type:EQUIP_TYPE_STORAGE, storageAmount:100, 
+                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
+                            cost: {titanium:50, gold:0, uranium:0}};
+export const EQUIP_BLASTER = {name: "Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:25, cool:0, damage:10, speed:2.5, lifetime:100, bulletFile:BULLET_FILE,
+                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:10, gold:0, uranium:20}};
-export const EQUIP_FAST_BLASTER = {name: "Fast Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:10, cool:0, damage:10, speed:4, lifetime:80, bulletFile:BULLET_FILE,
+export const EQUIP_FAST_BLASTER = {name: "Fast Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:10, cool:0, damage:10, speed:4, lifetime:80, bulletFile:BULLET_FILE,
                             crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:20, gold:20, uranium:40}};
-export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:7, speed:6, lifetime:70, bulletFile:BULLET_FILE,
-                            crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0},
+export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:7, speed:6, lifetime:70, bulletFile:BULLET_FILE,
+                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:30, gold:30, uranium:60}};
-export const EQUIP_THRUSTER = {name: "Thruster", type:EQUIP_TYPE_THRUSTER, thrustSpeed:0.08, 
-                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95},
+export const EQUIP_THRUSTER = {name: "Thruster", objType:OBJ_EQUIP, type:EQUIP_TYPE_THRUSTER, thrustSpeed:0.08, thrustType:THRUST_MOMENTUM,
+                            crit:{type:CRIT_TYPE_THRUSTER, maxHits:1, hits:0, pctLoss:0.95},
                             cost: {titanium:40, gold:40, uranium:10}};
-export const EQUIP_R2D2 = {name: "R2D2 Repair Droid", type:EQUIP_TYPE_REPAIR_DROID, repairSpeed:0.03, 
-                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:1},
+// blink thrustSpeed is good from 2 to 10                            
+export const EQUIP_BLINK_THRUSTER = {name: "Blink Thruster", objType:OBJ_EQUIP, type:EQUIP_TYPE_THRUSTER, thrustSpeed:2.5, thrustType:THRUST_BLINK,
+                            crit:{type:CRIT_TYPE_THRUSTER, maxHits:1, hits:0, pctLoss:0.95},
+                            cost: {titanium:60, gold:50, uranium:10}};
+export const EQUIP_R2D2 = {name: "R2D2 Repair Droid", objType:OBJ_EQUIP, type:EQUIP_TYPE_REPAIR_DROID, repairSpeed:0.03, 
+                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
                             cost: {titanium:20, gold:100, uranium:50}};
-export const EQUIP_ALIEN_BLASTER = {name: "Alien Blaster", type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:20, cool:0, damage:4, speed:2, lifetime:120, bulletFile:BULLET_BLUE_FILE,
+export const EQUIP_ALIEN_BLASTER = {name: "Alien Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:20, cool:0, damage:4, speed:2, lifetime:120, bulletFile:BULLET_BLUE_FILE,
                             crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:10, gold:30, uranium:50}};
+export const EQUIP_ARMOR = {name: "Armor Plate", objType:OBJ_EQUIP, type:EQUIP_TYPE_ARMOR, armorAmt:100, 
+                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
+                            cost: {titanium:50, gold:0, uranium:0}};
+export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER,
+   EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR];
 
 // Ships
 export const SHIP_EXPLORER = {
   name: "Explorer",
+  objType:OBJ_SHIP,
   propulsion: 0.05, // best bewteen 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 50,
@@ -126,7 +179,7 @@ export const SHIP_EXPLORER = {
         , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
   ],
   armorMax: 50,
-  armor: 20,
+  armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
   imageScale: 0.6,
@@ -136,6 +189,7 @@ export const SHIP_EXPLORER = {
 
 export const SHIP_CARGO = {
   name: "Cargo",
+  objType:OBJ_SHIP,
   propulsion: 0.025, // best bewteen 0.02 - 0.1
   turnSpeed: 0.04, // // best between 0.3 - 0.07
   resourcesMax: 600,
@@ -157,6 +211,7 @@ export const SHIP_CARGO = {
 
 export const SHIP_FAST = {
   name: "Fast",
+  objType:OBJ_SHIP,
   propulsion: 0.1, // best bewteen 0.02 - 0.1
   turnSpeed: 0.08, // // best between 0.3 - 0.07
   resourcesMax: 30,
@@ -178,6 +233,7 @@ export const SHIP_FAST = {
 
 export const SHIP_HEAVY = {
   name: "Heavy",
+  objType:OBJ_SHIP,
   propulsion: 0.05, // best bewteen 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 300,
@@ -199,6 +255,7 @@ export const SHIP_HEAVY = {
 
 export const SHIP_FIGHTER = {
   name: "Fighter",
+  objType:OBJ_SHIP,
   propulsion: 0.08, // best bewteen 0.02 - 0.1
   turnSpeed: 0.07, // // best between 0.3 - 0.07
   resourcesMax: 100,
@@ -220,6 +277,7 @@ export const SHIP_FIGHTER = {
 
 export const SHIP_ALIEN = {
   name: "Alien",
+  objType:OBJ_SHIP,
   propulsion: 0.05, // best bewteen 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 100,
@@ -236,27 +294,34 @@ export const SHIP_ALIEN = {
   ],
   armorMax: 100,
   armor: 100,
-  crashSpeed: 3,
+  crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.8,
   imageFile: ALIEN_SHIP_FILE,
   cost: {titanium:50, gold:50, uranium:50},
 };
 
+export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN];
 
-// Buildings
-export const BUILDING_PLACEMENT_ROTATION_INCREMENT = 0.1;
-// Mine
-export const BUILDING_TYPE_MINE = "mine";
-export const MINE_SCALE = 0.25;
-export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
-export const MINE_ANIMATION_SPEED = 0.5;
-export const MINE_SPEED_TITATIUM = 10.0166; // 1 every sec
-export const MINE_SPEED_GOLD = 10.0083;  // 1 every 2 sec
-export const MINE_SPEED_URANIUM = 10.0033; // 1 every 5 sec
-export const MINE_COST = {titanium:20, gold:10, uranium:0};
-// Factory
-export const BUILDING_TYPE_FACTORY = "factory";
-export const FACTORY_COST = {titanium:100, gold:100, uranium:10};
-export const FACTORY_SCALE = 0.25;
-export const FACTORY_PLACEMENT_FROM_SHIP = 50; // how far factory is to the right of the ship TODO: should be based on sprite.height/2
+export const MINING_XP_LEVELS = [
+  {xp:10, obj:EQUIP_BLASTER},
+  {xp:20, obj:SHIP_CARGO},
+  {xp:30, obj:EQUIP_ARMOR},
+  {xp:40, obj:SHIP_FAST},
+  {xp:50, obj:EQUIP_FAST_BLASTER},
+  {xp:60, obj:EQUIP_SPEED_BOOST},
+  {xp:70, obj:EQUIP_TURN_BOOST},
+  {xp:80, obj:EQUIP_STORAGE},
+  {xp:90, obj:EQUIP_THRUSTER},
+  {xp:100, obj:SHIP_HEAVY},
+  {xp:200, obj:SHIP_FIGHTER},
+]
+
+export const ALIEN_XP_LEVELS = [
+  {xp:100, obj:EQUIP_ALIEN_BLASTER},
+  {xp:200, obj:EQUIP_BLINK_BRAKE},
+  {xp:300, obj:EQUIP_BLINK_THRUSTER},
+  {xp:400, obj:EQUIP_STREAM_BLASTER},
+  {xp:400, obj:EQUIP_R2D2},
+  {xp:500, obj:SHIP_ALIEN},
+];
