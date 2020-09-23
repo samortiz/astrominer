@@ -53,6 +53,22 @@ export function randomInt(minP, maxP) {
 }
 
 /**
+ * @return a random floating point number between min and max
+ */
+export function randomFloat(min, max) {
+  return min + (Math.random() * (max - min));
+}
+
+/**
+ * @return add distance in direction to startX,startY 
+ */
+export function getPointFrom(startX, startY, dir, distance) {
+  let x = startX + (distance * Math.cos(dir));
+  let y = startY + (distance * Math.sin(dir));
+  return {x,y};
+}
+
+/**
  * @return a collection of points [[x,y],[x,y]] on a rectangular sprite that can be used for collision detection
  * @param x,y global x,y position of sprite (on main map, not in viewport)
  */

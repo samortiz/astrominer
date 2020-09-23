@@ -38,20 +38,12 @@ export function setupWorld() {
   createPlanets(container);
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
-  setShipStartXy(-200, 2500);
+  window.world.shipStartX = c.PLAYER_START_X;
+  window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   container.addChild(world.ship.sprite);
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
-  // landing planet
-  /*
-  let home = createPlanet(c.ROCK_PLANET_FILE, 'Home', -400, world.ship.y, 0.5, 250, {
-    titanium : 1500,
-    gold : 1500,
-    uranium : 1500,
-  }, container);
-  home.resources.stored =  {titanium : 1000, gold: 1000,uranium : 1000};
-  */
   createAliens(container);
   setupMiniMap(container);
   setupExplosionSheet();
@@ -67,65 +59,99 @@ export function createBackground(container) {
 }
 
 export function createPlanets(container) {
-  let fileNames = [c.ROCK_PLANET_FILE, c.RED_PLANET_FILE, c.PURPLE_PLANET_FILE, c.GREEN_PLANET_FILE];
-
-  for (let i=0; i<=c.NUM_PLANETS; i++) {
-    let index = utils.randomInt(0, fileNames.length-1);
-    let fileName = fileNames[index];
-    let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + utils.randomInt(1000,999999);
-    let {x,y} = generateXy();
-    let scale = utils.randomInt(10,120) / 100;
-    let mass = scale * 500;
-    // Setup the planet
-    createPlanet(fileName, name, x, y, scale, mass, {
-      titanium : utils.randomInt(0,1000),
-      gold : utils.randomInt(0,1000),
-      uranium : utils.randomInt(0,1000),
-    }, container);
+  for (let ring of c.UNIVERSE_RINGS) {
+    for (let i=0; i<ring.planetCount; i++) {
+      let fileName = ring.planetFiles[utils.randomInt(0, ring.planetFiles.length-1)];
+      let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + utils.randomInt(1000,999999);
+      let scale = utils.randomInt(ring.minPlanetRadius, ring.maxPlanetRadius) / 100;
+      let mass = scale * 500;
+      let maxResource = scale * scale * 800; // exponentially grow resources
+      let minResource = scale * scale * 20; // exponentially grow resources
+      // Setup the planet
+      let planet = createPlanet(fileName, name, scale, mass, {
+        titanium : utils.randomInt(minResource, maxResource),
+        gold : utils.randomInt(minResource, maxResource),
+        uranium : utils.randomInt(minResource, maxResource),
+      }, container);
+      let {x,y} = getFreeXy(planet, c.MIN_ALIEN_DIST_TO_PLANET, c.MIN_ALIEN_DIST_TO_ALIEN, ring.minDist, ring.maxDist);
+      planet.x = x;
+      planet.y = y;
+    }
   }
 }
 
 /**
- * Find a free spot of space to stick a planet. 
+ * Distance to the nearest planet that is not equal to origPlanet
+ * @return {nearestAlien, nearestDist} 
+ */
+function nearestPlanetDistance(origPlanet, x, y) {
+  let minDist = 99999999999; 
+  let nearestPlanet = null;
+  for (let planet of window.world.planets) {
+    if (planet !== origPlanet) {
+      let dist = utils.distanceBetween(x,y, planet.x, planet.y) - planet.radius;
+      if (origPlanet) {
+        dist -= origPlanet.radius;
+      }
+      if (!nearestPlanet || (dist < minDist)) {
+        minDist = dist;
+        nearestPlanet = planet;
+      }
+    }
+  } // for
+  return {nearestPlanet:nearestPlanet, nearestPlanetDist:minDist};
+}
+
+/**
+ * Distance to the nearest alien
+ * @return {nearestAlien, nearestDist} 
+ */
+function nearestAlienDistance(x, y) {
+  let minDist = 99999999999; 
+  let nearestAlien = null;
+  for (let alien of window.world.aliens) {
+    let dist = utils.distanceBetween(x,y, alien.x, alien.y);
+    if (!nearestAlien || (dist < minDist)) {
+      minDist = dist;
+      nearestAlien = alien;
+    }
+  } // for
+  return {nearestAlien:nearestAlien, nearestAlienDist:minDist};
+}
+
+/**
+ * Find a free spot of space to stick something
  * This will recurse until it finds a free spot.
  * @return {x,y}
  */
-function generateXy() {
-  let x = utils.randomInt(0, c.UNIVERSE_WIDTH);
-  let y = utils.randomInt(0, c.UNIVERSE_HEIGHT);
-  for (let planet of window.world.planets) {
-    // Still might overlap because we aren't counting the to-be-created planet's radius
-    let dist = utils.distanceBetween(x,y, planet.x, planet.y) - planet.radius;
-    if (dist < c.MIN_PLANET_DIST) {
-      return generateXy();
-    }
-  } // for
-  for (let alien of window.world.aliens) {
-    let dist = utils.distanceBetween(x,y, alien.x, alien.y) - alien.radius;
-    if (dist < 100) {
-      return generateXy();
-    }
-  } // for
-  return {x:x,y:y};
-}
-
-function setShipStartXy(x,y) {
-  for (let planet of window.world.planets) {
-    if ((utils.distanceBetween(0,y, planet.x, planet.y) - planet.radius) < c.SHIP_START_MIN_DIST_TO_PLANET) {
-      setShipStartXy(x, y+10);
-      return; // try again and exit
+function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, failCount=0) {
+  if (failCount > 400) {
+    console.warn("Having a hard time finding a spot after "+failCount+" tries");    
+  }
+  let dir = utils.randomFloat(0, Math.PI*2);
+  let dist = utils.randomInt(minDist, maxDist);
+  let {x,y} = utils.getPointFrom(0,0, dir, dist);
+  if (minDistToPlanet > 0) {
+    let {nearestPlanet, nearestPlanetDist} = nearestPlanetDistance(planet, x,y);
+    if (nearestPlanetDist < minDistToPlanet) {
+      return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
   }
-  window.world.shipStartX = x;
-  window.world.shipStartY = y;
+  if (minDistToAlien > 0) {
+    let {nearestAlien, nearestAlienDist} = nearestAlienDistance(x,y);
+    if (nearestAlienDist < minDistToAlien) {
+      return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
+    }
+  }
+  return {x,y};
 }
 
 // Creates and returns a planet (and adds it to the app)
-export function createPlanet(fileName, name, x, y, scale, mass, resources, container) {
+export function createPlanet(fileName, name, scale, mass, resources, container) {
   let planet = {};
   planet.name = name; 
-  planet.x = x;
-  planet.y = y;
+  planet.x = 0; // temp should get reset
+  planet.y = 0; // temp should get reset
   planet.mass = mass;
   planet.resources = {
     stored: {titanium:0, gold:0, uranium:0},
@@ -137,8 +163,8 @@ export function createPlanet(fileName, name, x, y, scale, mass, resources, conta
 
   // Setup the planet container sprite (contains planet plus buildings)
   planet.sprite = new window.PIXI.Container();
-  planet.sprite.x = x; // wrong value will be set on every draw
-  planet.sprite.y = y; 
+  planet.sprite.x = 0; // will be set on every draw
+  planet.sprite.y = 0; 
 
   // Setup the planet sprite itself
   let planetSprite = new window.PIXI.Sprite(
@@ -181,7 +207,7 @@ export function createShip(shipType, owner) {
 
 export function createAliens(container) {
   for (let i=0; i<c.NUM_ALIENS; i++) {
-    let {x,y} = generateXy();
+    let {x,y} = getFreeXy(null, c.MIN_ALIEN_DIST_TO_PLANET, c.MIN_ALIEN_DIST_TO_ALIEN, 300, c.UNIVERSE_RADIUS);
     let alien = createShip(c.SHIP_ALIEN, c.ALIEN);
     window.world.aliens.push(alien);
     alien.x = x;

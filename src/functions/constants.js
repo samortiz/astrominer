@@ -32,13 +32,6 @@ export const HALF_MINIMAP_VIEW_HEIGHT = MINIMAP_VIEW_HEIGHT / 2;
 export const MINIMAP_SCALE_X = MINIMAP_WIDTH / MINIMAP_VIEW_WIDTH;  
 export const MINIMAP_SCALE_Y = MINIMAP_HEIGHT / MINIMAP_VIEW_HEIGHT; 
 
-// Planets and Universe
-export const NUM_PLANETS = 200;
-export const MIN_PLANET_DIST = 300;
-export const UNIVERSE_WIDTH = 15000;
-export const UNIVERSE_HEIGHT = 10000;
-export const SHIP_START_MIN_DIST_TO_PLANET = 300;
-
 // Files
 export const SPRITESHEET_JSON = "images/spritesheet.json";
 export const ROCK_PLANET_FILE = "rock_planet.png";
@@ -63,6 +56,36 @@ export const ALIEN_SHIP_SMALL_FILE = "alien_small.png";
 export const ALIEN_SHIP_LARGE_FILE = "alien_large.png";
 export const ALIEN_SHIP_FIRE_FILE = "alien_fire.png";
 
+// Planets and Universe
+export const NUM_PLANETS = 200;
+export const MIN_PLANET_DIST = 300;
+export const UNIVERSE_RADIUS = 15000;
+export const UNIVERSE_RINGS = [
+  { planetCount: 1, 
+    minDist: 1, maxDist: 2, 
+    minDistToOtherPlanet:10, 
+    minPlanetRadius:400, maxPlanetRadius:401, 
+    planetFiles:[GREEN_PLANET_FILE]
+  },
+  { planetCount: 100, 
+    minDist: 1400, maxDist: 5000, 
+    minDistToOtherPlanet:100, 
+    minPlanetRadius:100, maxPlanetRadius:180, 
+    planetFiles:[RED_PLANET_FILE, PURPLE_PLANET_FILE, GREEN_PLANET_FILE]
+  },
+  { planetCount: 500, 
+    minDist: 5000, maxDist: 10000, 
+    minDistToOtherPlanet:100, 
+    minPlanetRadius:50, maxPlanetRadius:100, 
+    planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE]
+  },
+  { planetCount: 1000, 
+    minDist: 10000, maxDist: 15000, 
+    minDistToOtherPlanet:100, 
+    minPlanetRadius:30, maxPlanetRadius:90, 
+    planetFiles:[ROCK_PLANET_FILE]
+  },
+];
 
 export const PLAYER = "player";
 export const ALIEN = "alien";
@@ -70,8 +93,12 @@ export const PLAYER_STARTING_RESOURCES = {titanium:30, gold:20, uranium:0};
 export const GRAVITATIONAL_CONST = 2;
 export const ALLOWED_OVERLAP = 2; // overlap for fudging collision detection
 export const TAKEOFF_SPEED = 10; // in units of planet gravity
-export const NUM_ALIENS = 300;
 export const PLANET_RESOURCE_MAX = 99999999;
+export const PLAYER_START_X = -(UNIVERSE_RADIUS + 1000); // left of the universe
+export const PLAYER_START_Y = 0;
+export const NUM_ALIENS = 1000;
+export const MIN_ALIEN_DIST_TO_PLANET = 50;
+export const MIN_ALIEN_DIST_TO_ALIEN = 20;
 
 // Critical Hits
 export const CRIT_TYPE_BRAKE = "Brake"
