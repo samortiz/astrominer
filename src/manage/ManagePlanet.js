@@ -54,7 +54,7 @@ export class ManagePlanet extends React.Component {
               <td>
                 <span className='transfer-button' 
                         onClick={() => manage.transferResource(ship.resources, planet.resources.stored, 
-                        'titanium', this.state.titanium, -1)}>{'\u2bc7'}</span>
+                        'titanium', this.state.titanium, c.PLANET_RESOURCE_MAX)}>{'\u2bc7'}</span>
                   <input type='text' className='transfer-input' 
                   value={this.state.titanium} 
                   onChange={(event)=>this.valueChanged(event, 'titanium')}/>
@@ -70,7 +70,7 @@ export class ManagePlanet extends React.Component {
               <td>
                 <span className='transfer-button' 
                         onClick={() => manage.transferResource(ship.resources, planet.resources.stored, 
-                        'gold', this.state.gold, -1)}>{'\u2bc7'}</span>
+                        'gold', this.state.gold, c.PLANET_RESOURCE_MAX)}>{'\u2bc7'}</span>
                   <input type='text' className='transfer-input' 
                   value={this.state.gold} 
                   onChange={(event)=>this.valueChanged(event, 'gold')}/>
@@ -86,7 +86,7 @@ export class ManagePlanet extends React.Component {
               <td>
                 <span className='transfer-button' 
                         onClick={() => manage.transferResource(ship.resources, planet.resources.stored, 
-                        'uranium', this.state.uranium, -1)}>{'\u2bc7'}</span>
+                        'uranium', this.state.uranium, c.PLANET_RESOURCE_MAX)}>{'\u2bc7'}</span>
                   <input type='text' className='transfer-input' 
                   value={this.state.uranium} 
                   onChange={(event)=>this.valueChanged(event, 'uranium')}/>

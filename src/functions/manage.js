@@ -7,8 +7,10 @@ export function enterManageState() {
 
 // When managing planet resources - loop runs 60/s
 export function manageLoop(delta) {
-  if (window.world.keys.up.isDown || window.world.keys.w.isDown) {
-    takeOff();
+  if ((window.world.keys.up.isDown || window.world.keys.w.isDown)) {
+    if (window.world.ship.sprite.visible) {
+      takeOff();
+    }
   }
 }
 
@@ -116,7 +118,7 @@ export function transferResource(source, target, resourceType, requestedAmtStr, 
   }
   // Cap to max capacity of target
   let spaceLeft =  maxCapacity - (target.titanium + target.gold + target.uranium);
-  if ((maxCapacity > 0) && (spaceLeft < amt)) {
+  if (spaceLeft < amt) {
     amt = spaceLeft;
   }
   
@@ -199,7 +201,11 @@ export function removeShipFromStorage(ship, planet) {
 }
 
 export function addShipToStorage(ship, planet) {
-  planet.ships.push(ship);
+  // If the ship is not visible (and armorMax is zero) it has been destroyed
+  // Some ships might be non-visible because they are not currently being used
+  if (ship.sprite.visible && ship.armorMax > 0) {
+    planet.ships.push(ship);
+  }
 }
 
 export function beginUsingShip(newShip) {
@@ -241,6 +247,12 @@ export function costToRepair(ship) {
 
 export function repairShip(planet, ship) {
   let cost = costToRepair(ship);
-  ship.armor = ship.armorMax;
+  let addArmor = ship.armorMax - ship.armor; // armor needed
+  if (!game.canAfford(planet, ship, cost)) {
+    let titaniumOnHand = planet.resources.stored.titanium + ship.resources.titanium;
+    cost.titanium = titaniumOnHand;
+    addArmor = titaniumOnHand;
+  } 
   game.payResourceCost(planet, ship, cost);
+  ship.armor += addArmor;
 }

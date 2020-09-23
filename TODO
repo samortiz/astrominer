@@ -1,19 +1,18 @@
 JS Game
+- scroll minimap
 - Don't allow equipping two of the same type
-
 - Circular world
-- Jump view to planet from minimap
 - After crash focus on planet
 - CSS on info screens 
 Bugs
- - repair should not go negative (set max repair)
- - Storage -> UseShip button should disable when already selected
- - bullets show through minimap
- - restart in land mode doesn't redraw
+ - Creating ship after crash should find free spot on planet
+- bullets show through minimap
  - Scroll long lists
 
 Ideas :
+- zoom minimap
 - Self Destruct on FlyInfo
+- switching view to planet sets view on planet (without changing ship position?)
 - Factory progress bar
 - Alien drop (resources), pickup drops
 - Planet change name

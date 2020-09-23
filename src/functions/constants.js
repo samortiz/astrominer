@@ -66,11 +66,12 @@ export const ALIEN_SHIP_FIRE_FILE = "alien_fire.png";
 
 export const PLAYER = "player";
 export const ALIEN = "alien";
-export const PLAYER_STARTING_RESOURCES = {titanium:40, gold:10, uranium:0};
+export const PLAYER_STARTING_RESOURCES = {titanium:30, gold:20, uranium:0};
 export const GRAVITATIONAL_CONST = 2;
 export const ALLOWED_OVERLAP = 2; // overlap for fudging collision detection
 export const TAKEOFF_SPEED = 10; // in units of planet gravity
 export const NUM_ALIENS = 300;
+export const PLANET_RESOURCE_MAX = 99999999;
 
 // Critical Hits
 export const CRIT_TYPE_BRAKE = "Brake"
@@ -94,7 +95,7 @@ export const MINE_SPEED_URANIUM = 0.0033; // 1 every 5 sec
 export const MINE_COST = {titanium:20, gold:10, uranium:0};
 // Factory
 export const BUILDING_TYPE_FACTORY = "factory";
-export const FACTORY_COST = {titanium:100, gold:100, uranium:10};
+export const FACTORY_COST = {titanium:50, gold:20, uranium:10};
 export const FACTORY_SCALE = 0.25;
 export const FACTORY_PLACEMENT_FROM_SHIP = 50; // how far factory is to the right of the ship TODO: should be based on sprite.height/2
 
@@ -184,7 +185,7 @@ export const SHIP_EXPLORER = {
   crashAngle: 0.5,
   imageScale: 0.6,
   imageFile: SHIP_EXPLORER_FILE,
-  cost: {titanium:40, gold:40, uranium:30},
+  cost: {titanium:40, gold:30, uranium:30},
 };
 
 export const SHIP_CARGO = {
@@ -198,7 +199,7 @@ export const SHIP_CARGO = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 1,
+  equipMax: 2,
   equip : [EQUIP_BRAKE],
   armorMax: 20,
   armor: 20,
@@ -214,16 +215,16 @@ export const SHIP_FAST = {
   objType:OBJ_SHIP,
   propulsion: 0.1, // best bewteen 0.02 - 0.1
   turnSpeed: 0.08, // // best between 0.3 - 0.07
-  resourcesMax: 30,
+  resourcesMax: 40,
   resources: {
     titanium : 0,
     gold : 0,
     uranium : 0,
   },
-  equipMax: 2,
+  equipMax: 3,
   equip : [EQUIP_BRAKE],
-  armorMax : 60,
-  armor: 60,
+  armorMax : 50,
+  armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
   imageScale: 0.3,
@@ -242,7 +243,7 @@ export const SHIP_HEAVY = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 5,
+  equipMax: 6,
   equip : [EQUIP_BRAKE],
   armorMax : 300,
   armor: 300,
@@ -264,10 +265,10 @@ export const SHIP_FIGHTER = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 4,
+  equipMax: 5,
   equip : [EQUIP_BRAKE],
-  armorMax : 150,
-  armor: 150,
+  armorMax : 200,
+  armor: 200,
   crashSpeed: 1.5,
   crashAngle: 0.6,
   imageScale: 0.5,
@@ -286,7 +287,7 @@ export const SHIP_ALIEN = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 2,
+  equipMax: 3,
   equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
   crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
         , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
@@ -305,23 +306,23 @@ export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP
 
 export const MINING_XP_LEVELS = [
   {xp:10, obj:EQUIP_BLASTER},
-  {xp:20, obj:SHIP_CARGO},
-  {xp:30, obj:EQUIP_ARMOR},
-  {xp:40, obj:SHIP_FAST},
-  {xp:50, obj:EQUIP_FAST_BLASTER},
-  {xp:60, obj:EQUIP_SPEED_BOOST},
-  {xp:70, obj:EQUIP_TURN_BOOST},
-  {xp:80, obj:EQUIP_STORAGE},
-  {xp:90, obj:EQUIP_THRUSTER},
-  {xp:100, obj:SHIP_HEAVY},
-  {xp:200, obj:SHIP_FIGHTER},
+  {xp:100, obj:SHIP_CARGO},
+  {xp:200, obj:EQUIP_ARMOR},
+  {xp:400, obj:SHIP_FAST},
+  {xp:1000, obj:EQUIP_FAST_BLASTER},
+  {xp:1500, obj:EQUIP_SPEED_BOOST},
+  {xp:2000, obj:EQUIP_TURN_BOOST},
+  {xp:3000, obj:EQUIP_STORAGE},
+  {xp:5000, obj:EQUIP_THRUSTER},
+  {xp:8000, obj:SHIP_HEAVY},
+  {xp:10000, obj:SHIP_FIGHTER},
 ]
 
 export const ALIEN_XP_LEVELS = [
   {xp:100, obj:EQUIP_ALIEN_BLASTER},
-  {xp:200, obj:EQUIP_BLINK_BRAKE},
-  {xp:300, obj:EQUIP_BLINK_THRUSTER},
-  {xp:400, obj:EQUIP_STREAM_BLASTER},
-  {xp:400, obj:EQUIP_R2D2},
-  {xp:500, obj:SHIP_ALIEN},
+  {xp:300, obj:EQUIP_BLINK_BRAKE},
+  {xp:500, obj:EQUIP_BLINK_THRUSTER},
+  {xp:1000, obj:EQUIP_STREAM_BLASTER},
+  {xp:1500, obj:EQUIP_R2D2},
+  {xp:2000, obj:SHIP_ALIEN},
 ];

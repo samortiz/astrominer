@@ -1,4 +1,4 @@
-import { utils, c, game, manage } from './';
+import { utils, c, game, manage, fly } from './';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -266,12 +266,41 @@ function destroyShip(ship, afterExplosion) {
 
 function resetGame() {
   // loadNewShip will setup a new ship but not position it
-  let newShip = game.createShip(c.SHIP_EXPLORER);
-  manage.beginUsingShip(newShip);
-  newShip.sprite.rotation = 0;
-  newShip.x = window.world.shipStartX;
-  newShip.y = window.world.shipStartY;
-  newShip.sprite.visible = true;
+  let ship = window.world.ship;
+  let planet = window.world.selectedPlanet;
+  // The current ship is gone
+  ship.sprite.visible = false;
+  ship.resourcesMax = 0;
+  ship.resources = {titanium : 0,gold : 0,uranium : 0};
+  ship.equip = [];
+  ship.armorMax = 0;
+  ship.armor = 0;
+
+  // If the most recently used planet doesn't have any buildings
+  if (!planet || (planet.buildings.length === 0)) {
+    console.log("Looking for suitable planet");
+    // find a planet with a mine
+    for (let planet of window.world.planets) {
+      if (planet.buildings.length > 0) {
+        console.log("Found "+planet.name+" with buildings");
+        window.world.selectedPlanet = planet;
+        break;
+      }
+    }
+    // No buildings on any planet- game over! 
+    if (!planet) {
+      console.log("no planets with buildings");
+      window.world.selectedPlanet = window.world.planets[0];
+    }
+  }
+  let {x,y,rotation} = manage.getAvailablePlanetXY(planet, ship, 0, 20, 0);
+  ship.x = x;
+  ship.y = y;
+  ship.vx = 0;
+  ship.vy = 0;
+  ship.sprite.rotation = rotation;
+  flyLoop(0); // redraw the screen once
+  game.changeGameState(c.GAME_STATE.MANAGE);
 }
 
 /**
@@ -480,21 +509,18 @@ export function getEquip(ship, equipType) {
 }
 
 export function drawMiniMap() {
- let g = window.world.miniMapGraphics;
- let ship = window.world.ship;
- let l = 0;
- let t = c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT;
- let r = c.MINIMAP_WIDTH;
- let b = c.SCREEN_HEIGHT;
-
+  let g = window.world.miniMapGraphics;
+  let ship = window.world.ship;
+  let l = 0;
+  let t = c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT;
+  let r = c.MINIMAP_WIDTH;
+  let b = c.SCREEN_HEIGHT;
   g.clear();
-
   // Background
   g.beginFill(c.DARK_GREY);
   g.lineStyle(1, c.MED_GREY); 
   g.drawRect(l, t, r, b);
   g.endFill();
-
   // Planets
   for (let planet of window.world.planets) {
     if (planetOnMap(ship, planet)) {
@@ -511,11 +537,28 @@ export function drawMiniMap() {
       }
     }
   }
-
   // Ship
   g.lineStyle(1, c.WHITE);
   g.drawCircle(l+c.MINIMAP_WIDTH/2,t+c.MINIMAP_HEIGHT/2, 2);
 }
+
+/**
+ * Handles clicks on the minimap 
+ */
+export function clickOnMinimap(clickX, clickY) {
+  if (window.world.gameState === c.GAME_STATE.MANAGE) {
+    let ship = window.world.ship;
+    let globalX = ship.x + ((clickX - c.HALF_MINIMAP_WIDTH) * (1/c.MINIMAP_SCALE_X));
+    let globalY = ship.y + (((clickY - (c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT)) - c.HALF_MINIMAP_HEIGHT) * (1/c.MINIMAP_SCALE_X));
+    for (let planet of window.world.planets) {
+      if (utils.distanceBetween(globalX, globalY, planet.x, planet.y) <= planet.radius) {
+        window.world.selectedPlanet = planet;
+        // TODO: redraw based on what ship?
+      }
+    }
+  }
+}
+
 
 function planetOnMap(ship, planet) {
   // Right side

@@ -44,12 +44,14 @@ export function setupWorld() {
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
   // landing planet
+  /*
   let home = createPlanet(c.ROCK_PLANET_FILE, 'Home', -400, world.ship.y, 0.5, 250, {
     titanium : 1500,
     gold : 1500,
     uranium : 1500,
   }, container);
   home.resources.stored =  {titanium : 1000, gold: 1000,uranium : 1000};
+  */
   createAliens(container);
   setupMiniMap(container);
   setupExplosionSheet();
@@ -208,6 +210,16 @@ export function setupMiniMap(container) {
   window.world.miniMapGraphics = g;
 }
 
+/**
+ * Called when the user clicks on the screen 
+ */
+export function click(event) {
+  let x = event.data.global.x;
+  let y = event.data.global.y;
+  if ((x < c.MINIMAP_WIDTH) && (y> c.SCREEN_HEIGHT-c.MINIMAP_HEIGHT)) {
+    fly.clickOnMinimap(x,y);
+  }
+}
 
 export function changeGameState(newState) {
   const world = window.world;

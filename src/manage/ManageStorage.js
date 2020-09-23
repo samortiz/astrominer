@@ -22,19 +22,16 @@ export class ManageStorage extends React.Component {
     this.setState({selectedShip:null});
   }
 
-  canRepair(planet, ship) {
-    return game.canAfford(planet, ship, manage.costToRepair(ship)) 
-        && (Math.floor(this.state.selectedShip.armorMax - this.state.selectedShip.armor) <= 0);
-  }
-
-  changeEquip(ship, equip) {
-    console.log("Equiping ",ship, "with ",equip);
-  }
-
   render() {
     let world = window.world;
     let planet = world.selectedPlanet;
+    let currentShip = world.ship;
     let selectedShip = this.state.selectedShip;
+    
+    // Default to selecting the current ship
+    if (!selectedShip && currentShip.sprite.visible) {
+      selectedShip = currentShip;
+    }
 
     let selectedShipEquip = [];
     if (selectedShip) {
@@ -49,30 +46,29 @@ export class ManageStorage extends React.Component {
         <div className='storage-section'> 
           <div className='title'>Ships</div>
           <span className='item-list'>
-            {[world.ship].concat(planet.ships).map((ship, i) => {
+            {(currentShip.sprite.visible ? [currentShip] : []).concat(planet.ships).map((ship, i) => {
               return <div key={i} 
                           onClick={() => this.viewShip(ship)} 
-                          className={`ship ${this.state.selectedShip===ship ? 'selected-item' : 'non-selected-item'}`} >{ship.name}</div>
+                          className={`ship ${selectedShip===ship ? 'selected-item' : 'non-selected-item'}`} >{ship.name}</div>
             })}
           </span>
           <span className='item-details'>
-            { this.state.selectedShip != null && // exclude this block if no ship selected
+            { selectedShip != null && // exclude this block if no ship selected
             <div>
               <div className='button-row'>
-                <button onClick={() => this.startUsingShip()}>Use Ship</button>
+                <button onClick={() => this.startUsingShip()} disabled={selectedShip === currentShip}>Use Ship</button>
               </div>             
-              <div className='item-attr'><b>Name</b> {this.state.selectedShip.name} {this.state.selectedShip.id}</div>
-              <div className='item-attr'><b>Engine</b> Propulsion:{Math.floor(this.state.selectedShip.propulsion*100)} Turn:{Math.floor(this.state.selectedShip.turnSpeed*100)}</div>
-              <div className='item-attr'><b>Landing</b> Speed:{Math.floor(this.state.selectedShip.crashSpeed)} Angle:{Math.floor(this.state.selectedShip.crashAngle*10)}</div>
+              <div className='item-attr'><b>Name</b> {selectedShip.name} {selectedShip.id}</div>
+              <div className='item-attr'><b>Engine</b> Propulsion:{Math.floor(selectedShip.propulsion*100)} Turn:{Math.floor(selectedShip.turnSpeed*100)}</div>
+              <div className='item-attr'><b>Landing</b> Speed:{Math.floor(selectedShip.crashSpeed)} Angle:{Math.floor(selectedShip.crashAngle*10)}</div>
               <div className='item-attr'><b>Armor</b> 
-                {Math.floor(this.state.selectedShip.armor)} of {Math.floor(this.state.selectedShip.armorMax)} 
-                <button onClick={() => manage.repairShip(planet, this.state.selectedShip)}
-                        disabled={this.canRepair(planet, this.state.selectedShip)}
-                >Repair</button> 
-                 Cost {Math.floor(this.state.selectedShip.armorMax - this.state.selectedShip.armor)} titanium
+                {Math.floor(selectedShip.armor)} of {Math.floor(selectedShip.armorMax)} 
+                <button onClick={() => manage.repairShip(planet, selectedShip)}
+                        disabled={selectedShip.armorMax <= selectedShip.armor} >Repair</button> 
+                 &nbsp; Cost {Math.floor(selectedShip.armorMax - selectedShip.armor)} titanium
               </div>
-              <div className='item-attr'><b>Resources</b> Max:{Math.floor(this.state.selectedShip.resourcesMax)}</div>
-              <div className='item-attr'><b>Equip</b> Max:{this.state.selectedShip.equipMax}
+              <div className='item-attr'><b>Resources</b> Max:{Math.floor(selectedShip.resourcesMax)}</div>
+              <div className='item-attr'><b>Equip</b> Max:{selectedShip.equipMax}
                 {selectedShipEquip}
               </div>
             </div>

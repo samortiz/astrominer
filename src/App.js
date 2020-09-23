@@ -51,6 +51,9 @@ render() {
     game.setupWorld();
     this.setupKeyboardListeners();
     game.changeGameState(c.GAME_STATE.FLY);
+    window.world.app.renderer.plugins.interaction.on('pointerdown', (event) => { 
+      game.click(event);
+    });
     window.world.app.ticker.add(delta => this.mainLoop(delta));
   }
   
