@@ -63,7 +63,7 @@ export function createPlanets(container) {
     for (let i=0; i<ring.planetCount; i++) {
       let fileName = ring.planetFiles[utils.randomInt(0, ring.planetFiles.length-1)];
       let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + utils.randomInt(1000,999999);
-      let scale = utils.randomInt(ring.minPlanetRadius, ring.maxPlanetRadius) / 100;
+      let scale = utils.randomInt(ring.minPlanetScale, ring.maxPlanetScale) / 100;
       let mass = scale * 500;
       let maxResource = scale * scale * 800; // exponentially grow resources
       let minResource = scale * scale * 20; // exponentially grow resources
@@ -73,7 +73,7 @@ export function createPlanets(container) {
         gold : utils.randomInt(minResource, maxResource),
         uranium : utils.randomInt(minResource, maxResource),
       }, container);
-      let {x,y} = getFreeXy(planet, c.MIN_ALIEN_DIST_TO_PLANET, c.MIN_ALIEN_DIST_TO_ALIEN, ring.minDist, ring.maxDist);
+      let {x,y} = getFreeXy(planet, ring.minDistToOtherPlanet, 0, ring.minDist, ring.maxDist);
       planet.x = x;
       planet.y = y;
     }
@@ -89,7 +89,7 @@ function nearestPlanetDistance(origPlanet, x, y) {
   let nearestPlanet = null;
   for (let planet of window.world.planets) {
     if (planet !== origPlanet) {
-      let dist = utils.distanceBetween(x,y, planet.x, planet.y) - planet.radius;
+      let dist = utils.distanceBetween(x,y, planet.x,planet.y) - planet.radius;
       if (origPlanet) {
         dist -= origPlanet.radius;
       }
@@ -110,7 +110,8 @@ function nearestAlienDistance(x, y) {
   let minDist = 99999999999; 
   let nearestAlien = null;
   for (let alien of window.world.aliens) {
-    let dist = utils.distanceBetween(x,y, alien.x, alien.y);
+    // This assumes the calling code alien is the same size
+    let dist = utils.distanceBetween(x,y, alien.x, alien.y) - (alien.radius * 2);
     if (!nearestAlien || (dist < minDist)) {
       minDist = dist;
       nearestAlien = alien;
@@ -125,23 +126,25 @@ function nearestAlienDistance(x, y) {
  * @return {x,y}
  */
 function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, failCount=0) {
-  if (failCount > 400) {
-    console.warn("Having a hard time finding a spot after "+failCount+" tries");    
-  }
   let dir = utils.randomFloat(0, Math.PI*2);
   let dist = utils.randomInt(minDist, maxDist);
   let {x,y} = utils.getPointFrom(0,0, dir, dist);
+  let np = 9999;
   if (minDistToPlanet > 0) {
     let {nearestPlanet, nearestPlanetDist} = nearestPlanetDistance(planet, x,y);
     if (nearestPlanetDist < minDistToPlanet) {
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
+    np = nearestPlanetDist;
   }
   if (minDistToAlien > 0) {
     let {nearestAlien, nearestAlienDist} = nearestAlienDistance(x,y);
     if (nearestAlienDist < minDistToAlien) {
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
+  }
+  if (failCount > 200) {
+    console.warn("Had a hard time finding a spot, it took "+failCount+" tries on ring "+minDist+" np="+np);
   }
   return {x,y};
 }

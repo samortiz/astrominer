@@ -64,25 +64,25 @@ export const UNIVERSE_RINGS = [
   { planetCount: 1, 
     minDist: 1, maxDist: 2, 
     minDistToOtherPlanet:10, 
-    minPlanetRadius:400, maxPlanetRadius:401, 
+    minPlanetScale:400, maxPlanetScale:401, 
     planetFiles:[GREEN_PLANET_FILE]
   },
-  { planetCount: 100, 
+  { planetCount: 90, 
     minDist: 1400, maxDist: 5000, 
-    minDistToOtherPlanet:100, 
-    minPlanetRadius:100, maxPlanetRadius:180, 
+    minDistToOtherPlanet:150, 
+    minPlanetScale:100, maxPlanetScale:180, 
     planetFiles:[RED_PLANET_FILE, PURPLE_PLANET_FILE, GREEN_PLANET_FILE]
   },
-  { planetCount: 500, 
+  { planetCount: 600, 
     minDist: 5000, maxDist: 10000, 
-    minDistToOtherPlanet:100, 
-    minPlanetRadius:50, maxPlanetRadius:100, 
+    minDistToOtherPlanet:150, 
+    minPlanetScale:50, maxPlanetScale:100, 
     planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE]
   },
   { planetCount: 1000, 
     minDist: 10000, maxDist: 15000, 
-    minDistToOtherPlanet:100, 
-    minPlanetRadius:30, maxPlanetRadius:90, 
+    minDistToOtherPlanet:150, 
+    minPlanetScale:20, maxPlanetScale:90, 
     planetFiles:[ROCK_PLANET_FILE]
   },
 ];
@@ -98,7 +98,7 @@ export const PLAYER_START_X = -(UNIVERSE_RADIUS + 1000); // left of the universe
 export const PLAYER_START_Y = 0;
 export const NUM_ALIENS = 1000;
 export const MIN_ALIEN_DIST_TO_PLANET = 50;
-export const MIN_ALIEN_DIST_TO_ALIEN = 20;
+export const MIN_ALIEN_DIST_TO_ALIEN = 3;
 
 // Critical Hits
 export const CRIT_TYPE_BRAKE = "Brake"
