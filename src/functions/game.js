@@ -44,6 +44,19 @@ export function setupWorld() {
   container.addChild(world.ship.sprite);
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
+
+   // DEBUG test alien
+  let testAlienTurret = createAlien(container, c.SHIP_ALIEN_SMALL, c.PLAYER_START_X+250, c.PLAYER_START_Y);
+  let testAlienShip= createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X+250, c.PLAYER_START_Y+150);
+  // DEBUG test planet
+  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 0.5, 200, {
+    titanium : 20500,
+    gold : 51000,
+    uranium : 5000,
+  }, container);
+  testPlanet.x = c.PLAYER_START_X + 250;
+  testPlanet.y = c.PLAYER_START_Y - 300;
+
   createAliens(container);
   setupMiniMap(container);
   setupExplosionSheet();
@@ -208,16 +221,21 @@ export function createShip(shipType, owner) {
   return ship;
 }
 
+export function createAlien(container, shipType, x, y) {
+  let alien = createShip(shipType, c.ALIEN);
+  window.world.aliens.push(alien);
+  alien.x = x;
+  alien.y = y;
+  alien.radius = alien.sprite.width/2; // Only for circular aliens
+  alien.sprite.x += 100;
+  container.addChild(alien.sprite);
+  return alien;
+}
+
 export function createAliens(container) {
   for (let i=0; i<c.NUM_ALIENS; i++) {
     let {x,y} = getFreeXy(null, c.MIN_ALIEN_DIST_TO_PLANET, c.MIN_ALIEN_DIST_TO_ALIEN, 300, c.UNIVERSE_RADIUS);
-    let alien = createShip(c.SHIP_ALIEN, c.ALIEN);
-    window.world.aliens.push(alien);
-    alien.x = x;
-    alien.y = y;
-    alien.radius = alien.sprite.width/2; // Only for circular aliens
-    alien.sprite.x += 100;
-    container.addChild(alien.sprite);
+    createAlien(container, c.SHIP_ALIEN_SMALL, x, y);
   }
 }
 

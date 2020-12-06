@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { InfoPanel } from './InfoPanel';
-import { utils, c, game, fly } from './functions';
+import { utils, c, game, fly, ai } from './functions';
 
 export default class App extends React.Component {
 
@@ -63,7 +63,7 @@ render() {
       game.runBuildings();
       fly.moveBullets();
       fly.coolAllWeapons();
-      fly.moveAliens();
+      ai.moveAliens();
       window.world.gameLoop(delta);
     }
     this.forceUpdate()

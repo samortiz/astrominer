@@ -1,4 +1,4 @@
-import { utils, c, game, manage, fly } from './';
+import { utils, c, game, manage, ai } from './';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -145,7 +145,7 @@ export function planetInView(ship, planet) {
 }
 
 // Returns true if there is a collision and false otherwise
-function detectCollisionWithPlanet(ship, planet) {
+export function detectCollisionWithPlanet(ship, planet) {
   // [[x,y],[x,y]]
   let collisionPoints = utils.getVertexData(ship.x, ship.y, ship.sprite); 
   for (let point of collisionPoints) {
@@ -158,7 +158,7 @@ function detectCollisionWithPlanet(ship, planet) {
 }
 
 // Returns true if there is a collision and false otherwise
-function detectCollisionWithAlien(ship, alien) {
+export function detectCollisionWithAlien(ship, alien) {
   let collisionPoints = utils.getVertexData(ship.x, ship.y, ship.sprite); 
   for (let point of collisionPoints) {
     // Only works with circular aliens (need different logic for squares)
@@ -215,7 +215,7 @@ function landShip(ship, planet) {
   game.changeGameState(c.GAME_STATE.MANAGE);
 }
 
-function crash(ship) {
+export function crash(ship) {
   // Hit a planet so stop moving suddenly
   ship.vx = 0;
   ship.vy = 0;
@@ -247,7 +247,7 @@ export function getExplosionSprite(ship) {
  * @param ship : the one to explode
  * @param afterExplosion : function to run after exploding (or null if nothing to do)
  */
-function destroyShip(ship, afterExplosion) {
+export function destroyShip(ship, afterExplosion) {
   if (ship !== window.world.ship) {
     game.addAlienXp(ship);
   }
@@ -364,7 +364,7 @@ function thrustShip(ship, left) {
   }
 }
 
-function firePrimaryWeapon(ship) {
+export function firePrimaryWeapon(ship) {
   let gun = getEquip(ship, c.EQUIP_TYPE_PRIMARY_WEAPON);
   if (gun && (gun.cool <= 0)) {
     fireBullet(ship, gun);
@@ -484,7 +484,7 @@ export function damageShip(ship, damage, afterExplosion) {
 /**
  * collision between player ship and alien
  */
-function shipsCollide(ship, alien) {
+export function shipsCollide(ship, alien) {
   let shipDamage = ship.armor;
   let alienDamage = alien.armor;
   damageShip(alien, shipDamage, null);
@@ -571,20 +571,3 @@ function planetOnMap(ship, planet) {
   return true;
 }
 
-export function moveAliens() {
-  let ship = window.world.ship;
-  for (let alien of window.world.aliens) {
-    if (!alien.sprite.visible) {
-      continue;
-    }
-    // Set alien ship relative to the ship's viewport
-    alien.sprite.x = (alien.x - ship.x) + c.HALF_SCREEN_WIDTH;
-    alien.sprite.y = (alien.y - ship.y) + c.HALF_SCREEN_HEIGHT;
-    if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < 300) {
-      alien.sprite.rotation =  utils.normalizeRadian(Math.atan2(ship.y - alien.y, ship.x - alien.x));
-      alien.sprite.rotation += ((Math.PI/3) * Math.random()) -Math.PI/6;
-      firePrimaryWeapon(alien);
-    }
-  }
-
-}

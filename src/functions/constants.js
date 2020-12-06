@@ -144,6 +144,9 @@ export const THRUST_BLINK = "Thrust Blink";
 export const OBJ_EQUIP = "Equip";
 export const OBJ_SHIP = "Ship";
 
+export const ALIEN_AI_TURRET = "ALIEN_AI_TURRET";
+export const ALIEN_AI_CREEPER = "ALIEN_AI_CREEPER";
+
 // brakeSpeedPct is best between 0.02 - 0.1 (higher is ok)  
 export const EQUIP_BRAKE = {name: "Brake", objType:OBJ_EQUIP, type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
                             crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95},
@@ -201,7 +204,7 @@ export const SHIP_EXPLORER = {
     uranium : 0,
   },
   equipMax: 2,
-  equip : [EQUIP_BRAKE],
+  equip : [EQUIP_BRAKE, EQUIP_BLASTER], // DEBUG blaster
   crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
         , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
         , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
@@ -303,8 +306,8 @@ export const SHIP_FIGHTER = {
   cost: {titanium:500, gold:500, uranium:500},
 };
 
-export const SHIP_ALIEN = {
-  name: "Alien",
+export const SHIP_ALIEN_SMALL = {
+  name: "Alien Turret",
   objType:OBJ_SHIP,
   propulsion: 0.05, // best bewteen 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
@@ -325,11 +328,40 @@ export const SHIP_ALIEN = {
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.8,
-  imageFile: ALIEN_SHIP_FILE,
+  imageFile: ALIEN_SHIP_SMALL_FILE,
   cost: {titanium:50, gold:50, uranium:50},
+  aiType: ALIEN_AI_TURRET,
 };
 
-export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN];
+export const SHIP_ALIEN_LARGE = {
+  name: "Alien Ship",
+  objType:OBJ_SHIP,
+  propulsion: 0.05, // best bewteen 0.02 - 0.1
+  turnSpeed: 0.05, // // best between 0.3 - 0.07
+  resourcesMax: 100,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  equipMax: 3,
+  equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
+  crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
+    , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
+    , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
+  ],
+  armorMax: 100,
+  armor: 100,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 0.9,
+  imageFile: ALIEN_SHIP_FILE,
+  cost: {titanium:150, gold:100, uranium:80},
+  aiType: ALIEN_AI_CREEPER,
+};
+
+
+export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN_SMALL];
 
 export const MINING_XP_LEVELS = [
   {xp:10, obj:EQUIP_BLASTER},
@@ -351,5 +383,5 @@ export const ALIEN_XP_LEVELS = [
   {xp:500, obj:EQUIP_BLINK_THRUSTER},
   {xp:1000, obj:EQUIP_STREAM_BLASTER},
   {xp:1500, obj:EQUIP_R2D2},
-  {xp:2000, obj:SHIP_ALIEN},
+  {xp:2000, obj:SHIP_ALIEN_SMALL},
 ];

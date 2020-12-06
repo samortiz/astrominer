@@ -1,4 +1,5 @@
 import { c } from './';
+
 /**
  * Returns the distance between two points 
  */
@@ -44,6 +45,22 @@ export function calcGravity(x, y, planet) {
 }
 
 /**
+ * @return the angle x1,y1 would need to face to point directly at x2,y2
+ */
+export function directionTo(x1,y1, x2,y2) {
+  return Math.atan2(x1 - x2, y1 - y2);
+}
+
+/**
+ * @return {xAmt, yAmt} splitting the dir and amount into x,y portions
+ */
+export function dirComponents(dir, amount) {
+  let xAmt = amount * -Math.sin(dir);
+  let yAmt = amount * -Math.cos(dir);
+  return {xAmt, yAmt};
+}
+
+/**
  * @return an int between min and max inclusive
  */
 export function randomInt(minP, maxP) {
@@ -57,6 +74,13 @@ export function randomInt(minP, maxP) {
  */
 export function randomFloat(min, max) {
   return min + (Math.random() * (max - min));
+}
+
+/**
+ * @return true 50% of the time
+ */
+export function randomBool() {
+  return Math.random() > 0.5;
 }
 
 /**
