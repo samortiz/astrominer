@@ -47,9 +47,12 @@ export function setupWorld() {
 
    // DEBUG test alien
   let testAlienTurret = createAlien(container, c.SHIP_ALIEN_SMALL, c.PLAYER_START_X+250, c.PLAYER_START_Y);
-  let testAlienShip= createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X+250, c.PLAYER_START_Y+150);
+  let testAlienShip= createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X+250, c.PLAYER_START_Y+250);
+  //createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X-350, c.PLAYER_START_Y+150);
+  //createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X-350, c.PLAYER_START_Y-150);
+  //createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X+350, c.PLAYER_START_Y-150);
   // DEBUG test planet
-  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 0.5, 200, {
+  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 0.7, 200, {
     titanium : 20500,
     gold : 51000,
     uranium : 5000,
@@ -65,8 +68,8 @@ export function setupWorld() {
 export function createBackground(container) {
   window.world.bgSprite = new window.PIXI.TilingSprite(
     window.PIXI.Texture.from(c.STAR_BACKGROUND_FILE),
-    500,
-    500,
+    c.SCREEN_WIDTH,
+    c.SCREEN_HEIGHT,
   );
   container.addChild(window.world.bgSprite);
 }

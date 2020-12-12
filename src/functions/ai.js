@@ -53,9 +53,25 @@ export function turretAi(alien) {
 export function creeperAi(alien) {
     let ship = window.world.ship;
     let moved = false;
+    // Close enough to player to move
     if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < c.SCREEN_WIDTH) {
       let dirToPlayer = utils.directionTo(alien.x, alien.y, ship.x, ship.y);
       let { xAmt, yAmt} = utils.dirComponents(dirToPlayer, 20 * alien.propulsion);
+
+      // Check if we are too close to a planet (need to move around the planet)
+      for (let planet of window.world.planets) {
+        if (utils.distanceBetween(alien.x+xAmt, alien.y+yAmt, planet.x, planet.y) < (planet.radius + alien.radius + 10)) {
+           const dirToPlanet = utils.directionTo(alien.x, alien.y, planet.x, planet.y);
+           let dirDiff = dirToPlanet - dirToPlayer;
+           let rightLeft = (dirDiff >= 0) ? -1 : 1;
+           if (Math.abs(dirDiff) > Math.PI) {
+             rightLeft = rightLeft * -1;
+           }
+           const turnDir = dirToPlanet + (rightLeft * Math.PI/2);
+           ({xAmt, yAmt} = utils.dirComponents(turnDir, 20 * alien.propulsion));
+        }
+      }
+
       alien.x += xAmt;
       alien.y += yAmt;
       moved = true;
@@ -82,10 +98,9 @@ export function checkForCollisionWithPlanet(alien) {
 
 export function checkForCollisionWithAlien(alien) {
   for (let otherAlien of window.world.aliens) {
-    if (alien.sprite.visible && alien !== otherAlien) {
+    if (otherAlien.sprite.visible && alien !== otherAlien) {
       let dist = utils.distanceBetween(alien.x, alien.y, otherAlien.x, otherAlien.y);
       if (dist <= (alien.radius + otherAlien.radius)) {
-        console.log('bang');
         fly.shipsCollide(alien, otherAlien);
       }
     }

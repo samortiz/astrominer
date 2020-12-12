@@ -14,9 +14,9 @@ export const GAME_STATE = {
 };
 
 // Screen Layout
-export const SCREEN_WIDTH = 500;
+export const SCREEN_WIDTH = 1000;
+export const SCREEN_HEIGHT = 1000;
 export const HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2;
-export const SCREEN_HEIGHT = 500;
 export const HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
 // size of minimap on screen
 export const MINIMAP_WIDTH = 120; 

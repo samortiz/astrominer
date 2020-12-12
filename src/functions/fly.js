@@ -488,7 +488,7 @@ export function shipsCollide(ship, alien) {
   let shipDamage = ship.armor;
   let alienDamage = alien.armor;
   damageShip(alien, shipDamage, null);
-  damageShip(ship, alienDamage, resetGame);
+  damageShip(ship, alienDamage, (window.world.ship === ship) ? resetGame : null);
   // If you died hitting an alien, stop moving
   if (!ship.sprite.visible) {
     ship.vx = 0;
