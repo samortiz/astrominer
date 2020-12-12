@@ -1,4 +1,6 @@
 // Colors
+import {c} from "./index";
+
 export const BLACK = 0X000000;
 export const RED = 0xFF0000;
 export const BLUE = 0x0000FF;
@@ -57,9 +59,9 @@ export const ALIEN_SHIP_LARGE_FILE = "alien_large.png";
 export const ALIEN_SHIP_FIRE_FILE = "alien_fire.png";
 
 // Planets and Universe
-export const NUM_PLANETS = 200;
-export const MIN_PLANET_DIST = 300;
 export const UNIVERSE_RADIUS = 15000;
+export const PLANET_CACHE_STEP_SIZE = SCREEN_WIDTH;
+export const PLANET_CACHE_NUM_STEPS = UNIVERSE_RADIUS * 2 / PLANET_CACHE_STEP_SIZE;
 export const UNIVERSE_RINGS = [
   { planetCount: 1, 
     minDist: 1, maxDist: 2, 
@@ -330,7 +332,7 @@ export const SHIP_ALIEN_SMALL = {
   imageScale: 0.8,
   imageFile: ALIEN_SHIP_SMALL_FILE,
   cost: {titanium:50, gold:50, uranium:50},
-  aiType: ALIEN_AI_TURRET,
+  aiType: ALIEN_AI_CREEPER,
 };
 
 export const SHIP_ALIEN_LARGE = {

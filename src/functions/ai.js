@@ -1,4 +1,4 @@
-import {ai, c, fly, utils} from './';
+import { c, game, fly, utils} from './';
 
 export function moveAliens() {
   let ship = window.world.ship;
@@ -8,9 +8,9 @@ export function moveAliens() {
     }
     let hasMoved = false;
     if (alien.aiType === c.ALIEN_AI_TURRET) {
-      ai.turretAi(alien);
+      turretAi(alien);
     } else if (alien.aiType === c.ALIEN_AI_CREEPER) {
-      hasMoved = ai.creeperAi(alien);
+      hasMoved = creeperAi(alien);
     }
 
     if (hasMoved) {
@@ -56,10 +56,10 @@ export function creeperAi(alien) {
     // Close enough to player to move
     if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < c.SCREEN_WIDTH) {
       let dirToPlayer = utils.directionTo(alien.x, alien.y, ship.x, ship.y);
-      let { xAmt, yAmt} = utils.dirComponents(dirToPlayer, 20 * alien.propulsion);
+      let { xAmt, yAmt} = utils.dirComponents(dirToPlayer, 25 * alien.propulsion);
 
       // Check if we are too close to a planet (need to move around the planet)
-      for (let planet of window.world.planets) {
+      for (let planet of game.getPlanetsNear(alien.x, alien.y)) {
         if (utils.distanceBetween(alien.x+xAmt, alien.y+yAmt, planet.x, planet.y) < (planet.radius + alien.radius + 10)) {
            const dirToPlanet = utils.directionTo(alien.x, alien.y, planet.x, planet.y);
            let dirDiff = dirToPlanet - dirToPlayer;

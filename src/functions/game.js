@@ -63,6 +63,7 @@ export function setupWorld() {
   createAliens(container);
   setupMiniMap(container);
   setupExplosionSheet();
+  setupPlanetCache();
 }
 
 export function createBackground(container) {
@@ -421,5 +422,56 @@ export function createExplosionSprite() {
   window.world.explosions.push(sprite);
   window.world.app.stage.addChild(sprite);
   return sprite;
+}
+
+/**
+ * Creates a cache for all positions in the universe and stores the nearby planets
+ */
+export function setupPlanetCache() {
+  const planetCache = new Array(c.PLANET_CACHE_NUM_STEPS);
+  // for every position in the universe
+  for (let stepX=0; stepX <c.PLANET_CACHE_NUM_STEPS; stepX++) {
+    planetCache[stepX] = new Array(c.PLANET_CACHE_NUM_STEPS);
+    for (let stepY=0; stepY<c.PLANET_CACHE_NUM_STEPS; stepY++) {
+      const minX = ((stepX - 1) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
+      const maxX = ((stepX + 2) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
+      const minY = ((stepY - 1) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
+      const maxY = ((stepY + 2) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
+      //console.log('Step ('+stepX+','+stepY+')  x:'+minX+' to '+maxX+'   y:'+minY+' to '+maxY);
+      const stepPlanets = new Array();
+      // Find planets within view of this location
+      for (const planet of window.world.planets) {
+        if ((planet.x  - planet.radius >= minX) && (planet.x + planet.radius <= maxX ) &&
+            (planet.y - planet.radius >= minY) && (planet.y + planet.radius <= maxY )) {
+          stepPlanets.push(planet);
+        }
+      } // for planets
+      planetCache[stepX][stepY] = { planets: stepPlanets };
+    } // for stepY
+  } // for stepX
+
+  window.world.planetCache = planetCache;
+}
+
+/**
+ * Find planets from the planetCache that are somewhat near (within SCREEN_SIZE)
+ */
+export function getPlanetsNear(x, y) {
+  let stepX = Math.floor((x + c.UNIVERSE_RADIUS) / c.PLANET_CACHE_STEP_SIZE);
+  let stepY = Math.floor((y + c.UNIVERSE_RADIUS) / c.PLANET_CACHE_STEP_SIZE);
+  if (stepX < 0) {
+    stepX = 0;
+  }
+  if (stepX >= c.PLANET_CACHE_NUM_STEPS) {
+    stepX = c.PLANET_CACHE_NUM_STEPS - 1;
+  }
+  if (stepY < 0) {
+    stepY = 0;
+  }
+  if (stepY >= c.PLANET_CACHE_NUM_STEPS) {
+    stepY = c.PLANET_CACHE_NUM_STEPS - 1;
+  }
+  ;
+  return window.world.planetCache[stepX][stepY].planets;
 }
 
