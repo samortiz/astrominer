@@ -2,7 +2,7 @@
 
 "alien.png":
 {
-	"frame": {"x":477,"y":0,"w":85,"h":83},
+	"frame": {"x":498,"y":0,"w":85,"h":83},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":83},
@@ -10,15 +10,15 @@
 },
 "alien_fire.png":
 {
-	"frame": {"x":96,"y":0,"w":31,"h":52},
+	"frame": {"x":0,"y":0,"w":52,"h":31},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":31,"h":52},
-	"sourceSize": {"w":31,"h":52}
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":31},
+	"sourceSize": {"w":52,"h":31}
 },
 "alien_large.png":
 {
-	"frame": {"x":623,"y":0,"w":98,"h":93},
+	"frame": {"x":644,"y":0,"w":98,"h":93},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":98,"h":93},
@@ -26,7 +26,7 @@
 },
 "alien_small.png":
 {
-	"frame": {"x":403,"y":0,"w":74,"h":75},
+	"frame": {"x":424,"y":0,"w":74,"h":75},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":74,"h":75},
@@ -34,7 +34,7 @@
 },
 "bullet.png":
 {
-	"frame": {"x":0,"y":0,"w":32,"h":32},
+	"frame": {"x":52,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -42,7 +42,7 @@
 },
 "bullet_blue.png":
 {
-	"frame": {"x":32,"y":0,"w":32,"h":32},
+	"frame": {"x":84,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -50,7 +50,7 @@
 },
 "bullet_white.png":
 {
-	"frame": {"x":64,"y":0,"w":32,"h":32},
+	"frame": {"x":116,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -130,7 +130,7 @@
 },
 "ship_cargo.png":
 {
-	"frame": {"x":127,"y":0,"w":276,"h":62},
+	"frame": {"x":148,"y":0,"w":276,"h":62},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":62},
@@ -138,7 +138,7 @@
 },
 "ship_explorer.png":
 {
-	"frame": {"x":562,"y":0,"w":61,"h":84},
+	"frame": {"x":583,"y":0,"w":61,"h":84},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":84},
@@ -154,7 +154,7 @@
 },
 "ship_fighter.png":
 {
-	"frame": {"x":721,"y":0,"w":118,"h":116},
+	"frame": {"x":742,"y":0,"w":118,"h":116},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":118,"h":116},
@@ -176,8 +176,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":839,"h":1856},
+	"size": {"w":860,"h":1856},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:00ee37fe06d6e0c5318440063ab0e8f5:b33d10a04e762b153fd9a24c180b9002:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:8378725412803979d640c90d469a12fa:d0ee5160e434aab7d02b86e28bb109dc:729adc6043343cfda41c447ce8f464d6$"
 }
 }

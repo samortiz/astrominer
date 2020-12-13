@@ -41,24 +41,28 @@ export function setupWorld() {
   window.world.shipStartX = c.PLAYER_START_X;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
+  //world.ship = createShip(c.SHIP_FAST, c.PLAYER);
+
   container.addChild(world.ship.sprite);
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
    // DEBUG test alien
-  let testAlienTurret = createAlien(container, c.SHIP_ALIEN_SMALL, c.PLAYER_START_X+250, c.PLAYER_START_Y);
-  let testAlienShip= createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X+250, c.PLAYER_START_Y+250);
-  //createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X-350, c.PLAYER_START_Y+150);
-  //createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X-350, c.PLAYER_START_Y-150);
-  //createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X+350, c.PLAYER_START_Y-150);
-  // DEBUG test planet
-  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 0.7, 200, {
-    titanium : 20500,
-    gold : 51000,
-    uranium : 5000,
-  }, container);
-  testPlanet.x = c.PLAYER_START_X + 250;
-  testPlanet.y = c.PLAYER_START_Y - 300;
+  // createAlien(container, c.SHIP_ALIEN_FIRE, c.PLAYER_START_X - 250, c.PLAYER_START_Y);
+  // createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X - 250, c.PLAYER_START_Y+250);
+  //
+  // world.ship.armorMax = 10000;
+  // world.ship.armor = 10000;
+  // world.ship.equip[0] = c.EQUIP_BLINK_THRUSTER;
+  // world.ship.equip[1] = c.EQUIP_STREAM_BLASTER;
+  // world.ship.equip[2] = c.EQUIP_BLINK_BRAKE;
+  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 0.7, 200, {
+  //   titanium : 20500,
+  //   gold : 51000,
+  //   uranium : 5000,
+  // }, container);
+  // testPlanet.x = c.PLAYER_START_X + 250;
+  // testPlanet.y = c.PLAYER_START_Y - 300;
 
   createAliens(container);
   setupMiniMap(container);
@@ -237,10 +241,15 @@ export function createAlien(container, shipType, x, y) {
 }
 
 export function createAliens(container) {
-  for (let i=0; i<c.NUM_ALIENS; i++) {
-    let {x,y} = getFreeXy(null, c.MIN_ALIEN_DIST_TO_PLANET, c.MIN_ALIEN_DIST_TO_ALIEN, 300, c.UNIVERSE_RADIUS);
-    createAlien(container, c.SHIP_ALIEN_SMALL, x, y);
-  }
+
+  for (let ring of c.UNIVERSE_RINGS) {
+    for (const alienInfo of ring.aliens) {
+      for (let i=0; i<alienInfo.count; i++) {
+        let {x, y} = getFreeXy(null, c.MIN_ALIEN_DIST_TO_PLANET, c.MIN_ALIEN_DIST_TO_ALIEN, ring.minDist, ring.maxDist);
+        createAlien(container, alienInfo.file, x, y);
+      } // for i
+    } // for alienInfo
+  } // for ring
 }
 
 export function setupMiniMap(container) {

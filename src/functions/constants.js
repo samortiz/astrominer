@@ -52,43 +52,15 @@ export const CRASH_JSON = "images/crash.json";
 export const CRASH = "crash"; // animation name in json
 export const BULLET_FILE = "bullet.png";
 export const BULLET_BLUE_FILE = "bullet_blue.png";
-export const BULLET_WHITE_FILE = "bullet_white.png";
+export const BULLET_STAPLE_FILE = "bullet_white.png";
 export const ALIEN_SHIP_FILE = "alien.png";
 export const ALIEN_SHIP_SMALL_FILE = "alien_small.png";
 export const ALIEN_SHIP_LARGE_FILE = "alien_large.png";
 export const ALIEN_SHIP_FIRE_FILE = "alien_fire.png";
 
-// Planets and Universe
 export const UNIVERSE_RADIUS = 15000;
 export const PLANET_CACHE_STEP_SIZE = SCREEN_WIDTH;
 export const PLANET_CACHE_NUM_STEPS = UNIVERSE_RADIUS * 2 / PLANET_CACHE_STEP_SIZE;
-export const UNIVERSE_RINGS = [
-  { planetCount: 1, 
-    minDist: 1, maxDist: 2, 
-    minDistToOtherPlanet:10, 
-    minPlanetScale:400, maxPlanetScale:401, 
-    planetFiles:[GREEN_PLANET_FILE]
-  },
-  { planetCount: 90, 
-    minDist: 1400, maxDist: 5000, 
-    minDistToOtherPlanet:150, 
-    minPlanetScale:100, maxPlanetScale:180, 
-    planetFiles:[RED_PLANET_FILE, PURPLE_PLANET_FILE, GREEN_PLANET_FILE]
-  },
-  { planetCount: 600, 
-    minDist: 5000, maxDist: 10000, 
-    minDistToOtherPlanet:150, 
-    minPlanetScale:50, maxPlanetScale:100, 
-    planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE]
-  },
-  { planetCount: 1000, 
-    minDist: 10000, maxDist: 15000, 
-    minDistToOtherPlanet:150, 
-    minPlanetScale:20, maxPlanetScale:90, 
-    planetFiles:[ROCK_PLANET_FILE]
-  },
-];
-
 export const PLAYER = "player";
 export const ALIEN = "alien";
 export const PLAYER_STARTING_RESOURCES = {titanium:30, gold:20, uranium:0};
@@ -187,7 +159,11 @@ export const EQUIP_R2D2 = {name: "R2D2 Repair Droid", objType:OBJ_EQUIP, type:EQ
 export const EQUIP_ALIEN_BLASTER = {name: "Alien Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:20, cool:0, damage:4, speed:2, lifetime:120, bulletFile:BULLET_BLUE_FILE,
                             crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:10, gold:30, uranium:50}};
-export const EQUIP_ARMOR = {name: "Armor Plate", objType:OBJ_EQUIP, type:EQUIP_TYPE_ARMOR, armorAmt:100, 
+export const EQUIP_STAPLE_GUN = {name: "Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:1.5, speed:3, lifetime:300, bulletFile:BULLET_STAPLE_FILE,
+  crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
+  cost: {titanium:10, gold:30, uranium:50}};
+
+export const EQUIP_ARMOR = {name: "Armor Plate", objType:OBJ_EQUIP, type:EQUIP_TYPE_ARMOR, armorAmt:100,
                             crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
                             cost: {titanium:50, gold:0, uranium:0}};
 export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER,
@@ -308,7 +284,7 @@ export const SHIP_FIGHTER = {
   cost: {titanium:500, gold:500, uranium:500},
 };
 
-export const SHIP_ALIEN_SMALL = {
+export const SHIP_ALIEN_TURRET = {
   name: "Alien Turret",
   objType:OBJ_SHIP,
   propulsion: 0.05, // best bewteen 0.02 - 0.1
@@ -332,10 +308,10 @@ export const SHIP_ALIEN_SMALL = {
   imageScale: 0.8,
   imageFile: ALIEN_SHIP_SMALL_FILE,
   cost: {titanium:50, gold:50, uranium:50},
-  aiType: ALIEN_AI_CREEPER,
+  aiType: ALIEN_AI_TURRET,
 };
 
-export const SHIP_ALIEN_LARGE = {
+export const SHIP_ALIEN = {
   name: "Alien Ship",
   objType:OBJ_SHIP,
   propulsion: 0.05, // best bewteen 0.02 - 0.1
@@ -362,8 +338,95 @@ export const SHIP_ALIEN_LARGE = {
   aiType: ALIEN_AI_CREEPER,
 };
 
+export const SHIP_ALIEN_LARGE = {
+  name: "Alien Ship",
+  objType:OBJ_SHIP,
+  propulsion: 0.03, // best bewteen 0.02 - 0.1
+  turnSpeed: 0.05, // // best between 0.3 - 0.07
+  resourcesMax: 100,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  equipMax: 3,
+  equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
+  crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
+    , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
+    , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
+  ],
+  armorMax: 300,
+  armor: 300,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1,
+  imageFile: ALIEN_SHIP_LARGE_FILE,
+  cost: {titanium:150, gold:100, uranium:80},
+  aiType: ALIEN_AI_CREEPER,
+};
 
-export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN_SMALL];
+export const SHIP_ALIEN_FIRE = {
+  name: "Alien Fire",
+  objType:OBJ_SHIP,
+  propulsion: 0.08, // best bewteen 0.02 - 0.1
+  turnSpeed: 0.05, // // best between 0.3 - 0.07
+  resourcesMax: 100,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  equipMax: 3,
+  equip : [EQUIP_BRAKE, EQUIP_STAPLE_GUN],
+  crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
+    , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
+    , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
+  ],
+  armorMax: 250,
+  armor: 250,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1.5,
+  imageFile: ALIEN_SHIP_FIRE_FILE,
+  cost: {titanium:250, gold:200, uranium:80},
+  aiType: ALIEN_AI_CREEPER,
+};
+
+export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN_TURRET];
+
+// Universe Rings
+export const UNIVERSE_RINGS = [
+  { planetCount: 1,
+    minDist: 1, maxDist: 2,
+    minDistToOtherPlanet:10,
+    minPlanetScale:400, maxPlanetScale:401,
+    planetFiles:[GREEN_PLANET_FILE],
+    aliens: [{count: 0, file: null}],
+  },
+  { planetCount: 90,
+    minDist: 1400, maxDist: 5000,
+    minDistToOtherPlanet:150,
+    minPlanetScale:100, maxPlanetScale:180,
+    planetFiles:[RED_PLANET_FILE, PURPLE_PLANET_FILE, GREEN_PLANET_FILE],
+    aliens: [{count: 500, file: SHIP_ALIEN_LARGE}, {count: 500, file: SHIP_ALIEN_FIRE}, {count: 200, file: SHIP_ALIEN_TURRET}],
+  },
+  { planetCount: 600,
+    minDist: 5000, maxDist: 10000,
+    minDistToOtherPlanet:150,
+    minPlanetScale:50, maxPlanetScale:100,
+    planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE],
+    aliens: [{count: 1000, file: SHIP_ALIEN}, {count: 100, file: SHIP_ALIEN_LARGE}],
+  },
+  { planetCount: 1000,
+    minDist: 10000, maxDist: 15000,
+    minDistToOtherPlanet:150,
+    minPlanetScale:20, maxPlanetScale:90,
+    planetFiles:[ROCK_PLANET_FILE],
+    aliens: [{count: 750, file: SHIP_ALIEN_TURRET}, {count: 75, file: SHIP_ALIEN}],
+  },
+];
+
+
 
 export const MINING_XP_LEVELS = [
   {xp:10, obj:EQUIP_BLASTER},
@@ -385,5 +448,5 @@ export const ALIEN_XP_LEVELS = [
   {xp:500, obj:EQUIP_BLINK_THRUSTER},
   {xp:1000, obj:EQUIP_STREAM_BLASTER},
   {xp:1500, obj:EQUIP_R2D2},
-  {xp:2000, obj:SHIP_ALIEN_SMALL},
+  {xp:2000, obj:SHIP_ALIEN_TURRET},
 ];
