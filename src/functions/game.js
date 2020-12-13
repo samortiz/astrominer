@@ -119,7 +119,7 @@ function nearestPlanetDistance(origPlanet, x, y) {
         nearestPlanet = planet;
       }
     }
-  } // for
+  } // for planet
   return {nearestPlanet:nearestPlanet, nearestPlanetDist:minDist};
 }
 
