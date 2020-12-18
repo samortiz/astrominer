@@ -1,0 +1,183 @@
+{"frames": {
+
+"alien.png":
+{
+	"frame": {"x":498,"y":0,"w":85,"h":83},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":83},
+	"sourceSize": {"w":85,"h":83}
+},
+"alien_fire.png":
+{
+	"frame": {"x":0,"y":0,"w":52,"h":31},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":31},
+	"sourceSize": {"w":52,"h":31}
+},
+"alien_large.png":
+{
+	"frame": {"x":644,"y":0,"w":98,"h":93},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":98,"h":93},
+	"sourceSize": {"w":98,"h":93}
+},
+"alien_small.png":
+{
+	"frame": {"x":424,"y":0,"w":74,"h":75},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":74,"h":75},
+	"sourceSize": {"w":74,"h":75}
+},
+"bullet.png":
+{
+	"frame": {"x":52,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"bullet_blue.png":
+{
+	"frame": {"x":84,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"bullet_white.png":
+{
+	"frame": {"x":116,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"factory.png":
+{
+	"frame": {"x":400,"y":1436,"w":296,"h":420},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":296,"h":420},
+	"sourceSize": {"w":296,"h":420}
+},
+"green_planet.png":
+{
+	"frame": {"x":301,"y":636,"w":400,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
+	"sourceSize": {"w":400,"h":400}
+},
+"mine1.png":
+{
+	"frame": {"x":455,"y":116,"w":300,"h":260},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
+	"sourceSize": {"w":300,"h":260}
+},
+"mine2.png":
+{
+	"frame": {"x":0,"y":376,"w":300,"h":260},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
+	"sourceSize": {"w":300,"h":260}
+},
+"mine3.png":
+{
+	"frame": {"x":300,"y":376,"w":300,"h":260},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":260},
+	"sourceSize": {"w":300,"h":260}
+},
+"mine4.png":
+{
+	"frame": {"x":0,"y":636,"w":301,"h":260},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":301,"h":260},
+	"sourceSize": {"w":301,"h":260}
+},
+"purple_planet.png":
+{
+	"frame": {"x":0,"y":1036,"w":400,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
+	"sourceSize": {"w":400,"h":400}
+},
+"red_planet.png":
+{
+	"frame": {"x":400,"y":1036,"w":400,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
+	"sourceSize": {"w":400,"h":400}
+},
+"rock_planet.png":
+{
+	"frame": {"x":0,"y":1436,"w":400,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
+	"sourceSize": {"w":400,"h":400}
+},
+"ship_cargo.png":
+{
+	"frame": {"x":148,"y":0,"w":276,"h":62},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":62},
+	"sourceSize": {"w":276,"h":62}
+},
+"ship_explorer.png":
+{
+	"frame": {"x":583,"y":0,"w":61,"h":84},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":84},
+	"sourceSize": {"w":61,"h":84}
+},
+"ship_fast.png":
+{
+	"frame": {"x":205,"y":116,"w":250,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":250,"h":184},
+	"sourceSize": {"w":250,"h":184}
+},
+"ship_fighter.png":
+{
+	"frame": {"x":742,"y":0,"w":118,"h":116},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":118,"h":116},
+	"sourceSize": {"w":118,"h":116}
+},
+"ship_heavy.png":
+{
+	"frame": {"x":0,"y":116,"w":205,"h":132},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":205,"h":132},
+	"sourceSize": {"w":205,"h":132}
+}},
+"animations": {
+	"mine": ["mine1.png","mine2.png","mine3.png","mine4.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "spritesheet.png",
+	"format": "RGBA8888",
+	"size": {"w":860,"h":1856},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8378725412803979d640c90d469a12fa:d0ee5160e434aab7d02b86e28bb109dc:729adc6043343cfda41c447ce8f464d6$"
+}
+}

@@ -90,7 +90,7 @@ export const BUILDING_TYPE_MINE = "mine";
 export const MINE_SCALE = 0.25;
 export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
 export const MINE_ANIMATION_SPEED = 0.5;
-export const MINE_SPEED_TITATIUM = 0.0166; // 1 every sec
+export const MINE_SPEED_TITANIUM = 0.0166; // 1 every sec
 export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
 export const MINE_SPEED_URANIUM = 0.0033; // 1 every 5 sec
 export const MINE_COST = {titanium:20, gold:10, uranium:0};
@@ -240,6 +240,29 @@ export const SHIP_FAST = {
   cost: {titanium:200, gold:100, uranium:50},
 };
 
+
+export const SHIP_SKELETON = {
+  name: "Skeleton",
+  objType:OBJ_SHIP,
+  propulsion: 0.03, // best bewteen 0.02 - 0.1
+  turnSpeed: 0.045, // // best between 0.3 - 0.07
+  resourcesMax: 30,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  equipMax: 7,
+  equip : [],
+  armorMax : 50,
+  armor: 50,
+  crashSpeed: 2,
+  crashAngle: 0.5,
+  imageScale: 0.3,
+  imageFile: SHIP_FAST_FILE,
+  cost: {titanium:150, gold:150, uranium:50},
+};
+
 export const SHIP_HEAVY = {
   name: "Heavy",
   objType:OBJ_SHIP,
@@ -267,13 +290,13 @@ export const SHIP_FIGHTER = {
   objType:OBJ_SHIP,
   propulsion: 0.08, // best bewteen 0.02 - 0.1
   turnSpeed: 0.07, // // best between 0.3 - 0.07
-  resourcesMax: 100,
+  resourcesMax: 120,
   resources: {
     titanium : 0,
     gold : 0,
     uranium : 0,
   },
-  equipMax: 5,
+  equipMax: 6,
   equip : [EQUIP_BRAKE],
   armorMax : 200,
   armor: 200,
@@ -441,10 +464,11 @@ export const MINING_XP_LEVELS = [
   {xp:1000, obj:EQUIP_FAST_BLASTER},
   {xp:1500, obj:EQUIP_SPEED_BOOST},
   {xp:2000, obj:EQUIP_TURN_BOOST},
-  {xp:3000, obj:EQUIP_STORAGE},
-  {xp:5000, obj:EQUIP_THRUSTER},
-  {xp:8000, obj:SHIP_HEAVY},
-  {xp:10000, obj:SHIP_FIGHTER},
+  {xp:3000, obj:SHIP_SKELETON},
+  {xp:5000, obj:EQUIP_STORAGE},
+  {xp:8000, obj:EQUIP_THRUSTER},
+  {xp:10000, obj:SHIP_HEAVY},
+  {xp:15000, obj:SHIP_FIGHTER},
 ]
 
 export const ALIEN_XP_LEVELS = [
@@ -453,5 +477,5 @@ export const ALIEN_XP_LEVELS = [
   {xp:500, obj:EQUIP_BLINK_THRUSTER},
   {xp:1000, obj:EQUIP_STREAM_BLASTER},
   {xp:1500, obj:EQUIP_R2D2},
-  {xp:2000, obj:SHIP_ALIEN_TURRET},
+  {xp:2000, obj:SHIP_ALIEN},
 ];

@@ -1,5 +1,6 @@
 import { c, utils, fly, manage } from './';
 
+import Swal from 'sweetalert2'
 import lodash from 'lodash';
 
 /**
@@ -40,8 +41,8 @@ export function setupWorld() {
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
   window.world.shipStartY = c.PLAYER_START_Y;
-  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
-  //world.ship = createShip(c.SHIP_FAST, c.PLAYER);
+  //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
+  world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
 
   container.addChild(world.ship.sprite);
   // Initial Resources
@@ -50,19 +51,18 @@ export function setupWorld() {
    // DEBUG test alien
   // createAlien(container, c.SHIP_ALIEN_FIRE, c.PLAYER_START_X - 250, c.PLAYER_START_Y);
   // createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X - 250, c.PLAYER_START_Y+250);
-  //
-  // world.ship.armorMax = 10000;
-  // world.ship.armor = 10000;
-  // world.ship.equip[0] = c.EQUIP_BLINK_THRUSTER;
-  // world.ship.equip[1] = c.EQUIP_STREAM_BLASTER;
-  // world.ship.equip[2] = c.EQUIP_BLINK_BRAKE;
-  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 0.7, 200, {
-  //   titanium : 20500,
-  //   gold : 51000,
-  //   uranium : 5000,
-  // }, container);
-  // testPlanet.x = c.PLAYER_START_X + 250;
-  // testPlanet.y = c.PLAYER_START_Y - 300;
+  world.ship.armorMax = 100000;
+  world.ship.armor = 100000;
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER, c.EQUIP_BLINK_THRUSTER, c.EQUIP_STORAGE];
+  world.ship.equipMax = world.ship.equip.length;
+  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 0.7, 200, {
+    titanium : 20500,
+    gold : 51000,
+    uranium : 5000,
+  }, container);
+  testPlanet.x = c.PLAYER_START_X - 150;
+  testPlanet.y = c.PLAYER_START_Y ;
+  testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
   createAliens(container);
   setupMiniMap(container);
@@ -303,7 +303,7 @@ export function runBuildings() {
   for (let planet of world.planets) {
     for (let building of planet.buildings) {
       if (building.type === c.BUILDING_TYPE_MINE) {
-        mineResource(planet, 'titanium', c.MINE_SPEED_TITATIUM);
+        mineResource(planet, 'titanium', c.MINE_SPEED_TITANIUM);
         mineResource(planet, 'gold', c.MINE_SPEED_GOLD);
         mineResource(planet, 'uranium', c.MINE_SPEED_URANIUM);
       }
@@ -353,7 +353,21 @@ export function addAlienXp(ship) {
 }
 
 export function addBlueprint(nextLevel) {
-  console.log("Level up ",nextLevel.obj.name); // TODO Toast
+  Swal.fire({
+    title: 'New plan: '+nextLevel.obj.name,
+    timer: 5000,
+    position:'top',
+    showConfirmButton: false,
+    toast:true,
+    width: Math.floor(c.SCREEN_WIDTH/2)+'px',
+
+    showClass: {
+      popup: 'animate__animated animate__slideInDown'
+    },
+    hideClass: {
+      popup: 'animate__animated animate__slideOutUp'
+    }
+  }).then();
   let blueprints = window.world.blueprints;
   if (nextLevel.obj.objType === c.OBJ_EQUIP) {
     blueprints.equip.push(nextLevel.obj);
