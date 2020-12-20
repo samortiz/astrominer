@@ -41,8 +41,8 @@ export function createEmptyWorld() {
 export function setupWorld() {
   let container = window.world.system.app.stage;
   const world = window.world;
-  createBackground(container);
-  createPlanets(container);
+  createBackground();
+  createPlanets();
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
@@ -65,18 +65,19 @@ export function setupWorld() {
     titanium : 20500,
     gold : 51000,
     uranium : 5000,
-  }, container);
+  });
   testPlanet.x = c.PLAYER_START_X - 150;
   testPlanet.y = c.PLAYER_START_Y ;
   testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
-  createAliens(container);
-  setupMiniMap(container);
+  createAliens();
+  setupMiniMap();
   setupExplosionSheet();
   setupPlanetCache();
 }
 
-export function createBackground(container) {
+export function createBackground() {
+  let container = window.world.system.app.stage;
   window.world.system.bgSprite = new window.PIXI.TilingSprite(
     window.PIXI.Texture.from(c.STAR_BACKGROUND_FILE),
     c.SCREEN_WIDTH,
@@ -85,7 +86,8 @@ export function createBackground(container) {
   container.addChild(window.world.system.bgSprite);
 }
 
-export function createPlanets(container) {
+export function createPlanets() {
+  let container = window.world.system.app.stage;
   for (let ring of c.UNIVERSE_RINGS) {
     for (let i=0; i<ring.planetCount; i++) {
       let fileName = ring.planetFiles[utils.randomInt(0, ring.planetFiles.length-1)];
@@ -177,7 +179,8 @@ function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, fa
 }
 
 // Creates and returns a planet (and adds it to the app)
-export function createPlanet(fileName, name, scale, mass, resources, container) {
+export function createPlanet(fileName, name, scale, mass, resources) {
+  let container = window.world.system.app.stage;
   let planet = {};
   planet.name = name; 
   planet.x = 0; // temp should get reset
@@ -235,7 +238,8 @@ export function createShip(shipType, owner) {
   return ship;
 }
 
-export function createAlien(container, shipType, x, y) {
+export function createAlien(shipType, x, y) {
+  let container = window.world.system.app.stage;
   let alien = createShip(shipType, c.ALIEN);
   window.world.aliens.push(alien);
   alien.x = x;
@@ -246,19 +250,19 @@ export function createAlien(container, shipType, x, y) {
   return alien;
 }
 
-export function createAliens(container) {
-
+export function createAliens() {
   for (let ring of c.UNIVERSE_RINGS) {
     for (const alienInfo of ring.aliens) {
       for (let i=0; i<alienInfo.count; i++) {
         let {x, y} = getFreeXy(null, c.MIN_ALIEN_DIST_TO_PLANET, c.MIN_ALIEN_DIST_TO_ALIEN, ring.minDist, ring.maxDist);
-        createAlien(container, alienInfo.file, x, y);
+        createAlien(alienInfo.file, x, y);
       } // for i
     } // for alienInfo
   } // for ring
 }
 
-export function setupMiniMap(container) {
+export function setupMiniMap() {
+  let container = window.world.system.app.stage;
   let miniMapContainer = new window.PIXI.Container();
   container.addChild(miniMapContainer);
 
