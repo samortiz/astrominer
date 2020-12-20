@@ -11,10 +11,9 @@ Bugs
  - bullets show through minimap
  - Scroll long lists
 
-
 Ideas :
-- New aliens : small, large, fire
-- Skeleton ship : light
+- AI don't all crash into you
+- AI don't crash into other aliens
 - zoom minimap
 - Self Destruct on FlyInfo
 - switching view to planet sets view on planet (without changing ship position?)

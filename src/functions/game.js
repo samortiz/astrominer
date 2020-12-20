@@ -61,7 +61,7 @@ export function setupWorld() {
   world.ship.armor = 100000;
   world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER, c.EQUIP_BLINK_THRUSTER, c.EQUIP_STORAGE];
   world.ship.equipMax = world.ship.equip.length;
-  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 0.7, 200, {
+  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
     titanium : 20500,
     gold : 51000,
     uranium : 5000,
@@ -92,12 +92,12 @@ export function createPlanets() {
     for (let i=0; i<ring.planetCount; i++) {
       let fileName = ring.planetFiles[utils.randomInt(0, ring.planetFiles.length-1)];
       let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + utils.randomInt(1000,999999);
-      let scale = utils.randomInt(ring.minPlanetScale, ring.maxPlanetScale) / 100;
-      let mass = scale * 500;
-      let maxResource = scale * scale * 800; // exponentially grow resources
-      let minResource = scale * scale * 20; // exponentially grow resources
+      let radius = utils.randomInt(ring.minPlanetRadius, ring.maxPlanetRadius);
+      let mass = radius * radius * c.PLANET_DENSITY.get(fileName);
+      let maxResource = radius * radius * 800; // exponentially grow resources
+      let minResource = radius * radius * 20; // exponentially grow resources
       // Setup the planet
-      let planet = createPlanet(fileName, name, scale, mass, {
+      let planet = createPlanet(fileName, name, radius, mass, {
         titanium : utils.randomInt(minResource, maxResource),
         gold : utils.randomInt(minResource, maxResource),
         uranium : utils.randomInt(minResource, maxResource),
@@ -179,7 +179,7 @@ function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, fa
 }
 
 // Creates and returns a planet (and adds it to the app)
-export function createPlanet(fileName, name, scale, mass, resources) {
+export function createPlanet(fileName, name, radius, mass, resources) {
   let container = window.world.system.app.stage;
   let planet = {};
   planet.name = name; 
@@ -193,6 +193,9 @@ export function createPlanet(fileName, name, scale, mass, resources) {
   planet.ships = []; // stored ships 
   planet.equip = []; // stored equipment
   planet.buildings = []; // mines, factories
+  planet.radius = radius;
+
+  planet.spriteFile = fileName;
 
   // Setup the planet container sprite (contains planet plus buildings)
   planet.sprite = new window.PIXI.Container();
@@ -203,10 +206,10 @@ export function createPlanet(fileName, name, scale, mass, resources) {
   let planetSprite = new window.PIXI.Sprite(
     window.PIXI.loader.resources[c.SPRITESHEET_JSON].textures[fileName]);
   planetSprite.anchor.set(0.5, 0.5);
-  planetSprite.scale.set(scale, scale);
+  planet.spriteScale = radius * 2 / planetSprite.width;
+  planetSprite.scale.set(planet.spriteScale, planet.spriteScale);
   planet.sprite.addChild(planetSprite);
 
-  planet.radius = planet.sprite.width / 2; // save the calculation later
   // Planets with atmosphere are a little smaller
   if ((fileName === c.PURPLE_PLANET_FILE) || (fileName === c.GREEN_PLANET_FILE)) {
     planet.radius = planet.radius * 0.93; 

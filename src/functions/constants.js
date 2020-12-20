@@ -61,7 +61,7 @@ export const ALIEN_SHIP_SMALL_FILE = "alien_small.png";
 export const ALIEN_SHIP_LARGE_FILE = "alien_large.png";
 export const ALIEN_SHIP_FIRE_FILE = "alien_fire.png";
 
-export const UNIVERSE_RADIUS = 17000;
+export const UNIVERSE_RADIUS = 30000;
 export const PLANET_CACHE_STEP_SIZE = SCREEN_WIDTH;
 export const PLANET_CACHE_NUM_STEPS = UNIVERSE_RADIUS * 2 / PLANET_CACHE_STEP_SIZE;
 export const PLAYER = "player";
@@ -420,40 +420,46 @@ export const SHIP_ALIEN_FIRE = {
 
 export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN_TURRET];
 
+export const PLANET_DENSITY = new Map();
+PLANET_DENSITY.set(GREEN_PLANET_FILE, 0.01)
+PLANET_DENSITY.set(PURPLE_PLANET_FILE, 0.015)
+PLANET_DENSITY.set(RED_PLANET_FILE, 0.02)
+PLANET_DENSITY.set(ROCK_PLANET_FILE, 0.025)
+
 // Universe Rings
 export const UNIVERSE_RINGS = [
   { planetCount: 1,
     minDist: 1, maxDist: 2,
     minDistToOtherPlanet:10,
-    minPlanetScale:400, maxPlanetScale:401,
+    minPlanetRadius:1500, maxPlanetRadius:1501,
     planetFiles:[GREEN_PLANET_FILE],
     aliens: [{count: 0, file: null}],
   },
-  { planetCount: 90,
-    minDist: 1400, maxDist: 5000,
+  { planetCount: 200,
+    minDist: 2500, maxDist: 10000,
     minDistToOtherPlanet:150,
-    minPlanetScale:100, maxPlanetScale:180,
+    minPlanetRadius:250, maxPlanetRadius:500,
     planetFiles:[RED_PLANET_FILE, PURPLE_PLANET_FILE, GREEN_PLANET_FILE],
-    aliens: [{count: 500, file: SHIP_ALIEN_LARGE}, {count: 500, file: SHIP_ALIEN_FIRE}, {count: 200, file: SHIP_ALIEN_TURRET}],
+    aliens: [{count: 500, file: SHIP_ALIEN_LARGE}, {count: 500, file: SHIP_ALIEN_FIRE}, {count: 200, file: SHIP_ALIEN}, {count: 200, file: SHIP_ALIEN_TURRET}],
   },
-  { planetCount: 550,
-    minDist: 5000, maxDist: 10000,
-    minDistToOtherPlanet:150,
-    minPlanetScale:60, maxPlanetScale:100,
-    planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE],
-    aliens: [{count: 1500, file: SHIP_ALIEN}, {count: 100, file: SHIP_ALIEN_LARGE}],
-  },
-  { planetCount: 1200,
+  { planetCount: 600,
     minDist: 10000, maxDist: 15000,
     minDistToOtherPlanet:150,
-    minPlanetScale:20, maxPlanetScale:90,
-    planetFiles:[ROCK_PLANET_FILE],
-    aliens: [{count: 750, file: SHIP_ALIEN_TURRET}, {count: 75, file: SHIP_ALIEN}],
+    minPlanetRadius:150, maxPlanetRadius:300,
+    planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE, PURPLE_PLANET_FILE],
+    aliens: [{count: 1000, file: SHIP_ALIEN}, {count: 300, file: SHIP_ALIEN_LARGE}, {count: 500, file: SHIP_ALIEN_TURRET}],
   },
-  { planetCount: 350,
-    minDist: 15000, maxDist: UNIVERSE_RADIUS,
-    minDistToOtherPlanet:300,
-    minPlanetScale:20, maxPlanetScale:90,
+  { planetCount: 1800,
+    minDist: 15000, maxDist: 25000,
+    minDistToOtherPlanet:200,
+    minPlanetRadius:100, maxPlanetRadius:200,
+    planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE],
+    aliens: [{count: 1600, file: SHIP_ALIEN_TURRET}, {count: 150, file: SHIP_ALIEN}],
+  },
+  { planetCount: 1000,
+    minDist: 25000, maxDist: UNIVERSE_RADIUS,
+    minDistToOtherPlanet:500,
+    minPlanetRadius:30, maxPlanetRadius:100,
     planetFiles:[ROCK_PLANET_FILE],
     aliens: [],
   },
