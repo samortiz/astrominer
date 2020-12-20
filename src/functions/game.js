@@ -94,8 +94,8 @@ export function createPlanets() {
       let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + utils.randomInt(1000,999999);
       let radius = utils.randomInt(ring.minPlanetRadius, ring.maxPlanetRadius);
       let mass = radius * radius * c.PLANET_DENSITY.get(fileName);
-      let maxResource = radius * radius * 800; // exponentially grow resources
-      let minResource = radius * radius * 20; // exponentially grow resources
+      let maxResource = mass * 2 * 0.3;
+      let minResource = mass * 0.1;
       // Setup the planet
       let planet = createPlanet(fileName, name, radius, mass, {
         titanium : utils.randomInt(minResource, maxResource),

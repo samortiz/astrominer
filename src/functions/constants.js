@@ -445,7 +445,7 @@ export const UNIVERSE_RINGS = [
   { planetCount: 600,
     minDist: 10000, maxDist: 15000,
     minDistToOtherPlanet:150,
-    minPlanetRadius:150, maxPlanetRadius:300,
+    minPlanetRadius:150, maxPlanetRadius:250,
     planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE, PURPLE_PLANET_FILE],
     aliens: [{count: 1000, file: SHIP_ALIEN}, {count: 300, file: SHIP_ALIEN_LARGE}, {count: 500, file: SHIP_ALIEN_TURRET}],
   },
