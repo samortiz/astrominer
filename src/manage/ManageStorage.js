@@ -37,7 +37,7 @@ export class ManageStorage extends React.Component {
     if (selectedShip) {
       for (let i=0; i<selectedShip.equipMax; i++) {
         let equip = selectedShip.equip.length > i ? selectedShip.equip[i] : null;
-        selectedShipEquip.push(<EquipSelect key={equip ? equip.id : 'empty-'+i} planet={planet} ship={selectedShip} equip={equip} />);
+        selectedShipEquip.push(<EquipSelect key={equip ? equip.id+'-'+i : 'empty-'+i} planet={planet} ship={selectedShip} equip={equip} />);
       }
     }
 

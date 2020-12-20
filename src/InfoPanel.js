@@ -7,9 +7,9 @@ import { ManageTabs } from './manage/ManageTabs';
 export class InfoPanel extends React.Component {
   render() {
     let world = window.world;
-    if (world.gameState === c.GAME_STATE.MANAGE) {
+    if (world.system.gameState === c.GAME_STATE.MANAGE) {
       return (<ManageTabs/>);
-    } else if (world.gameState === c.GAME_STATE.FLY) {
+    } else if (world.system.gameState === c.GAME_STATE.FLY) {
       return (<InfoFly/>);
     }
     return (<div>...</div>);

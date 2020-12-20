@@ -12,25 +12,25 @@ export function flyLoop(delta) {
   if (ship.sprite.visible) {
     runRepairDroids(ship);
     // Keypress handling
-    if (world.keys.left.isDown || world.keys.a.isDown) {
+    if (world.system.keys.left.isDown || world.system.keys.a.isDown) {
       turnShip(ship, true);
     }
-    if (world.keys.right.isDown || world.keys.d.isDown) {
+    if (world.system.keys.right.isDown || world.system.keys.d.isDown) {
       turnShip(ship, false);
     }
-    if (world.keys.up.isDown || world.keys.w.isDown) {
+    if (world.system.keys.up.isDown || world.system.keys.w.isDown) {
       propelShip(ship);
     }
-    if (world.keys.down.isDown || world.keys.s.isDown) {
+    if (world.system.keys.down.isDown || world.system.keys.s.isDown) {
       brakeShip(ship);
     }
-    if (world.keys.space.isDown) {
+    if (world.system.keys.space.isDown) {
       firePrimaryWeapon(ship);
     }
-    if (world.keys.q.isDown) {
+    if (world.system.keys.q.isDown) {
       thrustShip(ship, true);
     }
-    if (world.keys.e.isDown) {
+    if (world.system.keys.e.isDown) {
       thrustShip(ship, false);
     }
   }
@@ -405,7 +405,7 @@ function findOrCreateBullet(bulletFile) {
   sprite.y = -100;
   sprite.anchor.set(0.5, 0.5);
   sprite.scale.set(0.5, 0.5);
-  window.world.app.stage.addChild(sprite);
+  window.world.system.app.stage.addChild(sprite);
   bullet.sprite = sprite;
   window.world.bullets.push(bullet);
   return bullet;
@@ -546,7 +546,7 @@ export function drawMiniMap() {
  * Handles clicks on the minimap 
  */
 export function clickOnMinimap(clickX, clickY) {
-  if (window.world.gameState === c.GAME_STATE.MANAGE) {
+  if (window.world.system.gameState === c.GAME_STATE.MANAGE) {
     let ship = window.world.ship;
     let globalX = ship.x + ((clickX - c.HALF_MINIMAP_WIDTH) * (1/c.MINIMAP_SCALE_X));
     let globalY = ship.y + (((clickY - (c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT)) - c.HALF_MINIMAP_HEIGHT) * (1/c.MINIMAP_SCALE_X));

@@ -1,6 +1,5 @@
-// Colors
-import {c} from "./index";
 
+// Colors
 export const BLACK = 0X000000;
 export const RED = 0xFF0000;
 export const BLUE = 0x0000FF;
@@ -14,6 +13,10 @@ export const GAME_STATE = {
   FLY: "fly",
   MANAGE: "manage"
 };
+
+// Saved games
+export const LOCALSTORAGE_GAME_NAMES_KEY = 'saved-game-names';
+export const LOCALSTORAGE_GAME_PREFIX = 'game-';
 
 // Screen Layout
 export const SCREEN_WIDTH = 1000;

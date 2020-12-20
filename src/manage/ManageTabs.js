@@ -1,42 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { ManagePlanet } from './ManagePlanet';
 import './ManageTabs.css';
 import { ManageFactory } from './ManageFactory';
 import { ManageStorage } from './ManageStorage';
+import {ManageSystem} from "./ManageSystem";
 
-export class ManageTabs extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {activeTab:'planet'};
-  }
+export function ManageTabs() {
+  const TAB_PLANET = 'planet';
+  const TAB_FACTORY = 'factory';
+  const TAB_STORAGE = 'storage';
+  const TAB_SYSTEM = 'system';
+  const TABS = [
+    { key: TAB_PLANET, name: 'Planet', obj: <ManagePlanet/> },
+    { key: TAB_FACTORY, name: 'Factory', obj: <ManageFactory/> },
+    { key: TAB_STORAGE, name: 'Storage', obj: <ManageStorage/> },
+    { key: TAB_SYSTEM, name: 'System', obj: <ManageSystem/> },
+  ];
+  const [selectedTab, setSelectedTab] = useState(TAB_PLANET);
 
-  isActive() {
-    return 'active-tab';
-  }
 
-  render() {
-    return (
-      <div className='tab-set'>
-        <span className={`tab ${this.state.activeTab==='planet'?'active-tab':'non-active-tab'}`}
-              onClick={() => this.setState({activeTab:'planet'})}
-           >Planet</span>
-        <span className={`tab ${this.state.activeTab==='factory'?'active-tab':'non-active-tab'}`}
-              onClick={() => this.setState({activeTab:'factory'})}
-           >Factory</span>
-        <span className={`tab ${this.state.activeTab==='storage'?'active-tab':'non-active-tab'}`}
-              onClick={() => this.setState({activeTab:'storage'})}
-           >Storage</span>
-        <div className={`tab-body ${this.state.activeTab==='planet'?'':'tab-hidden'}`}>
-          <ManagePlanet/> 
+  return (
+    <div className='tab-set'>
+      {TABS.map(tab =>
+        <span key={tab.key} className={`tab ${selectedTab === tab.key ? 'active-tab' : 'non-active-tab'}`}
+              onClick={() => setSelectedTab(tab.key)}
+        >{tab.name}</span>
+      )}
+      {TABS.map(tab =>
+        <div key={tab.key} className={`tab-body ${selectedTab === tab.key ? '' : 'tab-hidden'}`}>
+          {tab.obj}
         </div>
-        <div className={`tab-body ${this.state.activeTab==='factory'?'':'tab-hidden'}`}>
-          <ManageFactory/> 
-        </div>
-        <div className={`tab-body ${this.state.activeTab==='storage'?'':'tab-hidden'}`}>
-          <ManageStorage/> 
-        </div>
-
-      </div>);
-  }
+      )}
+    </div>);
 }
 

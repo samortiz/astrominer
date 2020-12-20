@@ -43,7 +43,7 @@ render() {
       .add(c.SPRITESHEET_JSON)
       .add(c.CRASH_JSON)
       .load(this.setupGame);
-    window.world.app = app;
+    window.world.system.app = app;
   }
 
   // Setup the App
@@ -51,36 +51,36 @@ render() {
     game.setupWorld();
     this.setupKeyboardListeners();
     game.changeGameState(c.GAME_STATE.FLY);
-    window.world.app.renderer.plugins.interaction.on('pointerdown', (event) => { 
+    window.world.system.app.renderer.plugins.interaction.on('pointerdown', (event) => {
       game.click(event);
     });
-    window.world.app.ticker.add(delta => this.mainLoop(delta));
+    window.world.system.app.ticker.add(delta => this.mainLoop(delta));
   }
   
   // Main loop runs 60 times per sec
   mainLoop = (delta) => {
-    if (window.world.gameLoop) {
+    if (window.world.system.gameLoop) {
       game.runBuildings();
       fly.moveBullets();
       fly.coolAllWeapons();
       ai.moveAliens();
-      window.world.gameLoop(delta);
+      window.world.system.gameLoop(delta);
     }
     this.forceUpdate()
   }
 
   setupKeyboardListeners = () => {
-    window.world.keys.left = utils.keyboardListener("ArrowLeft");
-    window.world.keys.right = utils.keyboardListener("ArrowRight");
-    window.world.keys.up = utils.keyboardListener("ArrowUp");
-    window.world.keys.down = utils.keyboardListener("ArrowDown");
-    window.world.keys.space = utils.keyboardListener(" ");
-    window.world.keys.w = utils.keyboardListener("w"); // up
-    window.world.keys.a = utils.keyboardListener("a"); // left
-    window.world.keys.s = utils.keyboardListener("s"); // down
-    window.world.keys.d = utils.keyboardListener("d"); // right
-    window.world.keys.q = utils.keyboardListener("q"); // thrust left
-    window.world.keys.e = utils.keyboardListener("e"); // thrust right
+    window.world.system.keys.left = utils.keyboardListener("ArrowLeft");
+    window.world.system.keys.right = utils.keyboardListener("ArrowRight");
+    window.world.system.keys.up = utils.keyboardListener("ArrowUp");
+    window.world.system.keys.down = utils.keyboardListener("ArrowDown");
+    window.world.system.keys.space = utils.keyboardListener(" ");
+    window.world.system.keys.w = utils.keyboardListener("w"); // up
+    window.world.system.keys.a = utils.keyboardListener("a"); // left
+    window.world.system.keys.s = utils.keyboardListener("s"); // down
+    window.world.system.keys.d = utils.keyboardListener("d"); // right
+    window.world.system.keys.q = utils.keyboardListener("q"); // thrust left
+    window.world.system.keys.e = utils.keyboardListener("e"); // thrust right
   }
   
 }

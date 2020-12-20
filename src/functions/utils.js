@@ -135,7 +135,6 @@ export function keyboardListener(value) {
       if (key.isUp && key.press) key.press();
       key.isDown = true;
       key.isUp = false;
-      event.preventDefault();
     }
   };
 
@@ -145,7 +144,6 @@ export function keyboardListener(value) {
       if (key.isDown && key.release) key.release();
       key.isDown = false;
       key.isUp = true;
-      event.preventDefault();
     }
   };
 

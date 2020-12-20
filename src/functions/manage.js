@@ -7,8 +7,8 @@ export function enterManageState() {
 
 // When managing planet resources - loop runs 60/s
 export function manageLoop(delta) {
-  if ((window.world.keys.up.isDown || window.world.keys.w.isDown)) {
-    if (window.world.ship.sprite.visible) {
+  if ((window.world.system.keys.up.isDown || window.world.system.keys.w.isDown)) {
+    if (window.world.ship.sprite.visible && !window.world.system.isTyping) {
       takeOff();
     }
   }
@@ -209,12 +209,12 @@ export function addShipToStorage(ship, planet) {
 }
 
 export function beginUsingShip(newShip) {
-  let container = window.world.app.stage;
+  let container = window.world.system.app.stage;
   let oldShip = window.world.ship;
   window.world.ship = newShip;
   // oldShip might have been destroyed
   if (oldShip) {
-    newShip.sprite.rotation= oldShip.sprite.rotation;
+    newShip.sprite.rotation = oldShip.sprite.rotation;
     fly.resetWeaponsCool(oldShip);
     container.removeChild(oldShip.sprite);
   }

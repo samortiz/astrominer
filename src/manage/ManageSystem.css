@@ -1,0 +1,16 @@
+.system-section {
+  padding-top:10px;
+  padding-bottom:10px;
+}
+
+.game-list-row {
+  padding-top:10px;
+}
+
+.game-list-item {
+  padding-left:10px;
+}
+
+.selected-game {
+  background-color: #AAFFFF;
+}

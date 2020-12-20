@@ -13,11 +13,15 @@ export function createEmptyWorld() {
     aliens:[],
     bullets: [],
     planets:[],
-    keys: {}, // Global keypress handlers
-    app: null, // Pixi App
-    gameState: c.GAME_STATE.INIT, // Curent game state 
-    gameLoop: null, // loop function in this state
-    selectedPlanet: {resources:{}}, 
+    system: {
+      keys: {}, // Global keypress handlers
+      app: null, // Pixi App
+      gameState: c.GAME_STATE.INIT, // Curent game state
+      isTyping: false, // used to stop keypress events ('w') when user is typing in input
+      saveGameName: null, // name of last game saved/loaded
+      gameLoop: null, // loop function in this state
+    },
+    selectedPlanet: {resources:{}},
     bgSprite: null, // star background
     explosions : [], //contains sprites
     explosionSheet: null, // spritesheet for explosions
@@ -33,7 +37,7 @@ export function createEmptyWorld() {
 }
 
 export function setupWorld() {
-  let container = window.world.app.stage;
+  let container = window.world.system.app.stage;
   const world = window.world;
   createBackground(container);
   createPlanets(container);
@@ -221,8 +225,8 @@ export function createShip(shipType, owner) {
   ship.y = window.world.shipStartY;
 
   // Graphics Sprite
-  let spritesheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
-  ship.sprite = new window.PIXI.Sprite(spritesheet.textures[ship.imageFile]);
+  let spriteSheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
+  ship.sprite = new window.PIXI.Sprite(spriteSheet.textures[ship.imageFile]);
   ship.sprite.position.set(c.HALF_SCREEN_WIDTH, c.HALF_SCREEN_HEIGHT);
   ship.sprite.anchor.set(0.5, 0.5);  // pivot on ship center
   ship.sprite.scale.set(ship.imageScale, ship.imageScale);
@@ -283,15 +287,15 @@ export function click(event) {
 
 export function changeGameState(newState) {
   const world = window.world;
-  world.gameState = newState;
+  world.system.gameState = newState;
   if (newState === c.GAME_STATE.FLY) {
     fly.enterFlyState();
-    world.gameLoop = fly.flyLoop;
+    world.system.gameLoop = fly.flyLoop;
   } else if (newState === c.GAME_STATE.MANAGE) {
     manage.enterManageState();
-    world.gameLoop = manage.manageLoop;
+    world.system.gameLoop = manage.manageLoop;
   } else {
-    world.gameLoop = null;
+    world.system.gameLoop = null;
   }
 }
 
@@ -443,7 +447,7 @@ export function createExplosionSprite() {
   sprite.loop = true;
   sprite.visible = false;
   window.world.explosions.push(sprite);
-  window.world.app.stage.addChild(sprite);
+  window.world.system.app.stage.addChild(sprite);
   return sprite;
 }
 
