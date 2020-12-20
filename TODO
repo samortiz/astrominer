@@ -3,11 +3,14 @@ JS Game
 - Level timing
 - After crash focus on last planet with mine
 - CSS on info screens 
-Bugs 
+Bugs
+ - No transfer onto/off ship when ship is not on selected planet
+ - blink thrusters should remove horiz momentum
  - Don't allow equipping two of the same type 
  - Creating ship after crash should find free spot on planet
  - bullets show through minimap
  - Scroll long lists
+
 
 Ideas :
 - New aliens : small, large, fire

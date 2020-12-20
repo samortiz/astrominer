@@ -119,7 +119,7 @@ export function runRepairDroids(ship) {
 }
 
 export function moveBackground(ship) {
-  let bgSprite = window.world.bgSprite;
+  let bgSprite = window.world.system.bgSprite;
   bgSprite.tilePosition.x = (100 - ship.x) + c.HALF_SCREEN_WIDTH;
   bgSprite.tilePosition.y = (100 - ship.y) + c.HALF_SCREEN_HEIGHT;
 }
@@ -224,7 +224,7 @@ export function crash(ship) {
 
 export function getExplosionSprite(ship) {
   let sprite = null;
-  for (let explosionSprite of window.world.explosions) {
+  for (let explosionSprite of window.world.system.explosions) {
     if (!explosionSprite.visible) {
       sprite = explosionSprite;
       break;
@@ -309,7 +309,7 @@ function resetGame() {
  */
 function moveExplosions() {
   let ship = window.world.ship;
-  for (let sprite of window.world.explosions) {
+  for (let sprite of window.world.system.explosions) {
     sprite.x = (sprite.globalX - ship.x) + c.HALF_SCREEN_WIDTH;
     sprite.y = (sprite.globalY - ship.y) + c.HALF_SCREEN_HEIGHT;
   }
@@ -389,7 +389,7 @@ export function fireBullet(ship, gun) {
  * Gets the next available bullet (one that is not visible)
  */
 function findOrCreateBullet(bulletFile) {
-  for (let bullet of window.world.bullets) {
+  for (let bullet of window.world.system.bullets) {
     if (!bullet.active && (bullet.fileName === bulletFile)) {
       bullet.active = true;
       bullet.sprite.visible = true;
@@ -407,7 +407,7 @@ function findOrCreateBullet(bulletFile) {
   sprite.scale.set(0.5, 0.5);
   window.world.system.app.stage.addChild(sprite);
   bullet.sprite = sprite;
-  window.world.bullets.push(bullet);
+  window.world.system.bullets.push(bullet);
   return bullet;
 }
 
@@ -425,7 +425,7 @@ function killBullet(bullet) {
  */
 export function moveBullets() {
   let ship = window.world.ship;
-  for (let bullet of window.world.bullets) {
+  for (let bullet of window.world.system.bullets) {
     if (bullet.active) {
       bullet.x = bullet.x + bullet.vx;
       bullet.y = bullet.y + bullet.vy;

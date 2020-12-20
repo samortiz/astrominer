@@ -11,20 +11,8 @@ export function createEmptyWorld() {
   return {
     ship:null, 
     aliens:[],
-    bullets: [],
     planets:[],
-    system: {
-      keys: {}, // Global keypress handlers
-      app: null, // Pixi App
-      gameState: c.GAME_STATE.INIT, // Curent game state
-      isTyping: false, // used to stop keypress events ('w') when user is typing in input
-      saveGameName: null, // name of last game saved/loaded
-      gameLoop: null, // loop function in this state
-    },
     selectedPlanet: {resources:{}},
-    bgSprite: null, // star background
-    explosions : [], //contains sprites
-    explosionSheet: null, // spritesheet for explosions
     blueprints: {
       ship:[c.SHIP_EXPLORER],
       equip:[c.EQUIP_BRAKE],
@@ -32,6 +20,20 @@ export function createEmptyWorld() {
       miningXpLevels: lodash.cloneDeep(c.MINING_XP_LEVELS),
       alienXp: 0, // aliens killed 
       alienXpLevels: lodash.cloneDeep(c.ALIEN_XP_LEVELS),
+    },
+    // everything in system is transient and not serialized when saving the game
+    system: {
+      keys: {}, // Global keypress handlers
+      app: null, // Pixi App
+      gameState: c.GAME_STATE.INIT, // Current game state
+      isTyping: false, // used to stop keypress events ('w') when user is typing in input
+      saveGameName: null, // name of last game saved/loaded
+      gameLoop: null, // loop function in this state
+      bgSprite: null, // star background
+      explosionSheet: null, // spritesheet for explosions
+      explosions : [], //contains sprites
+      bullets: [], // contains all the bullets
+      spriteCache: [],
     },
   };
 }
@@ -75,12 +77,12 @@ export function setupWorld() {
 }
 
 export function createBackground(container) {
-  window.world.bgSprite = new window.PIXI.TilingSprite(
+  window.world.system.bgSprite = new window.PIXI.TilingSprite(
     window.PIXI.Texture.from(c.STAR_BACKGROUND_FILE),
     c.SCREEN_WIDTH,
     c.SCREEN_HEIGHT,
   );
-  container.addChild(window.world.bgSprite);
+  container.addChild(window.world.system.bgSprite);
 }
 
 export function createPlanets(container) {
@@ -107,7 +109,7 @@ export function createPlanets(container) {
 
 /**
  * Distance to the nearest planet that is not equal to origPlanet
- * @return {nearestAlien, nearestDist} 
+ * @return {nearestAlien, nearestPlanetDist}
  */
 function nearestPlanetDistance(origPlanet, x, y) {
   let minDist = 99999999999; 
@@ -129,7 +131,7 @@ function nearestPlanetDistance(origPlanet, x, y) {
 
 /**
  * Distance to the nearest alien
- * @return {nearestAlien, nearestDist} 
+ * @return {nearestAlien, nearestAlienDist}
  */
 function nearestAlienDistance(x, y) {
   let minDist = 99999999999; 
@@ -156,14 +158,14 @@ function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, fa
   let {x,y} = utils.getPointFrom(0,0, dir, dist);
   let np = 9999;
   if (minDistToPlanet > 0) {
-    let {nearestPlanet, nearestPlanetDist} = nearestPlanetDistance(planet, x,y);
+    let {nearestPlanetDist} = nearestPlanetDistance(planet, x,y);
     if (nearestPlanetDist < minDistToPlanet) {
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
     np = nearestPlanetDist;
   }
   if (minDistToAlien > 0) {
-    let {nearestAlien, nearestAlienDist} = nearestAlienDistance(x,y);
+    let {nearestAlienDist} = nearestAlienDistance(x,y);
     if (nearestAlienDist < minDistToAlien) {
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
@@ -431,13 +433,13 @@ export function payResource(planet, ship, resourceType, amount) {
 }
 
 export function setupExplosionSheet() {
-  window.world.explosionSheet = window.PIXI.Loader.shared.resources[c.CRASH_JSON].spritesheet;
-  // Preload an explosion sprite animation (these will be cached and reused in world.explosions)
-  window.world.explosions.push(createExplosionSprite());
+  window.world.system.explosionSheet = window.PIXI.Loader.shared.resources[c.CRASH_JSON].spritesheet;
+  // Preload an explosion sprite animation (these will be cached and reused in world.system.explosions)
+  window.world.system.explosions.push(createExplosionSprite());
 }
 
 export function createExplosionSprite() {
-  let sprite = new window.PIXI.AnimatedSprite(window.world.explosionSheet.animations[c.CRASH]);
+  let sprite = new window.PIXI.AnimatedSprite(window.world.system.explosionSheet.animations[c.CRASH]);
   sprite.animationSpeed = 0.4;
   sprite.loop = false;
   sprite.anchor.set(0.5, 0.5);
@@ -446,7 +448,7 @@ export function createExplosionSprite() {
   sprite.y = c.HALF_SCREEN_WIDTH;
   sprite.loop = true;
   sprite.visible = false;
-  window.world.explosions.push(sprite);
+  window.world.system.explosions.push(sprite);
   window.world.system.app.stage.addChild(sprite);
   return sprite;
 }
@@ -465,7 +467,7 @@ export function setupPlanetCache() {
       const minY = ((stepY - 1) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
       const maxY = ((stepY + 2) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
       //console.log('Step ('+stepX+','+stepY+')  x:'+minX+' to '+maxX+'   y:'+minY+' to '+maxY);
-      const stepPlanets = new Array();
+      const stepPlanets = [];
       // Find planets within view of this location
       for (const planet of window.world.planets) {
         if ((planet.x  - planet.radius >= minX) && (planet.x + planet.radius <= maxX ) &&
@@ -498,7 +500,6 @@ export function getPlanetsNear(x, y) {
   if (stepY >= c.PLANET_CACHE_NUM_STEPS) {
     stepY = c.PLANET_CACHE_NUM_STEPS - 1;
   }
-  ;
   return window.world.planetCache[stepX][stepY].planets;
 }
 
