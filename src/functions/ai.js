@@ -84,11 +84,7 @@ export function creeperAi(alien) {
 
 
 export function checkForCollisionWithPlanet(alien) {
-  // This may need optimizing
   for (let planet of window.world.planets) {
-    if (!planet.sprite.visible) {
-      continue;
-    }
     let dist = utils.distanceBetween(alien.x, alien.y, planet.x, planet.y);
     if (dist <= (alien.radius + planet.radius)) {
       fly.destroyShip(alien, null);

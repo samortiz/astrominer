@@ -1,5 +1,6 @@
 import { c, utils, fly, game } from './';
 import lodash from 'lodash';
+import {getPlanetSprite} from "./game";
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -52,7 +53,7 @@ export function buildMine() {
   mine.sprite.x = (mine.x - planet.x);
   mine.sprite.y = (mine.y - planet.y);
 
-  planet.sprite.addChild(mine.sprite);
+  getPlanetSprite(planet).addChild(mine.sprite);
   game.payResourceCost(planet, ship, c.MINE_COST);
   planet.buildings.push(mine);
   fly.drawMiniMap(); // add building to minimap
@@ -153,7 +154,7 @@ export function buildFactory() {
   factory.sprite.x = (factory.x - planet.x);
   factory.sprite.y = (factory.y - planet.y);
 
-  planet.sprite.addChild(factory.sprite);
+  getPlanetSprite(planet).addChild(factory.sprite);
   game.payResourceCost(planet, ship, c.FACTORY_COST);
   planet.buildings.push(factory);
   fly.drawMiniMap(); // add to minimap

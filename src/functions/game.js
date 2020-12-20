@@ -33,7 +33,8 @@ export function createEmptyWorld() {
       explosionSheet: null, // spritesheet for explosions
       explosions : [], //contains sprites
       bullets: [], // contains all the bullets
-      spriteCache: [],
+      planetSpriteCache: {}, // {"green_planet.png" : Map(id:sprite, id:sprite)... }
+      nextId: 100, // increment this to generate new IDs
     },
   };
 }
@@ -54,7 +55,7 @@ export function setupWorld() {
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
-   // DEBUG test alien
+  // DEBUG test alien
   // createAlien(container, c.SHIP_ALIEN_FIRE, c.PLAYER_START_X - 250, c.PLAYER_START_Y);
   // createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X - 250, c.PLAYER_START_Y+250);
   world.ship.armorMax = 100000;
@@ -180,7 +181,6 @@ function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, fa
 
 // Creates and returns a planet (and adds it to the app)
 export function createPlanet(fileName, name, radius, mass, resources) {
-  let container = window.world.system.app.stage;
   let planet = {};
   planet.name = name; 
   planet.x = 0; // temp should get reset
@@ -194,29 +194,55 @@ export function createPlanet(fileName, name, radius, mass, resources) {
   planet.equip = []; // stored equipment
   planet.buildings = []; // mines, factories
   planet.radius = radius;
-
   planet.spriteFile = fileName;
+  planet.spriteId = null; // no sprite created yet
 
-  // Setup the planet container sprite (contains planet plus buildings)
-  planet.sprite = new window.PIXI.Container();
-  planet.sprite.x = 0; // will be set on every draw
-  planet.sprite.y = 0; 
-
-  // Setup the planet sprite itself
-  let planetSprite = new window.PIXI.Sprite(
-    window.PIXI.loader.resources[c.SPRITESHEET_JSON].textures[fileName]);
-  planetSprite.anchor.set(0.5, 0.5);
-  planet.spriteScale = radius * 2 / planetSprite.width;
-  planetSprite.scale.set(planet.spriteScale, planet.spriteScale);
-  planet.sprite.addChild(planetSprite);
-
-  // Planets with atmosphere are a little smaller
+  // Planets with atmosphere are a little smaller than the full image size
   if ((fileName === c.PURPLE_PLANET_FILE) || (fileName === c.GREEN_PLANET_FILE)) {
-    planet.radius = planet.radius * 0.93; 
+    planet.radius = planet.radius * 0.93;
   }
-  container.addChild(planet.sprite);
+
   window.world.planets.push(planet);
   return planet;
+}
+
+/**
+ * Finds or creates a planet sprite.
+ * If a sprite
+ */
+export function getPlanetSprite(planet) {
+  let planetSpriteCache = window.world.system.planetSpriteCache[planet.spriteFile];
+  // No cache for this file yet - create an empty cache
+  if (!planetSpriteCache) {
+    planetSpriteCache= new Map();
+    window.world.system.planetSpriteCache[planet.spriteFile] = planetSpriteCache;
+  }
+  // Lookup the sprite in the cache by ID
+  let planetContainer = planetSpriteCache.get(planet.spriteId);
+  if (planetContainer) {
+    return planetContainer;
+  }
+  if (!planetContainer) {
+    // Setup the planet container sprite (contains planet plus buildings)
+    planetContainer = new window.PIXI.Container();
+    planetContainer.x = 0; // will be set on every draw
+    planetContainer.y = 0;
+    window.world.system.app.stage.addChild(planetContainer);
+  }
+  // Setup the planet sprite itself
+  const planetSprite = new window.PIXI.Sprite(
+    window.PIXI.loader.resources[c.SPRITESHEET_JSON].textures[planet.spriteFile]);
+  planetSprite.anchor.set(0.5, 0.5);
+  const spriteScale = planet.radius * 2 / planetSprite.width;
+  planetSprite.scale.set(spriteScale, spriteScale);
+  planetContainer.addChild(planetSprite);
+
+  // TODO : Add buildings to the planet
+
+  // Cache the new sprite
+  planet.spriteId = window.world.system.nextId++;
+  planetSpriteCache.set(planet.spriteId, planetContainer);
+  return planetContainer;
 }
 
 // Creates and returns a ship object

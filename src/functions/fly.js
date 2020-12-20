@@ -1,4 +1,5 @@
 import { utils, c, game, manage, ai } from './';
+import {getPlanetSprite} from "./game";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -134,13 +135,21 @@ export function planetInView(ship, planet) {
       (ship.x - c.HALF_SCREEN_WIDTH - planet.radius > planet.x) || // Left
       (ship.y + c.HALF_SCREEN_HEIGHT + planet.radius < planet.y) || // Bottom
       (ship.y - c.HALF_SCREEN_HEIGHT - planet.radius > planet.y)) { // Top
-     planet.sprite.visible = false;
+    // Planet is not currently visible, but if it has an Id then it used to be visible
+    if (planet.spriteId) {
+      const sprite = getPlanetSprite(planet);
+      if (sprite.visible) {
+        sprite.visible = false;
+      }
+    }
     return false;
   }
-  planet.sprite.visible = true;
+  // Here we know this planet is in view
+  const sprite = getPlanetSprite(planet);
+  sprite.visible = true;
   // Set planet relative to the ship's viewport
-  planet.sprite.x = (planet.x - ship.x) + c.HALF_SCREEN_WIDTH;
-  planet.sprite.y = (planet.y - ship.y) + c.HALF_SCREEN_HEIGHT;
+  sprite.x = (planet.x - ship.x) + c.HALF_SCREEN_WIDTH;
+  sprite.y = (planet.y - ship.y) + c.HALF_SCREEN_HEIGHT;
   return true;
 }
 
