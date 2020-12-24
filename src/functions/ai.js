@@ -1,9 +1,10 @@
 import { c, game, fly, utils} from './';
+import {getShipSprite} from "./game";
 
 export function moveAliens() {
   let ship = window.world.ship;
   for (let alien of window.world.aliens) {
-    if (!alien.sprite.visible) {
+    if (!alien.alive) {
       continue;
     }
     let hasMoved = false;
@@ -12,16 +13,23 @@ export function moveAliens() {
     } else if (alien.aiType === c.ALIEN_AI_CREEPER) {
       hasMoved = creeperAi(alien);
     }
-
     if (hasMoved) {
       checkForCollisionWithPlanet(alien);
       checkForCollisionWithAlien(alien);
     }
 
-    // Set alien ship relative to the ship's viewport
-    alien.sprite.x = (alien.x - ship.x) + c.HALF_SCREEN_WIDTH;
-    alien.sprite.y = (alien.y - ship.y) + c.HALF_SCREEN_HEIGHT;
-  } // for
+    // If alien is in the viewport
+    if ((ship.x + c.HALF_SCREEN_WIDTH + alien.radius >= alien.x) && // Right
+      (ship.x - c.HALF_SCREEN_WIDTH - alien.radius <= alien.x) && // Left
+      (ship.y + c.HALF_SCREEN_HEIGHT + alien.radius >= alien.y) && // Bottom
+      (ship.y - c.HALF_SCREEN_HEIGHT - alien.radius <= alien.y) &&  // Top
+      alien.alive) { // alien may have died in a collision
+      // Set alien ship relative to the ship's viewport
+      const alienSprite = getShipSprite(alien);
+      alienSprite.x = (alien.x - ship.x) + c.HALF_SCREEN_WIDTH;
+      alienSprite.y = (alien.y - ship.y) + c.HALF_SCREEN_HEIGHT;
+    }
+  } // for alien
 }
 
 /**
@@ -34,9 +42,9 @@ export function shootAtPlayer(alien, jitter) {
   let ship = window.world.ship;
   let dirToPlayer = utils.normalizeRadian(Math.atan2(ship.y - alien.y, ship.x - alien.x));
   let jitterAmt = jitter * Math.random() * (utils.randomBool() ? -1 : 1);
-  alien.sprite.rotation = utils.normalizeRadian(dirToPlayer + jitterAmt);
+  alien.rotation = utils.normalizeRadian(dirToPlayer + jitterAmt);
   fly.firePrimaryWeapon(alien);
-  alien.sprite.rotation = dirToPlayer;
+  alien.rotation = dirToPlayer;
 }
 
 export function turretAi(alien) {
@@ -94,7 +102,7 @@ export function checkForCollisionWithPlanet(alien) {
 
 export function checkForCollisionWithAlien(alien) {
   for (let otherAlien of window.world.aliens) {
-    if (otherAlien.sprite.visible && alien !== otherAlien) {
+    if (otherAlien.alive && alien !== otherAlien) {
       let dist = utils.distanceBetween(alien.x, alien.y, otherAlien.x, otherAlien.y);
       if (dist <= (alien.radius + otherAlien.radius)) {
         fly.shipsCollide(alien, otherAlien);

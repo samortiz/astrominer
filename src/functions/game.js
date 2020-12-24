@@ -34,30 +34,34 @@ export function createEmptyWorld() {
       explosions : [], //contains sprites
       bullets: [], // contains all the bullets
       planetSpriteCache: {}, // {"green_planet.png" : Map(id:sprite, id:sprite)... }
+      shipSpriteCache: {}, // {"alien_small.png" : Map(id:sprite, id:sprite)... }
       nextId: 100, // increment this to generate new IDs
+      spriteContainers: {background:null, planets:null, bullets:null, ships:null, minimap:null},
     },
   };
 }
 
 export function setupWorld() {
-  let container = window.world.system.app.stage;
+  setupSpriteContainers();
+
   const world = window.world;
   createBackground();
   createPlanets();
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
+  window.world.shipStartX = -3500;
   window.world.shipStartY = c.PLAYER_START_Y;
   //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
+  const shipSprite = getShipSprite(world.ship);
 
-  container.addChild(world.ship.sprite);
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG test alien
-  // createAlien(container, c.SHIP_ALIEN_FIRE, c.PLAYER_START_X - 250, c.PLAYER_START_Y);
-  // createAlien(container, c.SHIP_ALIEN_LARGE, c.PLAYER_START_X - 250, c.PLAYER_START_Y+250);
+  createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
+  createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y-70);
   world.ship.armorMax = 100000;
   world.ship.armor = 100000;
   world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER, c.EQUIP_BLINK_THRUSTER, c.EQUIP_STORAGE];
@@ -77,8 +81,30 @@ export function setupWorld() {
   setupPlanetCache();
 }
 
+/**
+ * Sets up the sprite containers in the correct display order
+ */
+function setupSpriteContainers() {
+  let mainStage = window.world.system.app.stage;
+  let spriteContainers = window.world.system.spriteContainers;
+  spriteContainers.background = new window.PIXI.Container();
+  mainStage.addChild(spriteContainers.background);
+
+  spriteContainers.planets = new window.PIXI.Container();
+  mainStage.addChild(spriteContainers.planets);
+
+  spriteContainers.bullets = new window.PIXI.Container();
+  mainStage.addChild(spriteContainers.bullets);
+
+  spriteContainers.ships = new window.PIXI.Container();
+  mainStage.addChild(spriteContainers.ships);
+
+  spriteContainers.minimap = new window.PIXI.Container();
+  mainStage.addChild(spriteContainers.minimap);
+}
+
 export function createBackground() {
-  let container = window.world.system.app.stage;
+  let container = window.world.system.spriteContainers.background;
   window.world.system.bgSprite = new window.PIXI.TilingSprite(
     window.PIXI.Texture.from(c.STAR_BACKGROUND_FILE),
     c.SCREEN_WIDTH,
@@ -88,7 +114,7 @@ export function createBackground() {
 }
 
 export function createPlanets() {
-  let container = window.world.system.app.stage;
+  let container = window.world.system.spriteContainers.planets;
   for (let ring of c.UNIVERSE_RINGS) {
     for (let i=0; i<ring.planetCount; i++) {
       let fileName = ring.planetFiles[utils.randomInt(0, ring.planetFiles.length-1)];
@@ -227,7 +253,7 @@ export function getPlanetSprite(planet) {
     planetContainer = new window.PIXI.Container();
     planetContainer.x = 0; // will be set on every draw
     planetContainer.y = 0;
-    window.world.system.app.stage.addChild(planetContainer);
+    window.world.system.spriteContainers.planets.addChild(planetContainer);
   }
   // Setup the planet sprite itself
   const planetSprite = new window.PIXI.Sprite(
@@ -245,6 +271,57 @@ export function getPlanetSprite(planet) {
   return planetContainer;
 }
 
+/**
+ * Finds or creates a sprite for the ship
+ */
+export function getShipSprite(ship) {
+  if (!ship.alive) {
+    console.warn('You should not get sprites for dead ships. This will resurrect the sprite!');
+    console.trace();
+    window.error(); // does not exist... thus an error!
+    return;
+  }
+  let shipSpriteCache = window.world.system.shipSpriteCache[ship.imageFile];
+  // No cache for this file yet - create an empty cache
+  if (!shipSpriteCache) {
+    shipSpriteCache= new Map();
+    window.world.system.shipSpriteCache[ship.imageFile] = shipSpriteCache;
+  }
+  // Lookup the sprite in the cache by ID
+  let sprite = shipSpriteCache.get(ship.spriteId);
+  if (sprite) {
+    return sprite;
+  }
+  // Lookup a free sprite (dead or off-screen alien)
+  for (let [spriteId, foundSprite] of shipSpriteCache.entries()) {
+    if (!foundSprite.visible) {
+      foundSprite.visible = true;
+      foundSprite.rotation = ship.rotation;
+      ship.spriteWidth = foundSprite.width;
+      ship.spriteHeight = foundSprite.height;
+      ship.radius = foundSprite.width/2; // used for circular aliens
+      ship.spriteId = spriteId;
+      //console.log('found old sprite '+spriteId+' '+ship.imageFile);
+      return foundSprite;
+    }
+  } // foundSprite
+  // No sprite found - create a new one
+  let spriteSheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
+  sprite = new window.PIXI.Sprite(spriteSheet.textures[ship.imageFile]);
+  sprite.position.set(c.HALF_SCREEN_WIDTH, c.HALF_SCREEN_HEIGHT);
+  sprite.anchor.set(0.5, 0.5);  // pivot on ship center
+  sprite.scale.set(ship.imageScale, ship.imageScale);
+  sprite.rotation = ship.rotation;
+  ship.spriteWidth = sprite.width;
+  ship.spriteHeight = sprite.height;
+  ship.radius = sprite.width/2; // used for circular aliens
+  ship.spriteId = window.world.system.nextId++;
+  shipSpriteCache.set(ship.spriteId, sprite);
+  window.world.system.spriteContainers.ships.addChild(sprite);
+  //console.log('created new ship sprite '+ship.imageFile, sprite);
+  return sprite;
+}
+
 // Creates and returns a ship object
 export function createShip(shipType, owner) {
   let ship = lodash.cloneDeep(shipType);
@@ -257,25 +334,19 @@ export function createShip(shipType, owner) {
   ship.vy = 0; // velocityY
   ship.x = window.world.shipStartX;
   ship.y = window.world.shipStartY;
-
-  // Graphics Sprite
-  let spriteSheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
-  ship.sprite = new window.PIXI.Sprite(spriteSheet.textures[ship.imageFile]);
-  ship.sprite.position.set(c.HALF_SCREEN_WIDTH, c.HALF_SCREEN_HEIGHT);
-  ship.sprite.anchor.set(0.5, 0.5);  // pivot on ship center
-  ship.sprite.scale.set(ship.imageScale, ship.imageScale);
+  ship.spriteId = null; // no sprite yet
+  ship.alive = true; // set to false if it blows up
+  ship.spriteWidth = null; //We won't know until we load the sprite
+  ship.rotation = 0;
   return ship;
 }
 
 export function createAlien(shipType, x, y) {
-  let container = window.world.system.app.stage;
   let alien = createShip(shipType, c.ALIEN);
   window.world.aliens.push(alien);
   alien.x = x;
   alien.y = y;
-  alien.radius = alien.sprite.width/2; // Only for circular aliens
-  alien.sprite.x += 100;
-  container.addChild(alien.sprite);
+  alien.radius = 50; // will be set to a real value when sprite loads
   return alien;
 }
 
@@ -291,7 +362,7 @@ export function createAliens() {
 }
 
 export function setupMiniMap() {
-  let container = window.world.system.app.stage;
+  let container = window.world.system.spriteContainers.minimap;
   let miniMapContainer = new window.PIXI.Container();
   container.addChild(miniMapContainer);
 
@@ -482,7 +553,7 @@ export function createExplosionSprite() {
   sprite.loop = true;
   sprite.visible = false;
   window.world.system.explosions.push(sprite);
-  window.world.system.app.stage.addChild(sprite);
+  window.world.system.spriteContainers.bullets.addChild(sprite);
   return sprite;
 }
 

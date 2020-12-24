@@ -1,6 +1,6 @@
 import { c, utils, fly, game } from './';
 import lodash from 'lodash';
-import {getPlanetSprite} from "./game";
+import {getPlanetSprite, getShipSprite} from "./game";
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -9,7 +9,7 @@ export function enterManageState() {
 // When managing planet resources - loop runs 60/s
 export function manageLoop(delta) {
   if ((window.world.system.keys.up.isDown || window.world.system.keys.w.isDown)) {
-    if (window.world.ship.sprite.visible && !window.world.system.isTyping) {
+    if (window.world.ship.alive && !window.world.system.isTyping) {
       takeOff();
     }
   }
@@ -39,7 +39,8 @@ export function buildMine() {
   mine.sprite.scale.set(c.MINE_SCALE, c.MINE_SCALE);
 
   // Place the mine (to the right of the ship)
-  mine.sprite.rotation = getBuildingPlacementRotation(ship, planet, c.MINE_PLACEMENT_FROM_SHIP);
+  mine.rotation = getBuildingPlacementRotation(ship, planet, c.MINE_PLACEMENT_FROM_SHIP);
+  mine.sprite.rotation = mine.rotation;
   // Calculate an X,Y point near the ship on surface of the planet
   // NOTE: we use sprite.height for width because all sprites face to the right (0 rotation)
   let {x,y,rotation} = getAvailablePlanetXY(planet, ship, mine.sprite.rotation, mine.sprite.height/2, 0);
@@ -49,6 +50,7 @@ export function buildMine() {
   }
   mine.x = x;
   mine.y = y;
+  mine.rotation = rotation;
   mine.sprite.rotation = rotation;
   mine.sprite.x = (mine.x - planet.x);
   mine.sprite.y = (mine.y - planet.y);
@@ -63,7 +65,7 @@ export function buildMine() {
  * @return the rotation direction of a place some distance to the right of the ship
  */
 export function getBuildingPlacementRotation(ship, planet, distanceFromShip) {
-  let deg = ship.sprite.rotation + Math.PI/2; // 90 deg (right of the ship)
+  let deg = ship.rotation + Math.PI/2; // 90 deg (right of the ship)
   let degX = ship.x + distanceFromShip  * Math.cos(deg); // Some point Xpx to the right of the ship
   let degY = ship.y + distanceFromShip * Math.sin(deg);
   // Calculate the rotation direction to get to that point
@@ -93,7 +95,7 @@ export function buildingFits(planet, ship, rotation, buildingWidth) {
   let y = planet.y + ((planet.radius + 10) * Math.sin(rotation));
   // Min distance to building
   let minDist = utils.distanceBetween(x,y, ship.x, ship.y);
-  let minBuildingWidth = ship.sprite.height/2;
+  let minBuildingWidth = ship.spriteHeight / 2;
   for (let building of planet.buildings) {
      let dist = utils.distanceBetween(x,y, building.x, building.y);
      if (dist < minDist) {
@@ -140,7 +142,8 @@ export function buildFactory() {
   factory.sprite.scale.set(c.FACTORY_SCALE, c.FACTORY_SCALE);
 
   // Place the mine (to the right of the ship)
-  factory.sprite.rotation = getBuildingPlacementRotation(ship, planet, c.FACTORY_PLACEMENT_FROM_SHIP);
+  factory.rotation = getBuildingPlacementRotation(ship, planet, c.FACTORY_PLACEMENT_FROM_SHIP);
+  factory.sprite.rotation = factory.rotation;
   // Calculate an X,Y point near the ship on surface of the planet
   // NOTE: we use sprite.height for width because all sprites face to the right (0 rotation)
   let {x,y,rotation} = getAvailablePlanetXY(planet, ship, factory.sprite.rotation, factory.sprite.height/2, 0);
@@ -150,6 +153,7 @@ export function buildFactory() {
   }
   factory.x = x;
   factory.y = y;
+  factory.rotation = rotation;
   factory.sprite.rotation = rotation;
   factory.sprite.x = (factory.x - planet.x);
   factory.sprite.y = (factory.y - planet.y);
@@ -182,9 +186,9 @@ export function switchToShip(newShip, planet) {
   }
   addShipToStorage(oldShip, planet);
   beginUsingShip(newShip);
-  let r = planet.radius + newShip.sprite.width/2; 
-  newShip.x = planet.x + (r * Math.cos(newShip.sprite.rotation));
-  newShip.y = planet.y + (r * Math.sin(newShip.sprite.rotation));
+  let r = planet.radius + (newShip.spriteWidth / 2);
+  newShip.x = planet.x + (r * Math.cos(newShip.rotation));
+  newShip.y = planet.y + (r * Math.sin(newShip.rotation));
   // Set the sprite.x/y position of all the planets (moves your viewport slightly)
   for (let planet of window.world.planets) {
     fly.planetInView(newShip, planet);
@@ -204,22 +208,30 @@ export function removeShipFromStorage(ship, planet) {
 export function addShipToStorage(ship, planet) {
   // If the ship is not visible (and armorMax is zero) it has been destroyed
   // Some ships might be non-visible because they are not currently being used
-  if (ship.sprite.visible && ship.armorMax > 0) {
+  if (ship.alive && ship.armorMax > 0) {
     planet.ships.push(ship);
   }
 }
 
 export function beginUsingShip(newShip) {
-  let container = window.world.system.app.stage;
   let oldShip = window.world.ship;
   window.world.ship = newShip;
   // oldShip might have been destroyed
-  if (oldShip) {
-    newShip.sprite.rotation = oldShip.sprite.rotation;
+  if (oldShip && oldShip.spriteId) {
     fly.resetWeaponsCool(oldShip);
-    container.removeChild(oldShip.sprite);
+    const oldShipSprite = getShipSprite(oldShip);
+    oldShipSprite.visible = false;
+    oldShip.spriteId = null;
   }
-  container.addChild(newShip.sprite);
+  // Get the new sprite (adds it to the container)
+  const newShipSprite = getShipSprite(newShip);
+  newShipSprite.visible = true;
+  if (oldShip && oldShip.alive) {
+    newShip.rotation = oldShip.rotation;
+  } else {
+    newShip.rotation = 0;
+  }
+  newShipSprite.rotation = newShip.rotation;
   return newShip;
 }
 

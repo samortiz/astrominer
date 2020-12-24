@@ -29,7 +29,7 @@ export class ManageStorage extends React.Component {
     let selectedShip = this.state.selectedShip;
     
     // Default to selecting the current ship
-    if (!selectedShip && currentShip.sprite.visible) {
+    if (!selectedShip && currentShip.alive) {
       selectedShip = currentShip;
     }
 
@@ -46,7 +46,7 @@ export class ManageStorage extends React.Component {
         <div className='storage-section'> 
           <div className='title'>Ships</div>
           <span className='item-list'>
-            {(currentShip.sprite.visible ? [currentShip] : []).concat(planet.ships).map((ship, i) => {
+            {(currentShip.alive ? [currentShip] : []).concat(planet.ships).map((ship, i) => {
               return <div key={i} 
                           onClick={() => this.viewShip(ship)} 
                           className={`ship ${selectedShip===ship ? 'selected-item' : 'non-selected-item'}`} >{ship.name}</div>

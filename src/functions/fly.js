@@ -1,5 +1,5 @@
 import { utils, c, game, manage, ai } from './';
-import {getPlanetSprite} from "./game";
+import {getPlanetSprite, getShipSprite} from "./game";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -8,9 +8,9 @@ export function enterFlyState() {
 // Main play mode - flying
 export function flyLoop(delta) {
   let world = window.world;
-  let ship = world.ship;
-  // When sprite.visible is false the ship is exploding
-  if (ship.sprite.visible) {
+  let ship = window.world.ship;
+  // When ship.alive is false the ship is exploding
+  if (ship.alive) {
     runRepairDroids(ship);
     // Keypress handling
     if (world.system.keys.left.isDown || world.system.keys.a.isDown) {
@@ -34,47 +34,46 @@ export function flyLoop(delta) {
     if (world.system.keys.e.isDown) {
       thrustShip(ship, false);
     }
-  }
-  // Find planets in view
-  let planetsInView = [];
-  for (let planet of world.planets) {
-    if (planetInView(ship, planet)) {
-      planetsInView.push(planet);
+
+    // Find planets in view
+    let planetsInView = [];
+    for (let planet of world.planets) {
+      if (planetInView(ship, planet)) {
+        planetsInView.push(planet);
+      }
     }
-  }
-  if (ship.sprite.visible) {
+
     // Gravity
     for (let planet of planetsInView) {
       let grav = utils.calcGravity(ship.x, ship.y, planet);
       ship.vx += grav.x;
       ship.vy += grav.y;
     }
-  }
-  // move the ship
-  ship.x += ship.vx;
-  ship.y += ship.vy;
-  moveExplosions(); // especially alien explosions
-  moveBackground(ship);
-  // if ship is not busy exploding
-  if (ship.sprite.visible) { 
+
+    // move the ship
+    ship.x += ship.vx;
+    ship.y += ship.vy;
+
+    let shipSprite = getShipSprite(ship);
+    shipSprite.rotation = ship.rotation;
+
     // Ship-Planet Collisions
     for (let planet of planetsInView) {
-      if (detectCollisionWithPlanet(ship, planet)) {
-        if (successfulLanding(ship, planet)) {
-          landShip(ship, planet);
-        } else {
-          crash(ship);
-        }
+      if (detectCollisionWithPlanet(ship, shipSprite, planet)) {
+        landShip(ship, planet);
         return; // exit loop
       }
     } // for planet
     // Ship-Alien collision
     for (let alien of world.aliens) {
-      if (alien.sprite.visible && detectCollisionWithAlien(ship, alien)) {
+      if (alien.alive && detectCollisionWithAlien(ship, shipSprite, alien)) {
         shipsCollide(ship, alien);
       }
     }
   }
+
+  moveExplosions(); // especially alien explosions
+  moveBackground(ship);
   drawMiniMap();
 }
 
@@ -154,9 +153,9 @@ export function planetInView(ship, planet) {
 }
 
 // Returns true if there is a collision and false otherwise
-export function detectCollisionWithPlanet(ship, planet) {
+export function detectCollisionWithPlanet(ship, shipSprite, planet) {
   // [[x,y],[x,y]]
-  let collisionPoints = utils.getVertexData(ship.x, ship.y, ship.sprite); 
+  let collisionPoints = utils.getVertexData(ship.x, ship.y, shipSprite);
   for (let point of collisionPoints) {
     let dist = utils.distanceBetween(point[0], point[1], planet.x, planet.y);
     if (dist < planet.radius - c.ALLOWED_OVERLAP) { 
@@ -167,8 +166,8 @@ export function detectCollisionWithPlanet(ship, planet) {
 }
 
 // Returns true if there is a collision and false otherwise
-export function detectCollisionWithAlien(ship, alien) {
-  let collisionPoints = utils.getVertexData(ship.x, ship.y, ship.sprite); 
+export function detectCollisionWithAlien(ship, shipSprite, alien) {
+  let collisionPoints = utils.getVertexData(ship.x, ship.y, shipSprite);
   for (let point of collisionPoints) {
     // Only works with circular aliens (need different logic for squares)
     if (alien.radius) {
@@ -182,53 +181,42 @@ export function detectCollisionWithAlien(ship, alien) {
 }
 
 /**
- * @return true if the landing was successful
+ * Land the ship on the planet
  * NOTE: This will cause damage to the ship attempting to land (side-effects)
  */
-function successfulLanding(ship, planet) {
+function landShip(ship, planet) {
   // atan2 has parameters (y,x)
   let planetDir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
-  let dirDiff = Math.abs(ship.sprite.rotation - planetDir);
+  let dirDiff = Math.abs(ship.rotation - planetDir);
   let speed = Math.abs(ship.vx) + Math.abs(ship.vy);
   // 0 and PI*2 are right beside each other, so large values are very close to small values
   let success = ((dirDiff < ship.crashAngle) || (dirDiff > (Math.PI * 2 - ship.crashAngle)))
                 && (speed < ship.crashSpeed)
-  if (success) {
-    // The landing was good - no damage done
-    return success;
-  }
-  // damage ship for poor landing
-  let speedDiff = Math.max(speed - ship.crashSpeed, 0); // 0 if negative
-  let dirDiffAdj = Math.max(dirDiff - ship.crashAngle, 0); // 0 if negative
-  if (dirDiffAdj > Math.PI) {
-    dirDiffAdj = (Math.PI * 2) - dirDiff - ship.crashAngle;
-  }
-  let dmgPct = (speedDiff/3) + dirDiffAdj;
-  let dmg = dmgPct * ship.armorMax;
-  damageShip(ship, dmg, resetGame);
-  // If the ship survived return true
-  return ship.armor > 0;
-}
-
-function landShip(ship, planet) {
-  window.world.selectedPlanet = planet;
-  // Stop moving (even though the event loop stops movement)
+  // Stop moving
   ship.vx = 0;
   ship.vy = 0;
-  //Set ship position and angle on the planet surface
-  let dir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
-  let r = planet.radius + ship.sprite.width/2; 
-  ship.x = planet.x + (r * Math.cos(dir));
-  ship.y = planet.y + (r * Math.sin(dir));
-  ship.sprite.rotation = dir;
-  game.changeGameState(c.GAME_STATE.MANAGE);
-}
-
-export function crash(ship) {
-  // Hit a planet so stop moving suddenly
-  ship.vx = 0;
-  ship.vy = 0;
-  destroyShip(ship, resetGame);
+  if (!success) {
+    // The landing was rough - do damage
+    let speedDiff = Math.max(speed - ship.crashSpeed, 0); // 0 if negative
+    let dirDiffAdj = Math.max(dirDiff - ship.crashAngle, 0); // 0 if negative
+    if (dirDiffAdj > Math.PI) {
+      dirDiffAdj = (Math.PI * 2) - dirDiff - ship.crashAngle;
+    }
+    let dmgPct = (speedDiff / 3) + dirDiffAdj;
+    let dmg = dmgPct * ship.armorMax;
+    damageShip(ship, dmg, resetGame);
+  }
+  // If the ship survived the landing
+  if (ship.armor > 0) {
+    window.world.selectedPlanet = planet;
+    //Set ship position and angle on the planet surface
+    let dir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
+    let r = planet.radius + ship.spriteWidth / 2;
+    ship.x = planet.x + (r * Math.cos(dir));
+    ship.y = planet.y + (r * Math.sin(dir));
+    ship.rotation = dir;
+    game.changeGameState(c.GAME_STATE.MANAGE);
+  }
 }
 
 export function getExplosionSprite(ship) {
@@ -261,7 +249,10 @@ export function destroyShip(ship, afterExplosion) {
     game.addAlienXp(ship);
   }
   let explosionSprite = getExplosionSprite(ship);
-  ship.sprite.visible = false;
+  const shipSprite = getShipSprite(ship);
+  shipSprite.visible = false;
+  ship.alive = false;
+  ship.spriteId = null;
   explosionSprite.play();
   // This function runs after the animation finishes a loop
   explosionSprite.onLoop= () => {
@@ -278,7 +269,6 @@ function resetGame() {
   let ship = window.world.ship;
   let planet = window.world.selectedPlanet;
   // The current ship is gone
-  ship.sprite.visible = false;
   ship.resourcesMax = 0;
   ship.resources = {titanium : 0,gold : 0,uranium : 0};
   ship.equip = [];
@@ -302,13 +292,16 @@ function resetGame() {
       window.world.selectedPlanet = window.world.planets[0];
     }
   }
+  console.log('before finding new location');
   let {x,y,rotation} = manage.getAvailablePlanetXY(planet, ship, 0, 20, 0);
   ship.x = x;
   ship.y = y;
   ship.vx = 0;
   ship.vy = 0;
-  ship.sprite.rotation = rotation;
+  ship.rotation = rotation;
+  console.log('start fly');
   flyLoop(0); // redraw the screen once
+  console.log('end fly');
   game.changeGameState(c.GAME_STATE.MANAGE);
 }
 
@@ -330,7 +323,7 @@ function turnShip(ship, left) {
   if (turnBooster) {
     turnSpeed += turnBooster.boostSpeed;
   }
-  ship.sprite.rotation = utils.normalizeRadian(ship.sprite.rotation + turnSpeed * (left ? -1 : 1));
+  ship.rotation = utils.normalizeRadian(ship.rotation + turnSpeed * (left ? -1 : 1));
 }
 
 function propelShip(ship) {
@@ -339,8 +332,8 @@ function propelShip(ship) {
   if (booster) {
     propulsion += booster.boostSpeed;
   }
-  ship.vx += propulsion * Math.cos(ship.sprite.rotation);
-  ship.vy += propulsion * Math.sin(ship.sprite.rotation);
+  ship.vx += propulsion * Math.cos(ship.rotation);
+  ship.vy += propulsion * Math.sin(ship.rotation);
 }
 
 function brakeShip(ship) {
@@ -360,7 +353,7 @@ function brakeShip(ship) {
 function thrustShip(ship, left) {
   let thruster = getEquip(ship, c.EQUIP_TYPE_THRUSTER);
   if (thruster) {
-    let dir =utils.normalizeRadian(ship.sprite.rotation + ((left ? -1 : 1) * Math.PI/2)); // 90 deg turn
+    let dir =utils.normalizeRadian(ship.rotation + ((left ? -1 : 1) * Math.PI/2)); // 90 deg turn
     if (thruster.thrustType === c.THRUST_MOMENTUM) {
       ship.vx += thruster.thrustSpeed * Math.cos(dir);
       ship.vy += thruster.thrustSpeed * Math.sin(dir);
@@ -388,10 +381,10 @@ export function fireBullet(ship, gun) {
   let bullet = findOrCreateBullet(gun.bulletFile);
   bullet.lifetime = gun.lifetime;
   bullet.damage = gun.damage;
-  bullet.vx = ship.vx + gun.speed * Math.cos(ship.sprite.rotation);
-  bullet.vy = ship.vy + gun.speed * Math.sin(ship.sprite.rotation);
-  bullet.x = ship.x + Math.max(ship.sprite.width, ship.sprite.height)/2 * Math.cos(ship.sprite.rotation);
-  bullet.y = ship.y + Math.max(ship.sprite.width, ship.sprite.height)/2 * Math.sin(ship.sprite.rotation);
+  bullet.vx = ship.vx + gun.speed * Math.cos(ship.rotation);
+  bullet.vy = ship.vy + gun.speed * Math.sin(ship.rotation);
+  bullet.x = ship.x + Math.max(ship.spriteWidth, ship.spriteHeight)/2 * Math.cos(ship.rotation);
+  bullet.y = ship.y + Math.max(ship.spriteWidth, ship.spriteHeight)/2 * Math.sin(ship.rotation);
 }
 
 /**
@@ -414,7 +407,7 @@ function findOrCreateBullet(bulletFile) {
   sprite.y = -100;
   sprite.anchor.set(0.5, 0.5);
   sprite.scale.set(0.5, 0.5);
-  window.world.system.app.stage.addChild(sprite);
+  window.world.system.spriteContainers.bullets.addChild(sprite);
   bullet.sprite = sprite;
   window.world.system.bullets.push(bullet);
   return bullet;
@@ -459,13 +452,16 @@ function checkForBulletCollision(bullet) {
     }
   }
   // Collision with ship
-  if (ship.sprite.visible && ship.sprite.containsPoint({x:bullet.sprite.x, y:bullet.sprite.y})) {
-    bulletHitShip(bullet, ship, resetGame);
+  if (ship.alive) {
+    const shipSprite = getShipSprite(ship);
+    if (shipSprite.containsPoint({x:bullet.sprite.x, y:bullet.sprite.y})) {
+      bulletHitShip(bullet, ship, resetGame);
+    }
   } 
   // Collision with alien ship
   for (let alien of window.world.aliens) {
     // This check will only work with circular aliens, need a separate check for rectangular ones
-    if (alien.sprite.visible && alien.radius && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius) {
+    if (alien.alive && alien.radius && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius) {
       bulletHitShip(bullet, alien, null);
     }
   }
@@ -491,7 +487,7 @@ export function damageShip(ship, damage, afterExplosion) {
 }
 
 /**
- * collision between player ship and alien
+ * collision between player ship and alien (sometimes alien and alien)
  */
 export function shipsCollide(ship, alien) {
   let shipDamage = ship.armor;
@@ -499,7 +495,7 @@ export function shipsCollide(ship, alien) {
   damageShip(alien, shipDamage, null);
   damageShip(ship, alienDamage, (window.world.ship === ship) ? resetGame : null);
   // If you died hitting an alien, stop moving
-  if (!ship.sprite.visible) {
+  if (!ship.alive) {
     ship.vx = 0;
     ship.vy = 0;
   }
