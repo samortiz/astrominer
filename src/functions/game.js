@@ -55,6 +55,7 @@ export function setupWorld() {
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   //world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
+  shipSprite.visible = true;
 
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
@@ -271,6 +272,7 @@ export function getPlanetSprite(planet) {
 
 /**
  * Finds or creates a sprite for the ship
+ * NOTE: This will return a non-visible sprite, the calling code is responsible for making the sprite visible
  */
 export function getShipSprite(ship) {
   if (!ship.alive) {
@@ -293,7 +295,7 @@ export function getShipSprite(ship) {
   // Lookup a free sprite (dead or off-screen alien)
   for (let [spriteId, foundSprite] of shipSpriteCache.entries()) {
     if (!foundSprite.visible) {
-      foundSprite.visible = true;
+      foundSprite.visible = false;
       foundSprite.rotation = ship.rotation;
       ship.spriteWidth = foundSprite.width;
       ship.spriteHeight = foundSprite.height;
@@ -310,6 +312,7 @@ export function getShipSprite(ship) {
   sprite.anchor.set(0.5, 0.5);  // pivot on ship center
   sprite.scale.set(ship.imageScale, ship.imageScale);
   sprite.rotation = ship.rotation;
+  sprite.visible = false;
   ship.spriteWidth = sprite.width;
   ship.spriteHeight = sprite.height;
   ship.radius = sprite.width/2; // used for circular aliens

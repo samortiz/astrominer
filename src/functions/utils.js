@@ -1,4 +1,4 @@
-import { c } from './';
+import {c, utils} from './';
 
 /**
  * Returns the distance between two points 
@@ -48,15 +48,15 @@ export function calcGravity(x, y, planet) {
  * @return the angle x1,y1 would need to face to point directly at x2,y2
  */
 export function directionTo(x1,y1, x2,y2) {
-  return normalizeRadian(Math.atan2(x1 - x2, y1 - y2));
+  return normalizeRadian(Math.atan2(y2 - y1, x2 - x1));
 }
 
 /**
  * @return {xAmt, yAmt} splitting the dir and amount into x,y portions
  */
 export function dirComponents(dir, amount) {
-  let xAmt = amount * -Math.sin(dir);
-  let yAmt = amount * -Math.cos(dir);
+  let xAmt = amount * Math.cos(dir);
+  let yAmt = amount * Math.sin(dir);
   return {xAmt, yAmt};
 }
 

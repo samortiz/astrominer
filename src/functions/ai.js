@@ -26,6 +26,8 @@ export function moveAliens() {
       alien.alive) { // alien may have died in a collision
       // Set alien ship relative to the ship's viewport
       const alienSprite = getShipSprite(alien);
+      alienSprite.visible = true;
+      alienSprite.rotation = alien.rotation;
       alienSprite.x = (alien.x - ship.x) + c.HALF_SCREEN_WIDTH;
       alienSprite.y = (alien.y - ship.y) + c.HALF_SCREEN_HEIGHT;
     }
@@ -62,10 +64,10 @@ export function creeperAi(alien) {
     let ship = window.world.ship;
     let moved = false;
     // Close enough to player to move
-    if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < c.SCREEN_WIDTH) {
+    const distanceToPlayer = utils.distanceBetween(alien.x, alien.y, ship.x, ship.y);
+    if (distanceToPlayer < c.SCREEN_WIDTH) {
       let dirToPlayer = utils.directionTo(alien.x, alien.y, ship.x, ship.y);
       let { xAmt, yAmt} = utils.dirComponents(dirToPlayer, 25 * alien.propulsion);
-
       // Check if we are too close to a planet (need to move around the planet)
       for (let planet of game.getPlanetsNear(alien.x, alien.y)) {
         if (utils.distanceBetween(alien.x+xAmt, alien.y+yAmt, planet.x, planet.y) < (planet.radius + alien.radius + 10)) {
@@ -78,10 +80,15 @@ export function creeperAi(alien) {
            const turnDir = dirToPlanet + (rightLeft * Math.PI/2);
            ({xAmt, yAmt} = utils.dirComponents(turnDir, 20 * alien.propulsion));
         }
+      } // for planet
+      // Too close to player, don't move closer
+      if (distanceToPlayer < (ship.spriteWidth + alien.radius + 20)) {
+        xAmt = 0;
+        yAmt = 0;
       }
-
       alien.x += xAmt;
       alien.y += yAmt;
+      alien.rotation = dirToPlayer;
       moved = true;
     }
     if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < 300) {
