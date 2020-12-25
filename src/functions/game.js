@@ -50,30 +50,30 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  window.world.shipStartX = -3500;
+  //window.world.shipStartX = -3500;
   window.world.shipStartY = c.PLAYER_START_Y;
-  //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
-  world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
+  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
+  //world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
 
   // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG test alien
-  createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
-  createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y-70);
-  world.ship.armorMax = 100000;
-  world.ship.armor = 100000;
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER, c.EQUIP_BLINK_THRUSTER, c.EQUIP_STORAGE];
-  world.ship.equipMax = world.ship.equip.length;
-  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
-    titanium : 20500,
-    gold : 51000,
-    uranium : 5000,
-  });
-  testPlanet.x = c.PLAYER_START_X - 150;
-  testPlanet.y = c.PLAYER_START_Y ;
-  testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
+  //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
+  //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y-70);
+  // world.ship.armorMax = 100000;
+  // world.ship.armor = 100000;
+  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER, c.EQUIP_BLINK_THRUSTER, c.EQUIP_STORAGE];
+  // world.ship.equipMax = world.ship.equip.length;
+  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
+  //   titanium : 20500,
+  //   gold : 51000,
+  //   uranium : 5000,
+  // });
+  // testPlanet.x = c.PLAYER_START_X - 150;
+  // testPlanet.y = c.PLAYER_START_Y ;
+  // testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
   createAliens();
   setupMiniMap();
@@ -222,12 +222,6 @@ export function createPlanet(fileName, name, radius, mass, resources) {
   planet.radius = radius;
   planet.spriteFile = fileName;
   planet.spriteId = null; // no sprite created yet
-
-  // Planets with atmosphere are a little smaller than the full image size
-  if ((fileName === c.PURPLE_PLANET_FILE) || (fileName === c.GREEN_PLANET_FILE)) {
-    planet.radius = planet.radius * 0.93;
-  }
-
   window.world.planets.push(planet);
   return planet;
 }
@@ -248,18 +242,22 @@ export function getPlanetSprite(planet) {
   if (planetContainer) {
     return planetContainer;
   }
-  if (!planetContainer) {
-    // Setup the planet container sprite (contains planet plus buildings)
-    planetContainer = new window.PIXI.Container();
-    planetContainer.x = 0; // will be set on every draw
-    planetContainer.y = 0;
-    window.world.system.spriteContainers.planets.addChild(planetContainer);
-  }
+  // Setup the planet container sprite (contains planet plus buildings)
+  planetContainer = new window.PIXI.Container();
+  planetContainer.x = 0; // will be set on every draw
+  planetContainer.y = 0;
+  window.world.system.spriteContainers.planets.addChild(planetContainer);
+
   // Setup the planet sprite itself
   const planetSprite = new window.PIXI.Sprite(
     window.PIXI.loader.resources[c.SPRITESHEET_JSON].textures[planet.spriteFile]);
   planetSprite.anchor.set(0.5, 0.5);
-  const spriteScale = planet.radius * 2 / planetSprite.width;
+  let spriteScale = planet.radius * 2 / planetSprite.width;
+  // Planets with atmosphere are a little smaller than the full image size
+  if ((planet.spriteFile === c.PURPLE_PLANET_FILE) || (planet.spriteFile === c.GREEN_PLANET_FILE)) {
+    spriteScale = spriteScale * 1.08;
+  }
+
   planetSprite.scale.set(spriteScale, spriteScale);
   planetContainer.addChild(planetSprite);
 
