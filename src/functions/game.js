@@ -38,6 +38,7 @@ export function createEmptyWorld() {
       shipSpriteCache: {}, // {"alien_small.png" : Map(id:sprite, id:sprite)... }
       spriteContainers: {background:null, planets:null, bullets:null, ships:null, minimap:null},
       miniMapGraphics: null, // used as a canvas for drawing the miniMap
+      initializing: true, // set to false when the game fully running (after first draw)
     },
   };
 }
@@ -50,15 +51,14 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  //window.world.shipStartX = -3500;
+  window.world.shipStartX = +1600;
   window.world.shipStartY = c.PLAYER_START_Y;
   //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
-  shipSprite.visible = true;
-
-  // Initial Resources
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
+  shipSprite.visible = true;
+  world.ship.resources = {titanium:10000, gold:10000, uranium:10000};
 
   // DEBUG test alien
   //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
@@ -221,6 +221,7 @@ export function createPlanet(fileName, name, radius, mass, resources) {
   planet.equip = []; // stored equipment
   planet.buildings = []; // mines, factories
   planet.radius = radius;
+  planet.lastLandingDir = 0;
   planet.spriteFile = fileName;
   planet.spriteId = null; // no sprite created yet
   window.world.planets.push(planet);
@@ -605,6 +606,6 @@ export function getPlanetsNear(x, y) {
   if (stepY >= c.PLANET_CACHE_NUM_STEPS) {
     stepY = c.PLANET_CACHE_NUM_STEPS - 1;
   }
-  return window.world.planetCache[stepX][stepY].planets;
+  return window.world.system.planetCache[stepX][stepY].planets;
 }
 

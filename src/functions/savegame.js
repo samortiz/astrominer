@@ -1,5 +1,4 @@
 import lodash from 'lodash';
-import pako from 'pako';
 
 const WORLD_STORE = 'world';
 const DB_NAME = 'astrominer';

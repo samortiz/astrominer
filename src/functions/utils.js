@@ -115,7 +115,7 @@ export function getVertexData(x,y, sprite) {
  * Converts the local sprite-based x,y to global based on ship's position
  * @return [x,y] in global map coordinates
  */
-export function toGlobal(globalX, globalY, spriteX,spriteY) {
+export function toGlobal(globalX,globalY, spriteX,spriteY) {
   return [globalX + (spriteX - c.HALF_SCREEN_WIDTH), globalY+ (spriteY - c.HALF_SCREEN_HEIGHT)];
 }
 

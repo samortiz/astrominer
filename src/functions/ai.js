@@ -1,4 +1,4 @@
-import { c, game, fly, utils} from './';
+import {c, fly, game, utils} from './';
 import {getShipSprite} from "./game";
 
 export function moveAliens() {
@@ -22,14 +22,23 @@ export function moveAliens() {
     if ((ship.x + c.HALF_SCREEN_WIDTH + alien.radius >= alien.x) && // Right
       (ship.x - c.HALF_SCREEN_WIDTH - alien.radius <= alien.x) && // Left
       (ship.y + c.HALF_SCREEN_HEIGHT + alien.radius >= alien.y) && // Bottom
-      (ship.y - c.HALF_SCREEN_HEIGHT - alien.radius <= alien.y) &&  // Top
-      alien.alive) { // alien may have died in a collision
-      // Set alien ship relative to the ship's viewport
-      const alienSprite = getShipSprite(alien);
-      alienSprite.visible = true;
-      alienSprite.rotation = alien.rotation;
-      alienSprite.x = (alien.x - ship.x) + c.HALF_SCREEN_WIDTH;
-      alienSprite.y = (alien.y - ship.y) + c.HALF_SCREEN_HEIGHT;
+      (ship.y - c.HALF_SCREEN_HEIGHT - alien.radius <= alien.y)) { // Top
+      // alien may have died in a collision
+      if (alien.alive) {
+        // Set alien ship relative to the ship's viewport
+        const alienSprite = getShipSprite(alien);
+        alienSprite.visible = true;
+        alienSprite.rotation = alien.rotation;
+        alienSprite.x = (alien.x - ship.x) + c.HALF_SCREEN_WIDTH;
+        alienSprite.y = (alien.y - ship.y) + c.HALF_SCREEN_HEIGHT;
+      }
+    } else { // alien is not in view
+      // Release the sprite if the alien is not in the view
+      if (alien.spriteId) {
+        const alienSprite = getShipSprite(alien);
+        alienSprite.visible = false;
+        alien.spriteId = null;
+      }
     }
   } // for alien
 }
@@ -51,6 +60,9 @@ export function shootAtPlayer(alien, jitter) {
 
 export function turretAi(alien) {
   let ship = window.world.ship;
+  if (!ship.alive) {
+    return;
+  }
   if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < 300) {
     shootAtPlayer(alien, 0.7);
   }
@@ -61,40 +73,43 @@ export function turretAi(alien) {
  * @return true if alien moved false otherwise
  */
 export function creeperAi(alien) {
-    let ship = window.world.ship;
-    let moved = false;
-    // Close enough to player to move
-    const distanceToPlayer = utils.distanceBetween(alien.x, alien.y, ship.x, ship.y);
-    if (distanceToPlayer < c.SCREEN_WIDTH) {
-      let dirToPlayer = utils.directionTo(alien.x, alien.y, ship.x, ship.y);
-      let { xAmt, yAmt} = utils.dirComponents(dirToPlayer, 25 * alien.propulsion);
-      // Check if we are too close to a planet (need to move around the planet)
-      for (let planet of game.getPlanetsNear(alien.x, alien.y)) {
-        if (utils.distanceBetween(alien.x+xAmt, alien.y+yAmt, planet.x, planet.y) < (planet.radius + alien.radius + 10)) {
-           const dirToPlanet = utils.directionTo(alien.x, alien.y, planet.x, planet.y);
-           let dirDiff = dirToPlanet - dirToPlayer;
-           let rightLeft = (dirDiff >= 0) ? -1 : 1;
-           if (Math.abs(dirDiff) > Math.PI) {
-             rightLeft = rightLeft * -1;
-           }
-           const turnDir = dirToPlanet + (rightLeft * Math.PI/2);
-           ({xAmt, yAmt} = utils.dirComponents(turnDir, 20 * alien.propulsion));
+  let ship = window.world.ship;
+  if (!ship.alive) {
+    return;
+  }
+  let moved = false;
+  // Close enough to player to move
+  const distanceToPlayer = utils.distanceBetween(alien.x, alien.y, ship.x, ship.y);
+  if (distanceToPlayer < c.SCREEN_WIDTH) {
+    let dirToPlayer = utils.directionTo(alien.x, alien.y, ship.x, ship.y);
+    let {xAmt, yAmt} = utils.dirComponents(dirToPlayer, 25 * alien.propulsion);
+    // Check if we are too close to a planet (need to move around the planet)
+    for (let planet of game.getPlanetsNear(alien.x, alien.y)) {
+      if (utils.distanceBetween(alien.x + xAmt, alien.y + yAmt, planet.x, planet.y) < (planet.radius + alien.radius + 10)) {
+        const dirToPlanet = utils.directionTo(alien.x, alien.y, planet.x, planet.y);
+        let dirDiff = dirToPlanet - dirToPlayer;
+        let rightLeft = (dirDiff >= 0) ? -1 : 1;
+        if (Math.abs(dirDiff) > Math.PI) {
+          rightLeft = rightLeft * -1;
         }
-      } // for planet
-      // Too close to player, don't move closer
-      if (distanceToPlayer < (ship.spriteWidth + alien.radius + 20)) {
-        xAmt = 0;
-        yAmt = 0;
+        const turnDir = dirToPlanet + (rightLeft * Math.PI / 2);
+        ({xAmt, yAmt} = utils.dirComponents(turnDir, 20 * alien.propulsion));
       }
-      alien.x += xAmt;
-      alien.y += yAmt;
-      alien.rotation = dirToPlayer;
-      moved = true;
+    } // for planet
+    // Too close to player, don't move closer
+    if (distanceToPlayer < (ship.spriteWidth + alien.radius + 20)) {
+      xAmt = 0;
+      yAmt = 0;
     }
-    if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < 300) {
-      shootAtPlayer(alien, 0.15);
-    }
-    return moved;
+    alien.x += xAmt;
+    alien.y += yAmt;
+    alien.rotation = dirToPlayer;
+    moved = true;
+  }
+  if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < 300) {
+    shootAtPlayer(alien, 0.15);
+  }
+  return moved;
 }
 
 

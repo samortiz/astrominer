@@ -1,6 +1,5 @@
 import { c, utils, fly, game } from './';
 import lodash from 'lodash';
-import {getPlanetSprite, getShipSprite} from "./game";
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -55,7 +54,7 @@ export function buildMine() {
   mine.sprite.x = (mine.x - planet.x);
   mine.sprite.y = (mine.y - planet.y);
 
-  getPlanetSprite(planet).addChild(mine.sprite);
+  game.getPlanetSprite(planet).addChild(mine.sprite);
   game.payResourceCost(planet, ship, c.MINE_COST);
   planet.buildings.push(mine);
   fly.drawMiniMap(); // add building to minimap
@@ -158,7 +157,7 @@ export function buildFactory() {
   factory.sprite.x = (factory.x - planet.x);
   factory.sprite.y = (factory.y - planet.y);
 
-  getPlanetSprite(planet).addChild(factory.sprite);
+  game.getPlanetSprite(planet).addChild(factory.sprite);
   game.payResourceCost(planet, ship, c.FACTORY_COST);
   planet.buildings.push(factory);
   fly.drawMiniMap(); // add to minimap
@@ -179,20 +178,36 @@ export function buildShip(shipTemplate) {
  * NOTE: the new ship should already be created and stored in a planet
  */
 export function switchToShip(newShip, planet) {
+  console.log('switch to ship');
   let oldShip = window.world.ship;
   if (!removeShipFromStorage(newShip, planet)) {
     console.warn("Unable to remove ship from planet ",newShip," planet=",planet);
     return;
   }
   addShipToStorage(oldShip, planet);
-  beginUsingShip(newShip);
+
+  window.world.ship = newShip;
+  // check to ensure oldShip is not destroyed
+  if (oldShip && oldShip.alive && oldShip.spriteId) {
+    fly.resetWeaponsCool(oldShip);
+    const oldShipSprite = game.getShipSprite(oldShip);
+    oldShipSprite.visible = false;
+    oldShip.spriteId = null;
+  }
+  // Get the new sprite (adds it to the container)
+  const newShipSprite = game.getShipSprite(newShip);
+  newShipSprite.visible = true;
+  if (oldShip && oldShip.alive) {
+    newShip.rotation = oldShip.rotation;
+  } else {
+    newShip.rotation = planet.lastLandingDir;
+  }
+  newShipSprite.rotation = newShip.rotation;
+
   let r = planet.radius + (newShip.spriteWidth / 2);
   newShip.x = planet.x + (r * Math.cos(newShip.rotation));
   newShip.y = planet.y + (r * Math.sin(newShip.rotation));
-  // Set the sprite.x/y position of all the planets (moves your viewport slightly)
-  for (let planet of window.world.planets) {
-    fly.planetInView(newShip, planet);
-  }
+  fly.repositionScreen();
 }
 
 /**
@@ -211,28 +226,6 @@ export function addShipToStorage(ship, planet) {
   if (ship.alive && ship.armorMax > 0) {
     planet.ships.push(ship);
   }
-}
-
-export function beginUsingShip(newShip) {
-  let oldShip = window.world.ship;
-  window.world.ship = newShip;
-  // oldShip might have been destroyed
-  if (oldShip && oldShip.spriteId) {
-    fly.resetWeaponsCool(oldShip);
-    const oldShipSprite = getShipSprite(oldShip);
-    oldShipSprite.visible = false;
-    oldShip.spriteId = null;
-  }
-  // Get the new sprite (adds it to the container)
-  const newShipSprite = getShipSprite(newShip);
-  newShipSprite.visible = true;
-  if (oldShip && oldShip.alive) {
-    newShip.rotation = oldShip.rotation;
-  } else {
-    newShip.rotation = 0;
-  }
-  newShipSprite.rotation = newShip.rotation;
-  return newShip;
 }
 
 /**

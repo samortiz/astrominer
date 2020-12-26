@@ -57,17 +57,21 @@ export function flyLoop(delta) {
     let shipSprite = getShipSprite(ship);
     shipSprite.rotation = ship.rotation;
 
-    // Ship-Planet Collisions
-    for (let planet of planetsInView) {
-      if (detectCollisionWithPlanet(ship, shipSprite, planet)) {
-        landShip(ship, planet);
-        return; // exit loop
-      }
-    } // for planet
-    // Ship-Alien collision
-    for (let alien of world.aliens) {
-      if (alien.alive && detectCollisionWithAlien(ship, shipSprite, alien)) {
-        shipsCollide(ship, alien);
+    // Don't detect collisions until all the drawing is done
+    // Pixijs sometimes gets the sprite locations wrong when they haven't been rendered yet
+    if (!world.system.initializing) {
+      // Ship-Planet Collisions
+      for (let planet of planetsInView) {
+        if (detectCollisionWithPlanet(ship, shipSprite, planet)) {
+          landShip(ship, planet);
+          return; // exit loop
+        }
+      } // for planet
+      // Ship-Alien collision
+      for (let alien of world.aliens) {
+        if (alien.alive && detectCollisionWithAlien(ship, shipSprite, alien)) {
+          shipsCollide(ship, alien);
+        }
       }
     }
   }
@@ -75,6 +79,22 @@ export function flyLoop(delta) {
   moveExplosions(); // especially alien explosions
   moveBackground(ship);
   drawMiniMap();
+  // first draw is done
+  if (world.system.initializing) {
+    world.system.initializing = false;
+  }
+}
+
+/**
+ * Recalculates all the locations of planets and aliens
+ */
+export function repositionScreen() {
+  // Reposition all the planets
+  for (let planet of window.world.planets) {
+    planetInView(window.world.ship, planet);
+  }
+  // Reposition all the aliens
+  ai.moveAliens();
 }
 
 /**
@@ -158,7 +178,7 @@ export function detectCollisionWithPlanet(ship, shipSprite, planet) {
   let collisionPoints = utils.getVertexData(ship.x, ship.y, shipSprite);
   for (let point of collisionPoints) {
     let dist = utils.distanceBetween(point[0], point[1], planet.x, planet.y);
-    if (dist < planet.radius - c.ALLOWED_OVERLAP) { 
+    if (dist < planet.radius - c.ALLOWED_OVERLAP) {
       return true;
     } 
   }
@@ -210,11 +230,14 @@ function landShip(ship, planet) {
   if (ship.armor > 0) {
     window.world.selectedPlanet = planet;
     //Set ship position and angle on the planet surface
-    let dir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
+    let dir = utils.directionTo(planet.x, planet.y, ship.x, ship.y)
     let r = planet.radius + ship.spriteWidth / 2;
-    ship.x = planet.x + (r * Math.cos(dir));
-    ship.y = planet.y + (r * Math.sin(dir));
+    let {xAmt, yAmt} = utils.dirComponents(dir, r);
+    ship.x = planet.x + xAmt;
+    ship.y = planet.y + yAmt;
     ship.rotation = dir;
+    planet.lastLandingDir = dir;
+    getShipSprite(ship).rotation = dir;
     game.changeGameState(c.GAME_STATE.MANAGE);
   }
 }
@@ -293,7 +316,7 @@ function resetGame() {
     }
   }
   console.log('before finding new location');
-  let {x,y,rotation} = manage.getAvailablePlanetXY(planet, ship, 0, 20, 0);
+  let {x,y,rotation} = manage.getAvailablePlanetXY(planet, ship, planet.lastLandingDir, 20, 0);
   ship.x = x;
   ship.y = y;
   ship.vx = 0;
