@@ -22,7 +22,6 @@ export function createEmptyWorld() {
       alienXp: 0, // aliens killed 
       alienXpLevels: lodash.cloneDeep(c.ALIEN_XP_LEVELS),
     },
-    nextId: 100, // increment this to generate new IDs
     // everything in system is transient and not serialized when saving the game
     system: {
       keys: {}, // Global keypress handlers
@@ -207,7 +206,7 @@ function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, fa
 }
 
 // Creates and returns a planet (and adds it to the app)
-export function createPlanet(fileName, name, radius, mass, resources) {
+export function createPlanet(planetFile, name, radius, mass, resources) {
   let planet = {};
   planet.name = name; 
   planet.x = 0; // temp should get reset
@@ -222,7 +221,7 @@ export function createPlanet(fileName, name, radius, mass, resources) {
   planet.buildings = []; // mines, factories
   planet.radius = radius;
   planet.lastLandingDir = 0;
-  planet.spriteFile = fileName;
+  planet.spriteFile = planetFile;
   planet.spriteId = null; // no sprite created yet
   window.world.planets.push(planet);
   return planet;
@@ -230,7 +229,9 @@ export function createPlanet(fileName, name, radius, mass, resources) {
 
 /**
  * Finds or creates a planet sprite.
- * If a sprite
+ * This cache works a little different, no sprites are re-used.
+ * Once a planetSprite is created the buildings are added and it stays attached to the planet
+ * Otherwise we would have to empty out the container and redraw the planet and buildings each time
  */
 export function getPlanetSprite(planet) {
   let planetSpriteCache = window.world.system.planetSpriteCache[planet.spriteFile];
@@ -248,6 +249,7 @@ export function getPlanetSprite(planet) {
   planetContainer = new window.PIXI.Container();
   planetContainer.x = 0; // will be set on every draw
   planetContainer.y = 0;
+  planetContainer.visible = true;
   window.world.system.spriteContainers.planets.addChild(planetContainer);
 
   // Setup the planet sprite itself
@@ -259,14 +261,13 @@ export function getPlanetSprite(planet) {
   if ((planet.spriteFile === c.PURPLE_PLANET_FILE) || (planet.spriteFile === c.GREEN_PLANET_FILE)) {
     spriteScale = spriteScale * 1.08;
   }
-
   planetSprite.scale.set(spriteScale, spriteScale);
   planetContainer.addChild(planetSprite);
 
   // TODO : Add buildings to the planet
 
   // Cache the new sprite
-  planet.spriteId = window.world.nextId++;
+  planet.spriteId = lodash.uniqueId();
   planetSpriteCache.set(planet.spriteId, planetContainer);
   return planetContainer;
 }
@@ -317,7 +318,7 @@ export function getShipSprite(ship) {
   ship.spriteWidth = sprite.width;
   ship.spriteHeight = sprite.height;
   ship.radius = sprite.width/2; // used for circular aliens
-  ship.spriteId = window.world.nextId++;
+  ship.spriteId = lodash.uniqueId();
   shipSpriteCache.set(ship.spriteId, sprite);
   window.world.system.spriteContainers.ships.addChild(sprite);
   //console.log('created new ship sprite '+ship.imageFile, sprite);
@@ -369,7 +370,7 @@ export function setupMiniMap() {
   container.addChild(miniMapContainer);
 
   // Mask so drawings don't spill out of the map
-  var mask = new window.PIXI.Graphics();
+  let mask = new window.PIXI.Graphics();
   mask.drawRect(0, c.SCREEN_HEIGHT-c.MINIMAP_HEIGHT, c.MINIMAP_WIDTH, c.SCREEN_HEIGHT);
   mask.renderable = true;
   mask.cacheAsBitmap = true;
@@ -377,7 +378,7 @@ export function setupMiniMap() {
   miniMapContainer.mask = mask;  
 
   // Graphics for drawing shapes on
-  var g = new window.PIXI.Graphics();
+  let g = new window.PIXI.Graphics();
   miniMapContainer.addChild(g);  
   window.world.system.miniMapGraphics = g;
 }

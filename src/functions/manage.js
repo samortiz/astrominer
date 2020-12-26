@@ -23,38 +23,50 @@ function takeOff() {
   ship.vy = gravity.y * -c.TAKEOFF_SPEED;
 }
 
+/**
+ * Creates a factory sprite and adds it to the planet container using the factory x,y and rotation
+ * NOTE: The building x,y,rot need to be set before calling this
+ */
+export function makeBuildingSprite(building, planet, spriteScale, spriteFile, animation) {
+  let spritesheet = window.PIXI.Loader.shared.resources[c.SPRITESHEET_JSON].spritesheet;
+  let buildingSprite;
+  if (animation) {
+    buildingSprite = new window.PIXI.AnimatedSprite(spritesheet.animations[spriteFile]);
+    buildingSprite.animationSpeed = c.MINE_ANIMATION_SPEED;
+    buildingSprite.play();
+  } else {
+    buildingSprite = new window.PIXI.Sprite(spritesheet.textures[spriteFile]);
+  }
+  buildingSprite.anchor.set(0.5, 0.5);
+  buildingSprite.scale.set(spriteScale, spriteScale);
+  buildingSprite.rotation = building.rotation;
+  buildingSprite.x = (building.x - planet.x);
+  buildingSprite.y = (building.y - planet.y);
+  buildingSprite.visible = true;
+  const planetSprite = game.getPlanetSprite(planet);
+  planetSprite.addChild(buildingSprite);
+}
+
 export function buildMine() {
   let world = window.world;
   let mine = {type: c.BUILDING_TYPE_MINE};
   let planet = world.selectedPlanet;
   let ship = world.ship;
-
-  //Setup the graphics
-  let sheet = window.PIXI.Loader.shared.resources[c.SPRITESHEET_JSON].spritesheet;
-  mine.sprite = new window.PIXI.AnimatedSprite(sheet.animations[c.MINE_FILE]);
-  mine.sprite.animationSpeed = c.MINE_ANIMATION_SPEED; 
-  mine.sprite.play();
-  mine.sprite.anchor.set(0.5, 0.5);
-  mine.sprite.scale.set(c.MINE_SCALE, c.MINE_SCALE);
-
   // Place the mine (to the right of the ship)
-  mine.rotation = getBuildingPlacementRotation(ship, planet, c.MINE_PLACEMENT_FROM_SHIP);
-  mine.sprite.rotation = mine.rotation;
+  const initRotation = getBuildingPlacementRotation(ship, planet, c.MINE_WIDTH);
   // Calculate an X,Y point near the ship on surface of the planet
   // NOTE: we use sprite.height for width because all sprites face to the right (0 rotation)
-  let {x,y,rotation} = getAvailablePlanetXY(planet, ship, mine.sprite.rotation, mine.sprite.height/2, 0);
+  let {x,y,rotation} = getAvailablePlanetXY(planet, ship, initRotation, c.MINE_WIDTH, 0);
   if (x === null) {
     console.warn("Unable to place mine");
     return;
   }
+  mine.width = c.MINE_WIDTH;
   mine.x = x;
   mine.y = y;
   mine.rotation = rotation;
-  mine.sprite.rotation = rotation;
-  mine.sprite.x = (mine.x - planet.x);
-  mine.sprite.y = (mine.y - planet.y);
-
-  game.getPlanetSprite(planet).addChild(mine.sprite);
+  // Setup the graphics
+  makeBuildingSprite(mine, planet, c.MINE_SCALE, c.MINE_FILE, true);
   game.payResourceCost(planet, ship, c.MINE_COST);
   planet.buildings.push(mine);
   fly.drawMiniMap(); // add building to minimap
@@ -94,12 +106,12 @@ export function buildingFits(planet, ship, rotation, buildingWidth) {
   let y = planet.y + ((planet.radius + 10) * Math.sin(rotation));
   // Min distance to building
   let minDist = utils.distanceBetween(x,y, ship.x, ship.y);
-  let minBuildingWidth = ship.spriteHeight / 2;
+  let minBuildingWidth = buildingWidth;
   for (let building of planet.buildings) {
      let dist = utils.distanceBetween(x,y, building.x, building.y);
      if (dist < minDist) {
        minDist = dist;
-       minBuildingWidth = building.sprite.height;
+       minBuildingWidth = building.width;
      }
   } 
   return (minDist > (buildingWidth/2 + minBuildingWidth/2 + 15));
@@ -134,34 +146,27 @@ export function buildFactory() {
   let ship = world.ship;
   let factory = {type: c.BUILDING_TYPE_FACTORY};
 
-  //Setup the graphics
-  let spritesheet = window.PIXI.Loader.shared.resources[c.SPRITESHEET_JSON].spritesheet;
-  factory.sprite =  new window.PIXI.Sprite(spritesheet.textures[c.FACTORY_FILE]);
-  factory.sprite.anchor.set(0.5, 0.5);
-  factory.sprite.scale.set(c.FACTORY_SCALE, c.FACTORY_SCALE);
-
   // Place the mine (to the right of the ship)
-  factory.rotation = getBuildingPlacementRotation(ship, planet, c.FACTORY_PLACEMENT_FROM_SHIP);
-  factory.sprite.rotation = factory.rotation;
+  const initialRotation = getBuildingPlacementRotation(ship, planet, c.FACTORY_WIDTH);
   // Calculate an X,Y point near the ship on surface of the planet
   // NOTE: we use sprite.height for width because all sprites face to the right (0 rotation)
-  let {x,y,rotation} = getAvailablePlanetXY(planet, ship, factory.sprite.rotation, factory.sprite.height/2, 0);
+  let {x,y,rotation} = getAvailablePlanetXY(planet, ship, initialRotation, c.FACTORY_WIDTH, 0);
   if (x === null) {
     console.warn("Unable to place factory");
     return;
   }
+  factory.width = c.MINE_WIDTH;
   factory.x = x;
   factory.y = y;
   factory.rotation = rotation;
-  factory.sprite.rotation = rotation;
-  factory.sprite.x = (factory.x - planet.x);
-  factory.sprite.y = (factory.y - planet.y);
-
-  game.getPlanetSprite(planet).addChild(factory.sprite);
-  game.payResourceCost(planet, ship, c.FACTORY_COST);
   planet.buildings.push(factory);
+
+  // Setup the graphics
+  makeBuildingSprite(factory, planet, c.FACTORY_SCALE, c.FACTORY_FILE, false);
+
+  game.payResourceCost(planet, ship, c.FACTORY_COST);
   fly.drawMiniMap(); // add to minimap
-} 
+}
 
 /**
  * Called when the factory finishes building a new ship 

@@ -87,11 +87,11 @@ export const CRIT_TYPE_THRUSTER = "Thruster";
 export const CRIT_TYPE_MISC = "Misc";
 
 // Buildings
-export const BUILDING_PLACEMENT_ROTATION_INCREMENT = 0.1;
+export const BUILDING_PLACEMENT_ROTATION_INCREMENT = 0.05;
 // Mine
 export const BUILDING_TYPE_MINE = "mine";
 export const MINE_SCALE = 0.25;
-export const MINE_PLACEMENT_FROM_SHIP = 50; // mine is 50px to the right of the ship
+export const MINE_WIDTH = 50;
 export const MINE_ANIMATION_SPEED = 0.5;
 export const MINE_SPEED_TITANIUM = 0.0166; // 1 every sec
 export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
@@ -100,8 +100,8 @@ export const MINE_COST = {titanium:20, gold:10, uranium:0};
 // Factory
 export const BUILDING_TYPE_FACTORY = "factory";
 export const FACTORY_COST = {titanium:50, gold:20, uranium:10};
+export const FACTORY_WIDTH = 80;
 export const FACTORY_SCALE = 0.25;
-export const FACTORY_PLACEMENT_FROM_SHIP = 50; // how far factory is to the right of the ship TODO: should be based on sprite.height/2
 
 // Equipment
 export const EQUIP_TYPE_BRAKE = "Brake";
