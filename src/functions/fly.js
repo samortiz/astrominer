@@ -514,7 +514,7 @@ export function getEquip(ship, equipType) {
 }
 
 export function drawMiniMap() {
-  let g = window.world.miniMapGraphics;
+  let g = window.world.system.miniMapGraphics;
   let ship = window.world.ship;
   let l = 0;
   let t = c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT;

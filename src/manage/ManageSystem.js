@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import { savegame, c } from '../functions';
 import './ManageSystem.css';
 import lodash from 'lodash';
-import {saveLocalStorage} from "../functions/savegame";
+import {deleteWorld, deserializeWorld, loadLocalStorage, loadWorld, saveLocalStorage} from "../functions/savegame";
 
 export function ManageSystem() {
   const world = window.world;
@@ -30,24 +30,19 @@ export function ManageSystem() {
 
   function saveGame() {
     const saveGameName = nameInput.current.value;
-    // Save the game world
-    const worldStr = savegame.serializeWorld();
-    saveLocalStorage(c.LOCALSTORAGE_GAME_PREFIX+saveGameName, worldStr);
-    // Save the game name
+    // Save the world in indexedDB
+    savegame.saveWorld(c.DB_GAME_PREFIX+saveGameName);
+    // Save the game name in localStorage
     addGameName(saveGameName);
-  }
-
-  function loadGame() {
-
   }
 
   function deleteGame(gameName) {
     // TODO : confirm
-    localStorage.removeItem(c.LOCALSTORAGE_GAME_PREFIX+gameName);
+    deleteWorld(c.DB_GAME_PREFIX+gameName);
     gameNames = lodash.remove(gameNames, (name) => name !== gameName );
     saveLocalStorage(c.LOCALSTORAGE_GAME_NAMES_KEY, gameNames);
-    if (world.system.saveGameName === gameName) {
-      world.system.saveGameName = null;
+    if (world.saveGameName === gameName) {
+      world.saveGameName = null;
     }
     if (nameInput.current.value === gameName) {
       nameInput.current.value = '';
@@ -62,12 +57,14 @@ export function ManageSystem() {
         <button name="Save" onClick={() => saveGame() }>Save</button>
         <div className='section'><b>Saved Game</b></div>
         {gameNames.map(gameName => (
-          <div key={gameName} className={'game-list-row '+(world.system.saveGameName === gameName ? 'selected-game' : '')}>
-            <span className='game-list-item'><button>Load </button></span>
+          <div key={gameName} className={'game-list-row '+(world.saveGameName === gameName ? 'selected-game' : '')}>
+            <span className='game-list-item'><button onClick={() => loadWorld(c.DB_GAME_PREFIX+gameName)}>Load </button></span>
             <span className='game-list-item'><button onClick={() => deleteGame(gameName)}>Delete</button></span>
             <span className='game-list-item'>{gameName}</span>
           </div>
         ))}
+
+        <button onClick={() => loadWorld(c.DB_GAME_PREFIX+'test')}>Load Test </button>
       </div>
     </div>);
 }

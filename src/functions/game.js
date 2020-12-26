@@ -9,7 +9,8 @@ import lodash from 'lodash';
  */
 export function createEmptyWorld() {
   return {
-    ship:null, 
+    saveGameName: null, // name of last game saved/loaded
+    ship:null,
     aliens:[],
     planets:[],
     selectedPlanet: {resources:{}},
@@ -21,13 +22,13 @@ export function createEmptyWorld() {
       alienXp: 0, // aliens killed 
       alienXpLevels: lodash.cloneDeep(c.ALIEN_XP_LEVELS),
     },
+    nextId: 100, // increment this to generate new IDs
     // everything in system is transient and not serialized when saving the game
     system: {
       keys: {}, // Global keypress handlers
       app: null, // Pixi App
       gameState: c.GAME_STATE.INIT, // Current game state
       isTyping: false, // used to stop keypress events ('w') when user is typing in input
-      saveGameName: null, // name of last game saved/loaded
       gameLoop: null, // loop function in this state
       bgSprite: null, // star background
       explosionSheet: null, // spritesheet for explosions
@@ -35,16 +36,15 @@ export function createEmptyWorld() {
       bullets: [], // contains all the bullets
       planetSpriteCache: {}, // {"green_planet.png" : Map(id:sprite, id:sprite)... }
       shipSpriteCache: {}, // {"alien_small.png" : Map(id:sprite, id:sprite)... }
-      nextId: 100, // increment this to generate new IDs
       spriteContainers: {background:null, planets:null, bullets:null, ships:null, minimap:null},
+      miniMapGraphics: null, // used as a canvas for drawing the miniMap
     },
   };
 }
 
 export function setupWorld() {
-  setupSpriteContainers();
-
   const world = window.world;
+  setupSpriteContainers();
   createBackground();
   createPlanets();
   // Default selectedPlanet, shouldn't be displayed
@@ -52,8 +52,8 @@ export function setupWorld() {
   window.world.shipStartX = c.PLAYER_START_X;
   //window.world.shipStartX = -3500;
   window.world.shipStartY = c.PLAYER_START_Y;
-  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
-  //world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
+  //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
+  world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
   shipSprite.visible = true;
 
@@ -63,18 +63,18 @@ export function setupWorld() {
   // DEBUG test alien
   //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
   //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y-70);
-  // world.ship.armorMax = 100000;
-  // world.ship.armor = 100000;
-  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER, c.EQUIP_BLINK_THRUSTER, c.EQUIP_STORAGE];
-  // world.ship.equipMax = world.ship.equip.length;
-  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
-  //   titanium : 20500,
-  //   gold : 51000,
-  //   uranium : 5000,
-  // });
-  // testPlanet.x = c.PLAYER_START_X - 150;
-  // testPlanet.y = c.PLAYER_START_Y ;
-  // testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
+  world.ship.armorMax = 100000;
+  world.ship.armor = 100000;
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER, c.EQUIP_BLINK_THRUSTER, c.EQUIP_STORAGE];
+  world.ship.equipMax = world.ship.equip.length;
+  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
+    titanium : 20500,
+    gold : 51000,
+    uranium : 5000,
+  });
+  testPlanet.x = c.PLAYER_START_X - 150;
+  testPlanet.y = c.PLAYER_START_Y ;
+  testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
   createAliens();
   setupMiniMap();
@@ -265,7 +265,7 @@ export function getPlanetSprite(planet) {
   // TODO : Add buildings to the planet
 
   // Cache the new sprite
-  planet.spriteId = window.world.system.nextId++;
+  planet.spriteId = window.world.nextId++;
   planetSpriteCache.set(planet.spriteId, planetContainer);
   return planetContainer;
 }
@@ -316,7 +316,7 @@ export function getShipSprite(ship) {
   ship.spriteWidth = sprite.width;
   ship.spriteHeight = sprite.height;
   ship.radius = sprite.width/2; // used for circular aliens
-  ship.spriteId = window.world.system.nextId++;
+  ship.spriteId = window.world.nextId++;
   shipSpriteCache.set(ship.spriteId, sprite);
   window.world.system.spriteContainers.ships.addChild(sprite);
   //console.log('created new ship sprite '+ship.imageFile, sprite);
@@ -378,7 +378,7 @@ export function setupMiniMap() {
   // Graphics for drawing shapes on
   var g = new window.PIXI.Graphics();
   miniMapContainer.addChild(g);  
-  window.world.miniMapGraphics = g;
+  window.world.system.miniMapGraphics = g;
 }
 
 /**
@@ -584,7 +584,7 @@ export function setupPlanetCache() {
     } // for stepY
   } // for stepX
 
-  window.world.planetCache = planetCache;
+  window.world.system.planetCache = planetCache;
 }
 
 /**

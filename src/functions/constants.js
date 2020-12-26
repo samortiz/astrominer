@@ -16,7 +16,7 @@ export const GAME_STATE = {
 
 // Saved games
 export const LOCALSTORAGE_GAME_NAMES_KEY = 'saved-game-names';
-export const LOCALSTORAGE_GAME_PREFIX = 'game-';
+export const DB_GAME_PREFIX = 'game-';
 
 // Screen Layout
 export const SCREEN_WIDTH = 1000;
