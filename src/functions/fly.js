@@ -95,6 +95,7 @@ export function repositionScreen() {
   }
   // Reposition all the aliens
   ai.moveAliens();
+  drawMiniMap();
 }
 
 /**

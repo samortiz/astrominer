@@ -1,5 +1,8 @@
+import {fly, game, utils} from './';
 import lodash from 'lodash';
+import {getPlanetSprite, getShipSprite} from "./game";
 
+// IndexedDB constants
 const WORLD_STORE = 'world';
 const DB_NAME = 'astrominer';
 const DB_VERSION = 4;
@@ -10,11 +13,9 @@ const DB_VERSION = 4;
 export function saveLocalStorage(key, objToSave) {
   const existing = localStorage.getItem(key);
   if (existing) {
-    console.log('removing ', key);
     localStorage.removeItem(key);
   }
   localStorage.setItem(key, JSON.stringify(objToSave));
-  console.log("Saved "+key+" in localstorage ", objToSave);
 }
 
 /**
@@ -40,7 +41,7 @@ function upgradeDB(event) {
   if (event.oldVersion >= 1) {
     db.deleteObjectStore(WORLD_STORE);
   }
-  let objectStore = db.createObjectStore(WORLD_STORE, { keyPath: "saveGameName" });
+  db.createObjectStore(WORLD_STORE, { keyPath: "saveGameName" });
 }
 
 /**
@@ -54,7 +55,6 @@ export function loadWorld(key) {
   };
   dbRequest.onupgradeneeded = upgradeDB;
   dbRequest.onsuccess = function(event) {
-    console.log('DB opened OK ');
     let db = event.target.result;
     let transaction = db.transaction([WORLD_STORE]);
     let objectStore = transaction.objectStore(WORLD_STORE);
@@ -67,9 +67,34 @@ export function loadWorld(key) {
       const oldSystem = window.world.system;
       window.world = newWorld;
       window.world.system = oldSystem;
-      console.log('Loaded world ', window.world);
-      // TODO: Need to reset spriteIds and sprite.visible for all ships and planets so they get reloaded
-      // TODO: reset any data in system that needs copying
+
+      // Clear the old containers of whatever they had
+      window.world.system.spriteContainers.planets.removeChildren();
+      window.world.system.planetSpriteCache = {};
+      window.world.system.shipSpriteCache = {};
+      window.world.system.spriteContainers.ships.removeChildren();
+
+      // Reset the planetCache (all new planets)
+      game.setupPlanetCache();
+
+      // Reset/Redraw all the sprites
+      window.world.ship.spriteId = null;
+      const shipSprite = getShipSprite(window.world.ship);
+      shipSprite.visible = true;
+      for (const alien of  window.world.aliens) {
+        if (alien.spriteId) {
+          alien.spriteId = null;
+          getShipSprite(alien).visible = true;
+        }
+      }
+      for (const planet of window.world.planets) {
+        if (planet.spriteId) {
+          planet.spriteId = null;
+          getPlanetSprite(planet);
+        }
+      }
+      fly.repositionScreen();
+      utils.showToast('Loaded game');
     };
   }
 
@@ -85,23 +110,35 @@ export function saveWorld(key) {
   };
   dbRequest.onupgradeneeded = upgradeDB;
   dbRequest.onsuccess = function(event) {
-    console.log('DB success ');
     let db = event.target.result;
     let transaction = db.transaction([WORLD_STORE], "readwrite");
-    transaction.oncomplete = function(event) {
-      console.log("SaveWorld transaction complete!");
-    };
-    transaction.onerror = function(event) {
-      console.log('SaveWorld transaction error');
-    };
     let objectStore = transaction.objectStore(WORLD_STORE);
-    let objectStoreRequest = objectStore.add(worldToStore);
+    let objectStoreRequest = objectStore.put(worldToStore);
     objectStoreRequest.onsuccess = function(event) {
-        console.log('stored world OK');
+      utils.showToast('Saved game');
     };
+    objectStoreRequest.onerror = function(event) {
+      console.log('failed to save ', event.target);
+    }
   }
 }
 
 export function deleteWorld(key) {
-  // TODO
+  let dbRequest = indexedDB.open(DB_NAME, DB_VERSION);
+  dbRequest.onerror = function(event) {
+    console.log('DB Request Error:', event);
+  };
+  dbRequest.onupgradeneeded = upgradeDB;
+  dbRequest.onsuccess = function(event) {
+    let db = event.target.result;
+    let transaction = db.transaction([WORLD_STORE], "readwrite");
+    let objectStore = transaction.objectStore(WORLD_STORE);
+    let objectStoreRequest = objectStore.delete(key);
+    objectStoreRequest.onsuccess = function(event) {
+      utils.showToast('Deleted game '+key);
+    };
+    objectStoreRequest.onerror = function(event) {
+      console.log('failed to delete ', event.target);
+    }
+  }
 }

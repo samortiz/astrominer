@@ -1,4 +1,5 @@
-import {c, utils} from './';
+import { c } from './';
+import Swal from "sweetalert2";
 
 /**
  * Returns the distance between two points 
@@ -165,4 +166,22 @@ export function keyboardListener(value) {
   };
   
   return key;
+}
+
+
+export function showToast(text) {
+  Swal.fire({
+    title: text,
+    timer: 5000,
+    position:'top',
+    showConfirmButton: false,
+    toast:true,
+    width: Math.floor(c.SCREEN_WIDTH/2)+'px',
+    showClass: {
+      popup: 'animate__animated animate__slideInDown'
+    },
+    hideClass: {
+      popup: 'animate__animated animate__slideOutUp'
+    }
+  }).then();
 }

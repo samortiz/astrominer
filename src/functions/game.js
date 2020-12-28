@@ -1,6 +1,4 @@
 import { c, utils, fly, manage } from './';
-
-import Swal from 'sweetalert2'
 import lodash from 'lodash';
 
 /**
@@ -22,6 +20,7 @@ export function createEmptyWorld() {
       alienXp: 0, // aliens killed 
       alienXpLevels: lodash.cloneDeep(c.ALIEN_XP_LEVELS),
     },
+    nextId: 100, // unique ID for sprites, equip, etc...
     // everything in system is transient and not serialized when saving the game
     system: {
       keys: {}, // Global keypress handlers
@@ -84,7 +83,7 @@ export function setupWorld() {
 /**
  * Sets up the sprite containers in the correct display order
  */
-function setupSpriteContainers() {
+export function setupSpriteContainers() {
   let mainStage = window.world.system.app.stage;
   let spriteContainers = window.world.system.spriteContainers;
   spriteContainers.background = new window.PIXI.Container();
@@ -267,7 +266,7 @@ export function getPlanetSprite(planet) {
   // TODO : Add buildings to the planet
 
   // Cache the new sprite
-  planet.spriteId = lodash.uniqueId();
+  planet.spriteId = window.world.nextId++;
   planetSpriteCache.set(planet.spriteId, planetContainer);
   return planetContainer;
 }
@@ -318,7 +317,7 @@ export function getShipSprite(ship) {
   ship.spriteWidth = sprite.width;
   ship.spriteHeight = sprite.height;
   ship.radius = sprite.width/2; // used for circular aliens
-  ship.spriteId = lodash.uniqueId();
+  ship.spriteId = window.world.nextId++;
   shipSpriteCache.set(ship.spriteId, sprite);
   window.world.system.spriteContainers.ships.addChild(sprite);
   //console.log('created new ship sprite '+ship.imageFile, sprite);
@@ -328,9 +327,9 @@ export function getShipSprite(ship) {
 // Creates and returns a ship object
 export function createShip(shipType, owner) {
   let ship = lodash.cloneDeep(shipType);
-  ship.id = lodash.uniqueId();
+  ship.id = window.world.nextId++;
   for (let equip of ship.equip) {
-    equip.id = lodash.uniqueId();
+    equip.id = window.world.nextId++;
   }
   ship.owner = owner;
   ship.vx = 0; // velocityX
@@ -466,21 +465,7 @@ export function addAlienXp(ship) {
 }
 
 export function addBlueprint(nextLevel) {
-  Swal.fire({
-    title: 'New plan: '+nextLevel.obj.name,
-    timer: 5000,
-    position:'top',
-    showConfirmButton: false,
-    toast:true,
-    width: Math.floor(c.SCREEN_WIDTH/2)+'px',
-
-    showClass: {
-      popup: 'animate__animated animate__slideInDown'
-    },
-    hideClass: {
-      popup: 'animate__animated animate__slideOutUp'
-    }
-  }).then();
+  utils.showToast('New plan: '+nextLevel.obj.name);
   let blueprints = window.world.blueprints;
   if (nextLevel.obj.objType === c.OBJ_EQUIP) {
     blueprints.equip.push(nextLevel.obj);

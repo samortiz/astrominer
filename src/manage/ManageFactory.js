@@ -1,5 +1,4 @@
 import React from 'react';
-import { c } from '../functions';
 import './ManageFactory.css';
 import { FactoryButton } from './FactoryButton';
 

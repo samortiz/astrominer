@@ -10,11 +10,24 @@ export function ManageTabs() {
   const TAB_FACTORY = 'factory';
   const TAB_STORAGE = 'storage';
   const TAB_SYSTEM = 'system';
+
+  function getTabBody(key) {
+    if (key === TAB_PLANET) {
+      return <ManagePlanet/>;
+    } else if (key === TAB_FACTORY) {
+      return <ManageFactory/>;
+    } else if (key === TAB_STORAGE) {
+      return <ManageStorage/>;
+    } else if (key === TAB_SYSTEM) {
+      return <ManageSystem/>;
+    }
+  }
+
   const TABS = [
-    { key: TAB_PLANET, name: 'Planet', obj: <ManagePlanet/> },
-    { key: TAB_FACTORY, name: 'Factory', obj: <ManageFactory/> },
-    { key: TAB_STORAGE, name: 'Storage', obj: <ManageStorage/> },
-    { key: TAB_SYSTEM, name: 'System', obj: <ManageSystem/> },
+    { key: TAB_PLANET, name: 'Planet'},
+    { key: TAB_FACTORY, name: 'Factory'},
+    { key: TAB_STORAGE, name: 'Storage'},
+    { key: TAB_SYSTEM, name: 'System'},
   ];
   const [selectedTab, setSelectedTab] = useState(TAB_PLANET);
 
@@ -26,11 +39,9 @@ export function ManageTabs() {
               onClick={() => setSelectedTab(tab.key)}
         >{tab.name}</span>
       )}
-      {TABS.map(tab =>
-        <div key={tab.key} className={`tab-body ${selectedTab === tab.key ? '' : 'tab-hidden'}`}>
-          {tab.obj}
-        </div>
-      )}
+      <div className='tab-body'>
+        {getTabBody(selectedTab)}
+      </div>
     </div>);
 }
 

@@ -248,7 +248,7 @@ export function hasFactory(planet) {
 export function buildEquip(equipTemplate) {
   let planet = window.world.selectedPlanet;
   let equip = lodash.cloneDeep(equipTemplate);
-  equip.id = lodash.uniqueId();
+  equip.id = window.world.nextId++;
   planet.equip.push(equip);
 }
 

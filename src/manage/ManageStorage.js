@@ -1,5 +1,5 @@
 import React from 'react';
-import { manage, game } from '../functions';
+import { manage } from '../functions';
 import './ManageStorage.css';
 import { EquipSelect } from './EquipSelect';
 
