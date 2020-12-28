@@ -9,6 +9,10 @@ export function createEmptyWorld() {
   return {
     saveGameName: null, // name of last game saved/loaded
     ship:null,
+    view: { // global XY for current view (in manage mode, always ship.xy in fly mode)
+      x:0,
+      y:0,
+    },
     aliens:[],
     planets:[],
     selectedPlanet: {resources:{}},
@@ -49,30 +53,34 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  window.world.shipStartX = +1600;
+  //window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
-  //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
-  world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
+  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
+  //world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
-  world.ship.resources = c.PLAYER_STARTING_RESOURCES;
   shipSprite.visible = true;
-  world.ship.resources = {titanium:10000, gold:10000, uranium:10000};
+  world.ship.resources = c.PLAYER_STARTING_RESOURCES;
+
+  // DEBUG SHIP
+  //world.ship.armorMax = 10000;
+  //world.ship.armor = 10000;
+  //world.ship.resources = {titanium:10000, gold:10000, uranium:10000};
+  //world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER];
+  //world.ship.equipMax = world.ship.equip.length;
 
   // DEBUG test alien
   //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
   //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y-70);
-  world.ship.armorMax = 100000;
-  world.ship.armor = 100000;
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER, c.EQUIP_BLINK_THRUSTER, c.EQUIP_STORAGE];
-  world.ship.equipMax = world.ship.equip.length;
-  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
-    titanium : 20500,
-    gold : 51000,
-    uranium : 5000,
-  });
-  testPlanet.x = c.PLAYER_START_X - 150;
-  testPlanet.y = c.PLAYER_START_Y ;
-  testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
+
+  // DEBUG Planet
+  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
+  //   titanium : 20500,
+  //   gold : 51000,
+  //   uranium : 5000,
+  // });
+  // testPlanet.x = c.PLAYER_START_X - 150;
+  // testPlanet.y = c.PLAYER_START_Y ;
+  // testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
   createAliens();
   setupMiniMap();
@@ -426,8 +434,12 @@ export function runBuildings() {
     if ( (planet.resources.raw.titanium === 0) 
       && (planet.resources.raw.gold === 0)
       && (planet.resources.raw.uranium === 0)) {
-        for (let building of planet.buildings) {
-          building.sprite.animationSpeed = 0;
+        const planetSprite = getPlanetSprite(planet);
+        for (const buildingSprite of planetSprite.children) {
+          // all animated sprites stop (this may not be true if new building types are added)
+          if (buildingSprite.animationSpeed) {
+            buildingSprite.animationSpeed = 0;
+          }
         }
     }
   } // for planet

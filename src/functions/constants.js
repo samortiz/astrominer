@@ -1,8 +1,7 @@
-
 // Colors
 export const BLACK = 0X000000;
 export const RED = 0xFF0000;
-export const BLUE = 0x0000FF;
+export const BLUE = 0x00AAFF;
 export const WHITE = 0xFFFFFF;
 export const MED_GREY = 0x808080;
 export const DARK_GREY = 0x303030;
@@ -36,6 +35,14 @@ export const HALF_MINIMAP_VIEW_HEIGHT = MINIMAP_VIEW_HEIGHT / 2;
 // convert minimap pixels to real pixels
 export const MINIMAP_SCALE_X = MINIMAP_WIDTH / MINIMAP_VIEW_WIDTH;  
 export const MINIMAP_SCALE_Y = MINIMAP_HEIGHT / MINIMAP_VIEW_HEIGHT; 
+
+// MiniMap colors
+export const MINIMAP_BORDER_COLOR = LIGHT_GREY;
+export const MINIMAP_BACKGROUND_COLOR = DARK_GREY;
+export const MINIMAP_PLANET_COLOR = LIGHT_GREY;
+export const MINIMAP_BUILDING_COLOR = BLUE;
+export const MINIMAP_SHIP_COLOR = WHITE;
+
 
 // Files
 export const SPRITESHEET_JSON = "images/spritesheet.json";

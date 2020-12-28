@@ -138,7 +138,6 @@ export function keyboardListener(value) {
       key.isUp = false;
     }
   };
-
   //The `upHandler`
   key.upHandler = event => {
     if (event.key === key.value) {
@@ -147,27 +146,22 @@ export function keyboardListener(value) {
       key.isUp = true;
     }
   };
-
   //Attach event listeners
   const downListener = key.downHandler.bind(key);
   const upListener = key.upHandler.bind(key);
-  
   window.addEventListener(
     "keydown", downListener, false
   );
   window.addEventListener(
     "keyup", upListener, false
   );
-  
   // Detach event listeners
   key.unsubscribe = () => {
     window.removeEventListener("keydown", downListener);
     window.removeEventListener("keyup", upListener);
   };
-  
   return key;
 }
-
 
 export function showToast(text) {
   Swal.fire({

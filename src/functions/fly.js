@@ -53,6 +53,8 @@ export function flyLoop(delta) {
     // move the ship
     ship.x += ship.vx;
     ship.y += ship.vy;
+    world.view.x = ship.x;
+    world.view.y = ship.y;
 
     let shipSprite = getShipSprite(ship);
     shipSprite.rotation = ship.rotation;
@@ -265,8 +267,8 @@ export function getExplosionSprite(ship) {
 
 /**
  * Destroys the ship playing an explosion animation
- * @param ship : the one to explode
- * @param afterExplosion : function to run after exploding (or null if nothing to do)
+ * @param ship: the one to explode
+ * @param afterExplosion: function to run after exploding (or null if nothing to do)
  */
 export function destroyShip(ship, afterExplosion) {
   if (ship !== window.world.ship) {
@@ -539,35 +541,35 @@ export function getEquip(ship, equipType) {
 
 export function drawMiniMap() {
   let g = window.world.system.miniMapGraphics;
-  let ship = window.world.ship;
+  let view = window.world.view;
   let l = 0;
   let t = c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT;
   let r = c.MINIMAP_WIDTH;
   let b = c.SCREEN_HEIGHT;
   g.clear();
   // Background
-  g.beginFill(c.DARK_GREY);
-  g.lineStyle(1, c.MED_GREY); 
+  g.beginFill(c.MINIMAP_BACKGROUND_COLOR);
+  g.lineStyle(1, c.MINIMAP_BORDER_COLOR);
   g.drawRect(l, t, r, b);
   g.endFill();
   // Planets
   for (let planet of window.world.planets) {
-    if (planetOnMap(ship, planet)) {
-      let x = l + c.HALF_MINIMAP_WIDTH + ((planet.x - ship.x) * c.MINIMAP_SCALE_X);
-      let y = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - ship.y) * c.MINIMAP_SCALE_Y);
-      g.lineStyle(1, c.LIGHT_GREY);
+    if (planetOnMap(view, planet)) {
+      let x = l + c.HALF_MINIMAP_WIDTH + ((planet.x - view.x) * c.MINIMAP_SCALE_X);
+      let y = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - view.y) * c.MINIMAP_SCALE_Y);
+      g.lineStyle(1, c.MINIMAP_PLANET_COLOR);
       g.drawCircle(x,y, planet.radius * c.MINIMAP_SCALE_X);
       // Buildings
       for (let building of planet.buildings) {
-        let buildingX = l + c.HALF_MINIMAP_WIDTH + ((building.x - ship.x) * c.MINIMAP_SCALE_X) -1.5; 
-        let buildingY = t + c.HALF_MINIMAP_HEIGHT + ((building.y - ship.y) * c.MINIMAP_SCALE_Y) -1.5;
-        g.lineStyle(1, c.RED); 
+        let buildingX = l + c.HALF_MINIMAP_WIDTH + ((building.x - view.x) * c.MINIMAP_SCALE_X) -1.5;
+        let buildingY = t + c.HALF_MINIMAP_HEIGHT + ((building.y - view.y) * c.MINIMAP_SCALE_Y) -1.5;
+        g.lineStyle(1, c.MINIMAP_BUILDING_COLOR);
         g.drawRect(buildingX,buildingY,3,3); 
       }
     }
   }
   // Ship
-  g.lineStyle(1, c.WHITE);
+  g.lineStyle(1, c.MINIMAP_SHIP_COLOR);
   g.drawCircle(l+c.MINIMAP_WIDTH/2,t+c.MINIMAP_HEIGHT/2, 2);
 }
 
@@ -576,25 +578,27 @@ export function drawMiniMap() {
  */
 export function clickOnMinimap(clickX, clickY) {
   if (window.world.system.gameState === c.GAME_STATE.MANAGE) {
-    let ship = window.world.ship;
-    let globalX = ship.x + ((clickX - c.HALF_MINIMAP_WIDTH) * (1/c.MINIMAP_SCALE_X));
-    let globalY = ship.y + (((clickY - (c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT)) - c.HALF_MINIMAP_HEIGHT) * (1/c.MINIMAP_SCALE_X));
+    const view = window.world.view
+    let globalX = view.x + ((clickX - c.HALF_MINIMAP_WIDTH) * (1/c.MINIMAP_SCALE_X));
+    let globalY = view.y + (((clickY - (c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT)) - c.HALF_MINIMAP_HEIGHT) * (1/c.MINIMAP_SCALE_X));
     for (let planet of window.world.planets) {
       if (utils.distanceBetween(globalX, globalY, planet.x, planet.y) <= planet.radius) {
         window.world.selectedPlanet = planet;
-        // TODO: redraw based on what ship?
       }
     }
+    view.x = globalX;
+    view.y =  globalY;
+    drawMiniMap();
   }
 }
 
 
-function planetOnMap(ship, planet) {
+function planetOnMap(view, planet) {
   // Right side
-  if ((ship.x + c.HALF_MINIMAP_VIEW_WIDTH + planet.radius < planet.x) || // Right
-      (ship.x - c.HALF_MINIMAP_VIEW_WIDTH - planet.radius > planet.x) || // Left
-      (ship.y + c.HALF_MINIMAP_VIEW_HEIGHT + planet.radius < planet.y) || // Bottom
-      (ship.y - c.HALF_MINIMAP_VIEW_HEIGHT - planet.radius > planet.y)) { // Top
+  if ((view.x + c.HALF_MINIMAP_VIEW_WIDTH + planet.radius < planet.x) || // Right
+      (view.x - c.HALF_MINIMAP_VIEW_WIDTH - planet.radius > planet.x) || // Left
+      (view.y + c.HALF_MINIMAP_VIEW_HEIGHT + planet.radius < planet.y) || // Bottom
+      (view.y - c.HALF_MINIMAP_VIEW_HEIGHT - planet.radius > planet.y)) { // Top
     return false;
   }
   return true;

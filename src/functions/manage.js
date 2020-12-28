@@ -1,5 +1,6 @@
 import { c, utils, fly, game } from './';
 import lodash from 'lodash';
+import {EQUIP_TYPE_BRAKE, EQUIP_TYPE_PRIMARY_WEAPON, EQUIP_TYPE_THRUSTER} from "./constants";
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -201,7 +202,6 @@ export function buildShip(shipTemplate) {
  * NOTE: the new ship should already be created and stored in a planet
  */
 export function switchToShip(newShip, planet) {
-  console.log('switch to ship');
   let oldShip = window.world.ship;
   if (!removeShipFromStorage(newShip, planet)) {
     console.warn("Unable to remove ship from planet ",newShip," planet=",planet);
@@ -285,3 +285,86 @@ export function repairShip(planet, ship) {
   game.payResourceCost(planet, ship, cost);
   ship.armor += addArmor;
 }
+
+export function addEquip(ship, newEquip) {
+  if (newEquip.type === c.EQUIP_TYPE_ARMOR) {
+    // Only add armor if the ship is in full repair
+    if (ship.armor === ship.armorMax) {
+      ship.armor += newEquip.armorAmt;
+    }
+    ship.armorMax += newEquip.armorAmt;
+  } else if (newEquip.type === c.EQUIP_TYPE_STORAGE) {
+    ship.resourcesMax += newEquip.storageAmount;
+  }
+}
+
+export function moveEquipFromPlanetToShip(ship, planet, equipToMove) {
+  // Remove from the planet
+  ship.equip.push(equipToMove);
+  addEquip(ship, equipToMove);
+  // Remove the oldEquip from the planet
+  lodash.remove(planet.equip, (e) => e.id === equipToMove.id);
+}
+
+export function moveEquipFromShipToPlanet(ship, planet, equipToMove) {
+  // Add to the planet
+  planet.equip.push(equipToMove);
+  if (equipToMove.type === c.EQUIP_TYPE_ARMOR) {
+    ship.armorMax -= equipToMove.armorAmt;
+    if (ship.armor > ship.armorMax) {
+      ship.armor = ship.armorMax;
+    }
+  } else if (equipToMove.type === c.EQUIP_TYPE_STORAGE) {
+    ship.resourcesMax -= equipToMove.storageAmount;
+    let shipResources = ship.resources.titanium + ship.resources.gold + ship.resources.uranium;
+    if (shipResources > ship.resourcesMax) {
+      let owing = this.removeResource(ship, 'titanium', (shipResources - ship.resourcesMax));
+      if (owing > 0) {
+        owing = this.removeResource(ship, 'gold', owing);
+      }
+      if (owing > 0) {
+        owing = this.removeResource(ship, 'uranium', owing);
+      }
+      if (owing > 0) {
+        console.warn("Cannot remove more resources from ship still owing "+owing);
+      }
+    }
+  }
+  // Remove the oldEquip from the ship (no new equipment added)
+  lodash.remove(ship.equip, (e) => e.id === equipToMove.id);
+}
+
+/**
+ * Removes the resource from the ship
+ * @return the amount still owing after removing
+ */
+export function removeResource(ship, resourceType, amount) {
+  ship.resources[resourceType] -= amount;
+  if (ship.resources[resourceType] < 0) {
+    let owing = Math.abs(ship.resources[resourceType]);
+    ship.resources[resourceType] = 0;
+    return owing;
+  }
+  return 0;
+}
+
+/**
+ * @return true if the equip can be added to the ship
+ */
+export function canEquip(ship, equip) {
+  if (!ship || !ship.equip || !equip) {
+    return false;
+  }
+  // No more space
+  if (ship.equip.length >= ship.equipMax) {
+    return false;
+  }
+  // Some equip you can only have one
+  if ([EQUIP_TYPE_BRAKE, EQUIP_TYPE_PRIMARY_WEAPON, EQUIP_TYPE_THRUSTER].includes(equip.type)) {
+    if (ship.equip.find((eq) => eq.type === equip.type)) {
+      return false;
+    }
+  }
+  return true;
+}
+

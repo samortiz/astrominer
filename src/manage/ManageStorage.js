@@ -1,20 +1,15 @@
 import React from 'react';
 import { manage } from '../functions';
 import './ManageStorage.css';
-import { EquipSelect } from './EquipSelect';
 
 export class ManageStorage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {selectedShip:null, selectedEquip:null};
+    this.state = {selectedShip:null};
   }
 
   viewShip(ship) {
     this.setState({selectedShip:ship});
-  }
-
-  viewEquip(equip) {
-    this.setState({selectedEquip:equip});
   }
 
   startUsingShip() {
@@ -35,9 +30,12 @@ export class ManageStorage extends React.Component {
 
     let selectedShipEquip = [];
     if (selectedShip) {
-      for (let i=0; i<selectedShip.equipMax; i++) {
-        let equip = selectedShip.equip.length > i ? selectedShip.equip[i] : null;
-        selectedShipEquip.push(<EquipSelect key={equip ? equip.id+'-'+i : 'empty-'+i} planet={planet} ship={selectedShip} equip={equip} />);
+      for (let equip of selectedShip.equip) {
+        selectedShipEquip.push(
+          <div className="item" key={equip.id}>
+            {equip.name} &nbsp;
+            <button onClick={() => manage.moveEquipFromShipToPlanet(selectedShip, planet, equip)} >Remove</button>
+          </div>);
       }
     }
 
@@ -55,7 +53,7 @@ export class ManageStorage extends React.Component {
           <span className='item-details'>
             { selectedShip != null && // exclude this block if no ship selected
             <div>
-              <div className='button-row'>
+              <div className='item-attr'>
                 <button onClick={() => this.startUsingShip()} disabled={selectedShip === currentShip}>Use Ship</button>
               </div>             
               <div className='item-attr'><b>Name</b> {selectedShip.name} {selectedShip.id}</div>
@@ -67,29 +65,26 @@ export class ManageStorage extends React.Component {
                         disabled={selectedShip.armorMax <= selectedShip.armor} >Repair</button> 
                  &nbsp; Cost {Math.floor(selectedShip.armorMax - selectedShip.armor)} titanium
               </div>
-              <div className='item-attr'><b>Resources</b> Max:{Math.floor(selectedShip.resourcesMax)}</div>
-              <div className='item-attr'><b>Equip</b> Max:{selectedShip.equipMax}
+              <div className='item-attr'><b>Resources Max</b>{Math.floor(selectedShip.resourcesMax)}</div>
+              <div className='item-attr'><b>Equip</b> (Max {selectedShip.equipMax})
                 {selectedShipEquip}
               </div>
             </div>
             }
           </span>
         </div>
+
         <div className='storage-section'> 
           <div className='title'>Equipment</div>
-          <span className='item-list'>
+          <span className='equip-list'>
             {planet.equip.map((equip, i) => {
-              return <div key={i} 
-                          onClick={() => this.viewEquip(equip)} 
-                          className={`item ${this.state.selectedEquip===equip ? 'selected-item' : 'non-selected-item'}`} >{equip.name}</div>
+              return <div key={i} className='item'>
+                {equip.name} &nbsp;
+                <button onClick={() => manage.moveEquipFromPlanetToShip(selectedShip, planet, equip)}
+                        disabled={!manage.canEquip(selectedShip, equip)}
+                >Equip</button>
+              </div>
             })}
-          </span>
-          <span className='item-details'>
-            { this.state.selectedEquip != null && // exclude this block if no equip selected
-            <div>
-              <div className='item-attr'><b>Name</b> {this.state.selectedEquip.name} {this.state.selectedEquip.id}</div>
-            </div>
-            }
           </span>
         </div>
       </div>);
