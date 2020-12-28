@@ -57,6 +57,7 @@ export const SHIP_EXPLORER_FILE = "ship_explorer.png";
 export const SHIP_FAST_FILE = "ship_fast.png";
 export const SHIP_FIGHTER_FILE = "ship_fighter.png";
 export const SHIP_HEAVY_FILE = "ship_heavy.png";
+export const SHIP_BALL_FILE = "ballship.png";
 export const STAR_BACKGROUND_FILE = "images/stars.png";
 export const CRASH_JSON = "images/crash.json";
 export const CRASH = "crash"; // animation name in json
@@ -67,6 +68,8 @@ export const ALIEN_SHIP_FILE = "alien.png";
 export const ALIEN_SHIP_SMALL_FILE = "alien_small.png";
 export const ALIEN_SHIP_LARGE_FILE = "alien_large.png";
 export const ALIEN_SHIP_FIRE_FILE = "alien_fire.png";
+export const ALIEN_SHIP_BLUE_FILE = "alien_blue.png";
+
 
 export const UNIVERSE_RADIUS = 30000;
 export const PLANET_CACHE_STEP_SIZE = SCREEN_WIDTH;
@@ -84,21 +87,12 @@ export const NUM_ALIENS = 1000;
 export const MIN_ALIEN_DIST_TO_PLANET = 50;
 export const MIN_ALIEN_DIST_TO_ALIEN = 3;
 
-// Critical Hits
-export const CRIT_TYPE_BRAKE = "Brake"
-export const CRIT_TYPE_STEER_LEFT = "Steer Left";
-export const CRIT_TYPE_STEER_RIGHT = "Steer Right";
-export const CRIT_TYPE_ENGINE = "Engine";
-export const CRIT_TYPE_GUN = "Engine";
-export const CRIT_TYPE_THRUSTER = "Thruster";
-export const CRIT_TYPE_MISC = "Misc";
-
 // Buildings
 export const BUILDING_PLACEMENT_ROTATION_INCREMENT = 0.05;
 // Mine
 export const BUILDING_TYPE_MINE = "mine";
-export const MINE_SCALE = 0.25;
-export const MINE_WIDTH = 50;
+export const MINE_SCALE = 1;
+export const MINE_WIDTH = 52;
 export const MINE_ANIMATION_SPEED = 0.5;
 export const MINE_SPEED_TITANIUM = 0.0166; // 1 every sec
 export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
@@ -107,12 +101,13 @@ export const MINE_COST = {titanium:20, gold:10, uranium:0};
 // Factory
 export const BUILDING_TYPE_FACTORY = "factory";
 export const FACTORY_COST = {titanium:50, gold:20, uranium:10};
-export const FACTORY_WIDTH = 80;
-export const FACTORY_SCALE = 0.25;
+export const FACTORY_WIDTH = 91;
+export const FACTORY_SCALE = 0.8;
 
 // Equipment
 export const EQUIP_TYPE_BRAKE = "Brake";
 export const EQUIP_TYPE_PRIMARY_WEAPON = "Primary Weapon";
+export const EQUIP_TYPE_SECONDARY_WEAPON = "Secondary Weapon";
 export const EQUIP_TYPE_THRUSTER = "Thruster";
 export const EQUIP_TYPE_ARMOR = "Armor";
 export const EQUIP_TYPE_REPAIR_DROID = "Repair Droid";
@@ -130,60 +125,44 @@ export const OBJ_SHIP = "Ship";
 
 export const ALIEN_AI_TURRET = "ALIEN_AI_TURRET";
 export const ALIEN_AI_CREEPER = "ALIEN_AI_CREEPER";
+export const EQUIP_AI_MINE = "EQUIP_AI_MINE";
 
 // brakeSpeedPct is best between 0.02 - 0.1 (higher is ok)  
 export const EQUIP_BRAKE = {name: "Brake", objType:OBJ_EQUIP, type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
-                            crit: {type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:0.95},
                             cost: {titanium:20, gold:10, uranium:0} };
 export const EQUIP_BLINK_BRAKE = {name: "Blink Brake", objType:OBJ_EQUIP, type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0, 
-                            crit:{type:CRIT_TYPE_BRAKE, maxHits:1, hits:0, pctLoss:1},
                             cost: {titanium:50, gold:50, uranium:30}};
 export const EQUIP_SPEED_BOOST = {name: "Speed Booster", objType:OBJ_EQUIP, type:EQUIP_TYPE_SPEED, boostSpeed:0.05, 
-                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
                             cost: {titanium:0, gold:10, uranium:20}};
 export const EQUIP_TURN_BOOST = {name: "Turn Booster", objType:OBJ_EQUIP, type:EQUIP_TYPE_TURN, boostSpeed:0.05, 
-                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
                             cost: {titanium:0, gold:10, uranium:20}};
 export const EQUIP_STORAGE = {name: "Storage", objType:OBJ_EQUIP, type:EQUIP_TYPE_STORAGE, storageAmount:100, 
-                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
                             cost: {titanium:50, gold:0, uranium:0}};
 export const EQUIP_BLASTER = {name: "Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:25, cool:0, damage:10, speed:2.5, lifetime:100, bulletFile:BULLET_FILE,
-                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:10, gold:0, uranium:20}};
 export const EQUIP_FAST_BLASTER = {name: "Fast Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:10, cool:0, damage:10, speed:4, lifetime:80, bulletFile:BULLET_FILE,
-                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:20, gold:20, uranium:40}};
 export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:7, speed:6, lifetime:70, bulletFile:BULLET_FILE,
-                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:30, gold:30, uranium:60}};
 export const EQUIP_THRUSTER = {name: "Thruster", objType:OBJ_EQUIP, type:EQUIP_TYPE_THRUSTER, thrustSpeed:0.08, thrustType:THRUST_MOMENTUM,
-                            crit:{type:CRIT_TYPE_THRUSTER, maxHits:1, hits:0, pctLoss:0.95},
                             cost: {titanium:40, gold:40, uranium:10}};
 // blink thrustSpeed is good from 2 to 10                            
 export const EQUIP_BLINK_THRUSTER = {name: "Blink Thruster", objType:OBJ_EQUIP, type:EQUIP_TYPE_THRUSTER, thrustSpeed:2.5, thrustType:THRUST_BLINK,
-                            crit:{type:CRIT_TYPE_THRUSTER, maxHits:1, hits:0, pctLoss:0.95},
                             cost: {titanium:60, gold:50, uranium:10}};
 export const EQUIP_R2D2 = {name: "R2D2 Repair Droid", objType:OBJ_EQUIP, type:EQUIP_TYPE_REPAIR_DROID, repairSpeed:0.03, 
-                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
                             cost: {titanium:20, gold:100, uranium:50}};
 export const EQUIP_ALIEN_BLASTER = {name: "Alien Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:20, cool:0, damage:4, speed:2, lifetime:120, bulletFile:BULLET_BLUE_FILE,
-                            crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
                             cost: {titanium:10, gold:30, uranium:50}};
 export const EQUIP_STAPLE_GUN = {name: "Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:1.5, speed:3, lifetime:300, bulletFile:BULLET_STAPLE_FILE,
-  crit: {type:CRIT_TYPE_GUN, maxHits:1, hits:0},
   cost: {titanium:10, gold:30, uranium:50}};
-
 export const EQUIP_ARMOR = {name: "Armor Plate", objType:OBJ_EQUIP, type:EQUIP_TYPE_ARMOR, armorAmt:100,
-                            crit:{type:CRIT_TYPE_MISC, maxHits:1, hits:0, pctLoss:1},
                             cost: {titanium:50, gold:0, uranium:0}};
-export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER,
-   EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR];
 
 // Ships
 export const SHIP_EXPLORER = {
   name: "Explorer",
   objType:OBJ_SHIP,
-  propulsion: 0.05, // best bewteen 0.02 - 0.1
+  propulsion: 0.05, // best between 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 50,
   resources: {
@@ -193,10 +172,6 @@ export const SHIP_EXPLORER = {
   },
   equipMax: 2,
   equip : [EQUIP_BRAKE, EQUIP_BLASTER], // DEBUG blaster
-  crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
-        , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
-        , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
-  ],
   armorMax: 50,
   armor: 50,
   crashSpeed: 2,
@@ -209,7 +184,7 @@ export const SHIP_EXPLORER = {
 export const SHIP_CARGO = {
   name: "Cargo",
   objType:OBJ_SHIP,
-  propulsion: 0.025, // best bewteen 0.02 - 0.1
+  propulsion: 0.025, // best between 0.02 - 0.1
   turnSpeed: 0.04, // // best between 0.3 - 0.07
   resourcesMax: 600,
   resources: {
@@ -223,7 +198,7 @@ export const SHIP_CARGO = {
   armor: 20,
   crashSpeed: 1.2,
   crashAngle: 0.3,
-  imageScale: 0.4,
+  imageScale: 0.45,
   imageFile: SHIP_CARGO_FILE,
   cost: {titanium:100, gold:50, uranium:50},
 };
@@ -231,7 +206,7 @@ export const SHIP_CARGO = {
 export const SHIP_FAST = {
   name: "Fast",
   objType:OBJ_SHIP,
-  propulsion: 0.1, // best bewteen 0.02 - 0.1
+  propulsion: 0.1, // best between 0.02 - 0.1
   turnSpeed: 0.08, // // best between 0.3 - 0.07
   resourcesMax: 40,
   resources: {
@@ -254,7 +229,7 @@ export const SHIP_FAST = {
 export const SHIP_SKELETON = {
   name: "Skeleton",
   objType:OBJ_SHIP,
-  propulsion: 0.03, // best bewteen 0.02 - 0.1
+  propulsion: 0.03, // best between 0.02 - 0.1
   turnSpeed: 0.045, // // best between 0.3 - 0.07
   resourcesMax: 30,
   resources: {
@@ -276,7 +251,7 @@ export const SHIP_SKELETON = {
 export const SHIP_HEAVY = {
   name: "Heavy",
   objType:OBJ_SHIP,
-  propulsion: 0.05, // best bewteen 0.02 - 0.1
+  propulsion: 0.05, // best between 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 300,
   resources: {
@@ -298,7 +273,7 @@ export const SHIP_HEAVY = {
 export const SHIP_FIGHTER = {
   name: "Fighter",
   objType:OBJ_SHIP,
-  propulsion: 0.08, // best bewteen 0.02 - 0.1
+  propulsion: 0.08, // best between 0.02 - 0.1
   turnSpeed: 0.07, // // best between 0.3 - 0.07
   resourcesMax: 120,
   resources: {
@@ -320,7 +295,7 @@ export const SHIP_FIGHTER = {
 export const SHIP_ALIEN_TURRET = {
   name: "Alien Turret",
   objType:OBJ_SHIP,
-  propulsion: 0.05, // best bewteen 0.02 - 0.1
+  propulsion: 0.05, // best between 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 100,
   resources: {
@@ -330,10 +305,6 @@ export const SHIP_ALIEN_TURRET = {
   },
   equipMax: 3,
   equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
-  crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
-        , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
-        , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
-  ],
   armorMax: 100,
   armor: 100,
   crashSpeed: 2,
@@ -347,7 +318,7 @@ export const SHIP_ALIEN_TURRET = {
 export const SHIP_ALIEN = {
   name: "Alien Ship",
   objType:OBJ_SHIP,
-  propulsion: 0.05, // best bewteen 0.02 - 0.1
+  propulsion: 0.05, // best between 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 100,
   resources: {
@@ -357,10 +328,6 @@ export const SHIP_ALIEN = {
   },
   equipMax: 3,
   equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
-  crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
-    , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
-    , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
-  ],
   armorMax: 100,
   armor: 100,
   crashSpeed: 2,
@@ -374,7 +341,7 @@ export const SHIP_ALIEN = {
 export const SHIP_ALIEN_LARGE = {
   name: "Alien Ship",
   objType:OBJ_SHIP,
-  propulsion: 0.03, // best bewteen 0.02 - 0.1
+  propulsion: 0.03, // best between 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 100,
   resources: {
@@ -384,10 +351,6 @@ export const SHIP_ALIEN_LARGE = {
   },
   equipMax: 3,
   equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
-  crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
-    , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
-    , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
-  ],
   armorMax: 300,
   armor: 300,
   crashSpeed: 2,
@@ -401,7 +364,7 @@ export const SHIP_ALIEN_LARGE = {
 export const SHIP_ALIEN_FIRE = {
   name: "Alien Fire",
   objType:OBJ_SHIP,
-  propulsion: 0.08, // best bewteen 0.02 - 0.1
+  propulsion: 0.08, // best between 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 100,
   resources: {
@@ -411,10 +374,6 @@ export const SHIP_ALIEN_FIRE = {
   },
   equipMax: 3,
   equip : [EQUIP_BRAKE, EQUIP_STAPLE_GUN],
-  crits: [{type:CRIT_TYPE_STEER_LEFT, maxHits:1, hits:0, pctLoss:0.95}
-    , {type:CRIT_TYPE_STEER_RIGHT, maxHits:1, hits:0, pctLoss:0.95}
-    , {type:CRIT_TYPE_ENGINE, maxHits:1, hits:0, pctLoss:0.80}
-  ],
   armorMax: 250,
   armor: 250,
   crashSpeed: 2,
@@ -425,7 +384,65 @@ export const SHIP_ALIEN_FIRE = {
   aiType: ALIEN_AI_CREEPER,
 };
 
-export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN_TURRET];
+export const SHIP_MINE = {
+  name: "Mine",
+  objType:OBJ_SHIP,
+  propulsion: 0.0,
+  turnSpeed: 0.0,
+  resourcesMax: 0,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  equipMax: 0,
+  equip : [],
+  armorMax: 100,
+  armor: 100,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1,
+  imageFile: ALIEN_SHIP_BLUE_FILE,
+  cost: {titanium:5, gold:5, uranium:10},
+  aiType: EQUIP_AI_MINE,
+  aiData: {mineDistance: 300}
+};
+
+export const SHIP_MISSLE = {
+  name: "Missile",
+  objType:OBJ_SHIP,
+  propulsion: 0.08, // best between 0.02 - 0.1
+  turnSpeed: 0.05, // // best between 0.3 - 0.07
+  resourcesMax: 0,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  equipMax: 0,
+  equip : [],
+  armorMax: 20,
+  armor: 20,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1.5,
+  imageFile: ALIEN_SHIP_BLUE_FILE,
+  cost: {titanium:5, gold:5, uranium:10},
+  aiType: EQUIP_AI_MINE,
+};
+
+export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN,  SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_FIRE];
+
+
+// This equipment needs to go after the ships (ugh)
+export const EQUIP_MINE_DEPLOYER = {name: "Mine Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:15, cool:0,
+  createShip: SHIP_MINE,
+  cost: {titanium:30, gold:100, uranium:100}};
+
+export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER,
+  EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR, EQUIP_MINE_DEPLOYER];
+
+
 
 export const PLANET_DENSITY = new Map();
 PLANET_DENSITY.set(GREEN_PLANET_FILE, 0.01)
@@ -439,7 +456,7 @@ export const UNIVERSE_RINGS = [
     minDist: 1, maxDist: 2,
     minDistToOtherPlanet:10,
     minPlanetRadius:1500, maxPlanetRadius:1501,
-    planetFiles:[GREEN_PLANET_FILE],
+    planetFiles:[PURPLE_PLANET_FILE],
     aliens: [{count: 0, file: null}],
   },
   { planetCount: 200,
@@ -453,7 +470,7 @@ export const UNIVERSE_RINGS = [
     minDist: 10000, maxDist: 15000,
     minDistToOtherPlanet:150,
     minPlanetRadius:150, maxPlanetRadius:250,
-    planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE, PURPLE_PLANET_FILE],
+    planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE, GREEN_PLANET_FILE],
     aliens: [{count: 1000, file: SHIP_ALIEN}, {count: 300, file: SHIP_ALIEN_LARGE}, {count: 500, file: SHIP_ALIEN_TURRET}],
   },
   { planetCount: 1800,

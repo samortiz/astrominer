@@ -28,6 +28,10 @@ export function flyLoop(delta) {
     if (world.system.keys.space.isDown) {
       firePrimaryWeapon(ship);
     }
+    if (world.system.keys.x.isDown) {
+      fireSecondaryWeapon(ship);
+    }
+
     if (world.system.keys.q.isDown) {
       thrustShip(ship, true);
     }
@@ -115,7 +119,7 @@ export function coolAllWeapons() {
  */
 export function coolWeapons(ship) {
   for (let equip of ship.equip) {
-    if ((equip.type === c.EQUIP_TYPE_PRIMARY_WEAPON) && (equip.cool > 0)) {
+    if (equip.cool) {
       equip.cool -= 1;
     }
   }
@@ -271,7 +275,7 @@ export function getExplosionSprite(ship) {
  * @param afterExplosion: function to run after exploding (or null if nothing to do)
  */
 export function destroyShip(ship, afterExplosion) {
-  if (ship !== window.world.ship) {
+  if (ship.owner === c.ALIEN) {
     game.addAlienXp(ship);
   }
   let explosionSprite = getExplosionSprite(ship);
@@ -397,6 +401,25 @@ export function firePrimaryWeapon(ship) {
   if (gun && (gun.cool <= 0)) {
     fireBullet(ship, gun);
     gun.cool = gun.coolTime; // this is decremented in coolWeapons
+  }
+}
+
+export function fireSecondaryWeapon(ship) {
+  let weapon = getEquip(ship, c.EQUIP_TYPE_SECONDARY_WEAPON);
+  if (weapon && (weapon.cool <= 0)) {
+    if (weapon.createShip) {
+      const mine = game.createShip(weapon.createShip, c.PLAYER);
+      const mineSprite = getShipSprite(mine);
+      const mineDistFromShip = ship.spriteWidth/2 + mine.spriteWidth/2 + 20;
+      const {xAmt, yAmt} = utils.dirComponents(ship.rotation, mineDistFromShip);
+      mine.x = ship.x - xAmt;
+      mine.y = ship.y - yAmt;
+      mineSprite.visible = true;
+      mineSprite.x = (mine.x - ship.x) + c.HALF_SCREEN_WIDTH;
+      mineSprite.y = (mine.y - ship.y) + c.HALF_SCREEN_HEIGHT;
+      window.world.aliens.push(mine);
+    }
+    weapon.cool = weapon.coolTime; // this is decremented in coolWeapons
   }
 }
 

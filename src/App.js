@@ -81,6 +81,7 @@ render() {
     window.world.system.keys.d = utils.keyboardListener("d"); // right
     window.world.system.keys.q = utils.keyboardListener("q"); // thrust left
     window.world.system.keys.e = utils.keyboardListener("e"); // thrust right
+    window.world.system.keys.x = utils.keyboardListener("x"); // secondary weapon
   }
   
 }

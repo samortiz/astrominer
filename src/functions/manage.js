@@ -56,6 +56,7 @@ export function makeBuildingSprite(building, planet, planetSprite = null) {
   }
   buildingSprite.anchor.set(0.5, 0.5);
   buildingSprite.scale.set(spriteScale, spriteScale);
+  console.log(spriteFile+' scale='+spriteScale+' width='+buildingSprite.height);
   buildingSprite.rotation = building.rotation;
   buildingSprite.x = (building.x - planet.x);
   buildingSprite.y = (building.y - planet.y);

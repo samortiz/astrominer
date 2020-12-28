@@ -196,6 +196,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">alien_blue.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9Paddings</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">alien_fire.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -238,6 +253,21 @@
                 <rect>19,19,37,37</rect>
                 <key>scale9Paddings</key>
                 <rect>19,19,37,37</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ballship.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>7,7,13,13</rect>
+                <key>scale9Paddings</key>
+                <rect>7,7,13,13</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -464,6 +494,8 @@
             <filename>alien_small.png</filename>
             <filename>bullet_blue.png</filename>
             <filename>bullet_white.png</filename>
+            <filename>alien_blue.png</filename>
+            <filename>ballship.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

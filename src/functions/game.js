@@ -53,34 +53,36 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  //window.world.shipStartX = +1550;
+  window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
-  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
-  //world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
+  //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
+  world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
   shipSprite.visible = true;
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  //world.ship.armorMax = 10000;
-  //world.ship.armor = 10000;
-  //world.ship.resources = {titanium:10000, gold:10000, uranium:10000};
-  //world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_STREAM_BLASTER];
-  //world.ship.equipMax = world.ship.equip.length;
+  world.ship.armorMax = 10000;
+  world.ship.armor = 10000;
+  world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_MINE_DEPLOYER, c.EQUIP_STREAM_BLASTER];
+  world.ship.equipMax = world.ship.equip.length;
+  world.blueprints.equip = [...c.ALL_EQUIP];
+  world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
   //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
   //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y-70);
 
   // DEBUG Planet
-  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
-  //   titanium : 20500,
-  //   gold : 51000,
-  //   uranium : 5000,
-  // });
-  // testPlanet.x = c.PLAYER_START_X - 150;
-  // testPlanet.y = c.PLAYER_START_Y ;
-  // testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
+  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
+    titanium : 20500,
+    gold : 51000,
+    uranium : 5000,
+  });
+  testPlanet.x = c.PLAYER_START_X - 150;
+  testPlanet.y = c.PLAYER_START_Y ;
+  testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
   createAliens();
   setupMiniMap();
@@ -286,12 +288,12 @@ export function getPlanetSprite(planet) {
  * NOTE: This will return a non-visible sprite, the calling code is responsible for making the sprite visible
  */
 export function getShipSprite(ship) {
-  if (!ship.alive) {
-    console.warn('You should not get sprites for dead ships. This will resurrect the sprite!');
-    console.trace();
-    window.error(); // does not exist... thus an error!
-    return;
-  }
+  // if (!ship.alive) {
+  //   console.warn('You should not get sprites for dead ships.');
+  //   console.trace();
+  //   window.error(); // does not exist... thus an error!
+  //   return;
+  // }
   let shipSpriteCache = window.world.system.shipSpriteCache[ship.imageFile];
   // No cache for this file yet - create an empty cache
   if (!shipSpriteCache) {
