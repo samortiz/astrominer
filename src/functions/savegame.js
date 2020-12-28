@@ -5,7 +5,7 @@ import {getPlanetSprite, getShipSprite} from "./game";
 // IndexedDB constants
 const WORLD_STORE = 'world';
 const DB_NAME = 'astrominer';
-const DB_VERSION = 4;
+const DB_VERSION = 1;
 
 /** Saves an object in localstorage.
  * @param objToSave: should be an Object or Array, NOT a primitive as the JSON.parse will fail

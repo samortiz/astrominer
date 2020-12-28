@@ -263,7 +263,9 @@ export function getPlanetSprite(planet) {
   planetSprite.scale.set(spriteScale, spriteScale);
   planetContainer.addChild(planetSprite);
 
-  // TODO : Add buildings to the planet
+  for (const building of planet.buildings) {
+    manage.makeBuildingSprite(building, planet, planetContainer);
+  }
 
   // Cache the new sprite
   planet.spriteId = window.world.nextId++;

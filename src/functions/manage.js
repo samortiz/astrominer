@@ -24,10 +24,26 @@ function takeOff() {
 }
 
 /**
+ * @return Correct set of constants for the building type.
+ * Maybe these constants could be moved into a variable or something
+ */
+function getBuildingInfo(buildingType) {
+  if (buildingType === c.BUILDING_TYPE_FACTORY) {
+    return {spriteScale:c.FACTORY_SCALE, spriteFile:c.FACTORY_FILE, animation:false};
+  } else if (buildingType === c.BUILDING_TYPE_MINE) {
+    return {spriteScale:c.MINE_SCALE, spriteFile:c.MINE_FILE, animation:true};
+  }
+  console.warn('Unknown building type ', buildingType);
+  return {}
+}
+
+/**
  * Creates a factory sprite and adds it to the planet container using the factory x,y and rotation
  * NOTE: The building x,y,rot need to be set before calling this
+ * @param planetSprite optional, if null this will lookup the sprite using getPlanetSprite()
  */
-export function makeBuildingSprite(building, planet, spriteScale, spriteFile, animation) {
+export function makeBuildingSprite(building, planet, planetSprite = null) {
+  const { spriteScale, spriteFile, animation } = getBuildingInfo(building.type);
   let spritesheet = window.PIXI.Loader.shared.resources[c.SPRITESHEET_JSON].spritesheet;
   let buildingSprite;
   if (animation) {
@@ -43,7 +59,9 @@ export function makeBuildingSprite(building, planet, spriteScale, spriteFile, an
   buildingSprite.x = (building.x - planet.x);
   buildingSprite.y = (building.y - planet.y);
   buildingSprite.visible = true;
-  const planetSprite = game.getPlanetSprite(planet);
+  if (!planetSprite) {
+    planetSprite = game.getPlanetSprite(planet);
+  }
   planetSprite.addChild(buildingSprite);
 }
 
@@ -66,7 +84,7 @@ export function buildMine() {
   mine.y = y;
   mine.rotation = rotation;
   // Setup the graphics
-  makeBuildingSprite(mine, planet, c.MINE_SCALE, c.MINE_FILE, true);
+  makeBuildingSprite(mine, planet);
   game.payResourceCost(planet, ship, c.MINE_COST);
   planet.buildings.push(mine);
   fly.drawMiniMap(); // add building to minimap
@@ -162,7 +180,7 @@ export function buildFactory() {
   planet.buildings.push(factory);
 
   // Setup the graphics
-  makeBuildingSprite(factory, planet, c.FACTORY_SCALE, c.FACTORY_FILE, false);
+  makeBuildingSprite(factory, planet);
 
   game.payResourceCost(planet, ship, c.FACTORY_COST);
   fly.drawMiniMap(); // add to minimap
