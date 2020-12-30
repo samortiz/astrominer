@@ -1,5 +1,6 @@
-import { utils, c, game, manage, ai } from './';
+import {utils, c, game, manage, ai, fly} from './';
 import {getPlanetSprite, getShipSprite} from "./game";
+import {shootAt} from "./ai";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -11,7 +12,7 @@ export function flyLoop(delta) {
   let ship = window.world.ship;
   // When ship.alive is false the ship is exploding
   if (ship.alive) {
-    runRepairDroids(ship);
+    runDroids(ship);
     // Keypress handling
     if (world.system.keys.left.isDown || world.system.keys.a.isDown) {
       turnShip(ship, true);
@@ -119,8 +120,13 @@ export function coolAllWeapons() {
  */
 export function coolWeapons(ship) {
   for (let equip of ship.equip) {
+    // If equip has a cool time
     if (equip.cool) {
       equip.cool -= 1;
+    }
+    // Gunnery Droids are equip with weapons
+    if (equip.weapon && equip.weapon.cool) {
+      equip.weapon.cool -= 1;
     }
   }
 }
@@ -133,7 +139,7 @@ export function resetWeaponsCool(ship) {
   }
 }
 
-export function runRepairDroids(ship) {
+export function runDroids(ship) {
   for (let droid of ship.equip) {
     if ((droid.type === c.EQUIP_TYPE_REPAIR_DROID) && (ship.armor < ship.armorMax)) {
       let cost = {titanium:droid.repairSpeed, gold:0, uranium:0};
@@ -141,9 +147,41 @@ export function runRepairDroids(ship) {
         ship.armor += droid.repairSpeed;
         game.payResourceCost(null, ship, cost);
       }
+    } else if (droid.type === c.EQUIP_TYPE_GUNNERY_DROID) {
+      shootAtNearestAlien(ship, droid.weapon);
     }
   } // for
 }
+
+/**
+ * Fires the weapon in the direction of the nearest alien (if able to )
+ */
+export function shootAtNearestAlien(ship, weapon) {
+  // If we can't shoot, don't waste our time
+  if (weapon.cool > 0) {
+    return;
+  }
+  let nearestAlien = null;
+  let nearestAlienDist = null;
+  for (let alien of window.world.aliens) {
+    if (alien.alive && alien.owner === c.ALIEN) {
+      let dist = utils.distanceBetween(ship.x, ship.y, alien.x, alien.y);
+      if (!nearestAlien || (dist < nearestAlienDist)) {
+        nearestAlien = alien;
+        nearestAlienDist = dist;
+      }
+    }
+  } // for
+  if (nearestAlien && (nearestAlienDist <= weaponRange(weapon))) {
+    const origDir = ship.rotation;
+    let dirToShoot = utils.normalizeRadian(Math.atan2(nearestAlien.y - ship.y, nearestAlien.x - ship.x));
+    let jitterAmt = 0.1 * Math.random() * (utils.randomBool() ? -1 : 1);
+    ship.rotation = utils.normalizeRadian(dirToShoot + jitterAmt);
+    fireWeapon(weapon, ship);
+    ship.rotation = origDir;
+  }
+}
+
 
 export function moveBackground(ship) {
   let bgSprite = window.world.system.bgSprite;
@@ -396,12 +434,19 @@ function thrustShip(ship, left) {
   }
 }
 
+/**
+ * Fires the weapon from the location and direction of the ship
+ */
+export function fireWeapon(weapon, ship) {
+  if (weapon && (weapon.cool <= 0)) {
+    fireBullet(ship, weapon);
+    weapon.cool = weapon.coolTime; // this is decremented in coolWeapons
+  }
+}
+
 export function firePrimaryWeapon(ship) {
   let gun = getEquip(ship, c.EQUIP_TYPE_PRIMARY_WEAPON);
-  if (gun && (gun.cool <= 0)) {
-    fireBullet(ship, gun);
-    gun.cool = gun.coolTime; // this is decremented in coolWeapons
-  }
+  fireWeapon(gun, ship);
 }
 
 export function fireSecondaryWeapon(ship) {
@@ -626,4 +671,21 @@ function planetOnMap(view, planet) {
   }
   return true;
 }
+/**
+ * @return the max range of the weapon
+ */
+export function weaponRange(weapon) {
+  if (!weapon) {
+    return 0;
+  }
+  // Not sure what the fudge factor is, but the range seems a little short without it
+  return weapon.speed * weapon.lifetime * 1.4;
+}
 
+/**
+ * @return the max range of the primary weapon on the ship
+ */
+export function primaryWeaponRange(ship) {
+  let gun = getEquip(ship, c.EQUIP_TYPE_PRIMARY_WEAPON);
+  return weaponRange(gun);
+}

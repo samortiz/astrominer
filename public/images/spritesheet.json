@@ -2,7 +2,7 @@
 
 "alien.png":
 {
-	"frame": {"x":174,"y":114,"w":85,"h":83},
+	"frame": {"x":74,"y":122,"w":85,"h":83},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":83},
@@ -10,7 +10,7 @@
 },
 "alien_blue.png":
 {
-	"frame": {"x":174,"y":0,"w":48,"h":48},
+	"frame": {"x":368,"y":0,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -18,7 +18,7 @@
 },
 "alien_fire.png":
 {
-	"frame": {"x":26,"y":0,"w":52,"h":31},
+	"frame": {"x":220,"y":0,"w":52,"h":31},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":31},
@@ -26,15 +26,23 @@
 },
 "alien_large.png":
 {
-	"frame": {"x":320,"y":114,"w":98,"h":93},
+	"frame": {"x":220,"y":122,"w":98,"h":93},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":98,"h":93},
 	"sourceSize": {"w":98,"h":93}
 },
+"alien_large_blue.png":
+{
+	"frame": {"x":318,"y":122,"w":98,"h":95},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":98,"h":95},
+	"sourceSize": {"w":98,"h":95}
+},
 "alien_small.png":
 {
-	"frame": {"x":100,"y":114,"w":74,"h":75},
+	"frame": {"x":0,"y":122,"w":74,"h":75},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":74,"h":75},
@@ -42,7 +50,7 @@
 },
 "ballship.png":
 {
-	"frame": {"x":0,"y":0,"w":26,"h":26},
+	"frame": {"x":64,"y":0,"w":26,"h":26},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":26,"h":26},
@@ -50,7 +58,7 @@
 },
 "bullet.png":
 {
-	"frame": {"x":78,"y":0,"w":32,"h":32},
+	"frame": {"x":272,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -58,7 +66,7 @@
 },
 "bullet_blue.png":
 {
-	"frame": {"x":110,"y":0,"w":32,"h":32},
+	"frame": {"x":304,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -66,7 +74,7 @@
 },
 "bullet_white.png":
 {
-	"frame": {"x":142,"y":0,"w":32,"h":32},
+	"frame": {"x":336,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -74,7 +82,7 @@
 },
 "factory.png":
 {
-	"frame": {"x":0,"y":207,"w":80,"h":114},
+	"frame": {"x":0,"y":217,"w":80,"h":114},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":114},
@@ -82,7 +90,7 @@
 },
 "green_planet.png":
 {
-	"frame": {"x":0,"y":339,"w":400,"h":400},
+	"frame": {"x":0,"y":349,"w":400,"h":400},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
@@ -90,7 +98,7 @@
 },
 "mine1.png":
 {
-	"frame": {"x":222,"y":0,"w":60,"h":52},
+	"frame": {"x":0,"y":48,"w":60,"h":52},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":52},
@@ -98,7 +106,7 @@
 },
 "mine2.png":
 {
-	"frame": {"x":282,"y":0,"w":60,"h":52},
+	"frame": {"x":60,"y":48,"w":60,"h":52},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":52},
@@ -106,7 +114,7 @@
 },
 "mine3.png":
 {
-	"frame": {"x":342,"y":0,"w":60,"h":52},
+	"frame": {"x":120,"y":48,"w":60,"h":52},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":52},
@@ -114,15 +122,23 @@
 },
 "mine4.png":
 {
-	"frame": {"x":0,"y":52,"w":60,"h":52},
+	"frame": {"x":180,"y":48,"w":60,"h":52},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":52},
 	"sourceSize": {"w":60,"h":52}
 },
+"missile.png":
+{
+	"frame": {"x":0,"y":0,"w":64,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":10},
+	"sourceSize": {"w":64,"h":10}
+},
 "purple_planet.png":
 {
-	"frame": {"x":0,"y":739,"w":400,"h":400},
+	"frame": {"x":0,"y":749,"w":400,"h":400},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
@@ -130,7 +146,7 @@
 },
 "red_planet.png":
 {
-	"frame": {"x":0,"y":1139,"w":400,"h":400},
+	"frame": {"x":0,"y":1149,"w":400,"h":400},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
@@ -138,23 +154,31 @@
 },
 "rock_planet.png":
 {
-	"frame": {"x":0,"y":1539,"w":400,"h":400},
+	"frame": {"x":0,"y":1549,"w":400,"h":400},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":400},
 	"sourceSize": {"w":400,"h":400}
 },
-"ship_cargo.png":
+"ship_black.png":
 {
-	"frame": {"x":60,"y":52,"w":276,"h":62},
+	"frame": {"x":240,"y":48,"w":70,"h":70},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":276,"h":62},
-	"sourceSize": {"w":276,"h":62}
+	"spriteSourceSize": {"x":0,"y":0,"w":70,"h":70},
+	"sourceSize": {"w":70,"h":70}
+},
+"ship_cargo.png":
+{
+	"frame": {"x":90,"y":0,"w":130,"h":29},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":130,"h":29},
+	"sourceSize": {"w":130,"h":29}
 },
 "ship_explorer.png":
 {
-	"frame": {"x":259,"y":114,"w":61,"h":84},
+	"frame": {"x":159,"y":122,"w":61,"h":84},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":84},
@@ -162,7 +186,7 @@
 },
 "ship_fast.png":
 {
-	"frame": {"x":0,"y":114,"w":100,"h":74},
+	"frame": {"x":310,"y":48,"w":100,"h":74},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":74},
@@ -170,7 +194,7 @@
 },
 "ship_fighter.png":
 {
-	"frame": {"x":80,"y":207,"w":118,"h":116},
+	"frame": {"x":80,"y":217,"w":118,"h":116},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":118,"h":116},
@@ -178,11 +202,19 @@
 },
 "ship_heavy.png":
 {
-	"frame": {"x":198,"y":207,"w":205,"h":132},
+	"frame": {"x":258,"y":217,"w":205,"h":132},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":205,"h":132},
 	"sourceSize": {"w":205,"h":132}
+},
+"ship_skeleton.png":
+{
+	"frame": {"x":198,"y":217,"w":60,"h":120},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":60,"h":120},
+	"sourceSize": {"w":60,"h":120}
 }},
 "animations": {
 	"mine": ["mine1.png","mine2.png","mine3.png","mine4.png"]
@@ -192,8 +224,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":418,"h":1939},
+	"size": {"w":463,"h":1949},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:3cb89a1694e0db74db0b310b32258b52:b34e3a0be376c7a8ec90278c8d15f6f8:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:2bb5d8e1ecf09d1a139ce12da2a85c2f:1598cbc9c24ce65c8d69a884831f1542:729adc6043343cfda41c447ce8f464d6$"
 }
 }

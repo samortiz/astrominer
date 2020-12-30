@@ -241,6 +241,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">alien_large_blue.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,24,49,47</rect>
+                <key>scale9Paddings</key>
+                <rect>25,24,49,47</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">alien_small.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -364,6 +379,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">missile.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,3,32,5</rect>
+                <key>scale9Paddings</key>
+                <rect>16,3,32,5</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">purple_planet.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -392,6 +422,21 @@
                 <rect>188,188,375,375</rect>
                 <key>scale9Paddings</key>
                 <rect>188,188,375,375</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ship_black.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>18,18,35,35</rect>
+                <key>scale9Paddings</key>
+                <rect>18,18,35,35</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -470,6 +515,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">ship_skeleton.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,64,64,128</rect>
+                <key>scale9Paddings</key>
+                <rect>32,64,64,128</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileList</key>
         <array>
@@ -496,6 +556,10 @@
             <filename>bullet_white.png</filename>
             <filename>alien_blue.png</filename>
             <filename>ballship.png</filename>
+            <filename>alien_large_blue.png</filename>
+            <filename>ship_black.png</filename>
+            <filename>missile.png</filename>
+            <filename>ship_skeleton.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

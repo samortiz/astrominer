@@ -69,6 +69,8 @@ export const ALIEN_SHIP_SMALL_FILE = "alien_small.png";
 export const ALIEN_SHIP_LARGE_FILE = "alien_large.png";
 export const ALIEN_SHIP_FIRE_FILE = "alien_fire.png";
 export const ALIEN_SHIP_BLUE_FILE = "alien_blue.png";
+export const ALIEN_SHIP_LARGE_BLUE_FILE = "alien_large_blue.png";
+export const ALIEN_SHIP_BLACK_FILE = "ship_black.png";
 
 
 export const UNIVERSE_RADIUS = 30000;
@@ -111,7 +113,7 @@ export const EQUIP_TYPE_SECONDARY_WEAPON = "Secondary Weapon";
 export const EQUIP_TYPE_THRUSTER = "Thruster";
 export const EQUIP_TYPE_ARMOR = "Armor";
 export const EQUIP_TYPE_REPAIR_DROID = "Repair Droid";
-export const EQUIP_TYPE_MISC = "Misc";
+export const EQUIP_TYPE_GUNNERY_DROID = "Gunnery Droid";
 export const EQUIP_TYPE_SPEED = "Speed";
 export const EQUIP_TYPE_TURN = "Turn";
 export const EQUIP_TYPE_STORAGE = "Storage";
@@ -126,6 +128,7 @@ export const OBJ_SHIP = "Ship";
 export const ALIEN_AI_TURRET = "ALIEN_AI_TURRET";
 export const ALIEN_AI_CREEPER = "ALIEN_AI_CREEPER";
 export const EQUIP_AI_MINE = "EQUIP_AI_MINE";
+export const EQUIP_AI_TURRET_MINE = "EQUIP_AI_TURRET_MINE";
 
 // brakeSpeedPct is best between 0.02 - 0.1 (higher is ok)  
 export const EQUIP_BRAKE = {name: "Brake", objType:OBJ_EQUIP, type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
@@ -151,6 +154,8 @@ export const EQUIP_BLINK_THRUSTER = {name: "Blink Thruster", objType:OBJ_EQUIP, 
                             cost: {titanium:60, gold:50, uranium:10}};
 export const EQUIP_R2D2 = {name: "R2D2 Repair Droid", objType:OBJ_EQUIP, type:EQUIP_TYPE_REPAIR_DROID, repairSpeed:0.03, 
                             cost: {titanium:20, gold:100, uranium:50}};
+export const EQUIP_GUNNERY_DROID = {name: "Gunnery Droid", objType:OBJ_EQUIP, type:EQUIP_TYPE_GUNNERY_DROID,
+  weapon:EQUIP_FAST_BLASTER, cost: {titanium:100, gold:200, uranium:300}};
 export const EQUIP_ALIEN_BLASTER = {name: "Alien Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:20, cool:0, damage:4, speed:2, lifetime:120, bulletFile:BULLET_BLUE_FILE,
                             cost: {titanium:10, gold:30, uranium:50}};
 export const EQUIP_STAPLE_GUN = {name: "Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:1.5, speed:3, lifetime:300, bulletFile:BULLET_STAPLE_FILE,
@@ -384,6 +389,29 @@ export const SHIP_ALIEN_FIRE = {
   aiType: ALIEN_AI_CREEPER,
 };
 
+export const SHIP_ALIEN_STEALTH = {
+  name: "Alien Stealth",
+  objType:OBJ_SHIP,
+  propulsion: 0.04, // best between 0.02 - 0.1
+  turnSpeed: 0.05, // // best between 0.3 - 0.07
+  resourcesMax: 100,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  equipMax: 3,
+  equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
+  armorMax: 150,
+  armor: 150,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1.5,
+  imageFile: ALIEN_SHIP_BLACK_FILE,
+  cost: {titanium:100, gold:200, uranium:150},
+  aiType: ALIEN_AI_CREEPER,
+};
+
 export const SHIP_MINE = {
   name: "Mine",
   objType:OBJ_SHIP,
@@ -405,6 +433,30 @@ export const SHIP_MINE = {
   imageFile: ALIEN_SHIP_BLUE_FILE,
   cost: {titanium:5, gold:5, uranium:10},
   aiType: EQUIP_AI_MINE,
+  aiData: {mineDistance: 300}
+};
+
+export const SHIP_TURRET_MINE = {
+  name: "Turret Mine",
+  objType:OBJ_SHIP,
+  propulsion: 0.0,
+  turnSpeed: 0.0,
+  resourcesMax: 0,
+  resources: {
+    titanium : 0,
+    gold : 0,
+    uranium : 0,
+  },
+  equipMax: 0,
+  equip : [EQUIP_FAST_BLASTER],
+  armorMax: 100,
+  armor: 100,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 0.8,
+  imageFile: ALIEN_SHIP_LARGE_BLUE_FILE,
+  cost: {titanium:5, gold:5, uranium:10},
+  aiType: EQUIP_AI_TURRET_MINE,
   aiData: {mineDistance: 300}
 };
 
@@ -431,18 +483,20 @@ export const SHIP_MISSLE = {
   aiType: EQUIP_AI_MINE,
 };
 
-export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER, SHIP_ALIEN,  SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_FIRE];
-
+export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER,
+  SHIP_ALIEN,  SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_FIRE, SHIP_ALIEN_STEALTH];
 
 // This equipment needs to go after the ships (ugh)
-export const EQUIP_MINE_DEPLOYER = {name: "Mine Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:15, cool:0,
+export const EQUIP_MINE_DEPLOYER = {name: "Mine Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:50, cool:0,
   createShip: SHIP_MINE,
   cost: {titanium:30, gold:100, uranium:100}};
 
+export const EQUIP_TURRET_MINE_DEPLOYER = {name: "Turret Mine Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:100, cool:0,
+  createShip: SHIP_TURRET_MINE,
+  cost: {titanium:100, gold:150, uranium:150}};
+
 export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER,
-  EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR, EQUIP_MINE_DEPLOYER];
-
-
+  EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR, EQUIP_MINE_DEPLOYER, EQUIP_TURRET_MINE_DEPLOYER];
 
 export const PLANET_DENSITY = new Map();
 PLANET_DENSITY.set(GREEN_PLANET_FILE, 0.01)
@@ -458,6 +512,13 @@ export const UNIVERSE_RINGS = [
     minPlanetRadius:1500, maxPlanetRadius:1501,
     planetFiles:[PURPLE_PLANET_FILE],
     aliens: [{count: 0, file: null}],
+  },
+  { planetCount: 0,
+    minDist: 1600, maxDist: 2500,
+    minDistToOtherPlanet:200,
+    minPlanetRadius:200, maxPlanetRadius:200,
+    planetFiles:[],
+    aliens: [{count: 50, file: SHIP_ALIEN_STEALTH}],
   },
   { planetCount: 200,
     minDist: 2500, maxDist: 10000,

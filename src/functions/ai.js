@@ -12,6 +12,8 @@ export function moveAliens() {
       turretAi(alien);
     } else if (alien.aiType === c.ALIEN_AI_CREEPER) {
       hasMoved = creeperAi(alien);
+    } else if (alien.aiType === c.EQUIP_AI_TURRET_MINE) {
+      hasMoved = turretMineAi(alien);
     }
     if (hasMoved) {
       checkForCollisionWithPlanet(alien);
@@ -44,18 +46,19 @@ export function moveAliens() {
 }
 
 /**
- * Fire primary weapon in the direction of the player
+ * Fire primary weapon in the direction of x,y
+ * @ship ship with gun to fire
+ * @x/y  the location to aim at
  * @jitter amount (in radians) of randomness added to direction component
  *         0 - shoots directly at player
  *         PI - shoot completely randomly
  */
-export function shootAtPlayer(alien, jitter) {
-  let ship = window.world.ship;
-  let dirToPlayer = utils.normalizeRadian(Math.atan2(ship.y - alien.y, ship.x - alien.x));
+export function shootAt(shooter, x,y, jitter) {
+  let dirToShoot = utils.normalizeRadian(Math.atan2(y - shooter.y, x - shooter.x));
   let jitterAmt = jitter * Math.random() * (utils.randomBool() ? -1 : 1);
-  alien.rotation = utils.normalizeRadian(dirToPlayer + jitterAmt);
-  fly.firePrimaryWeapon(alien);
-  alien.rotation = dirToPlayer;
+  shooter.rotation = utils.normalizeRadian(dirToShoot + jitterAmt);
+  fly.firePrimaryWeapon(shooter);
+  shooter.rotation = dirToShoot;
 }
 
 export function turretAi(alien) {
@@ -64,8 +67,26 @@ export function turretAi(alien) {
     return;
   }
   if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < 300) {
-    shootAtPlayer(alien, 0.7);
+    shootAt(alien, alien.x, alien.y, 0.7);
   }
+}
+
+export function turretMineAi(turret) {
+  let nearestTarget = null;
+  let nearestTargetDist = null;
+  for (let alien of window.world.aliens) {
+    if (alien.alive && alien.owner === c.ALIEN) {
+      let dist = utils.distanceBetween(turret.x, turret.y, alien.x, alien.y);
+      if ((dist < fly.primaryWeaponRange(turret)) && (!nearestTarget || (dist < nearestTargetDist))) {
+        nearestTarget = alien;
+        nearestTargetDist = dist;
+      }
+    }
+  } // for
+  if (nearestTarget) {
+    shootAt(turret, nearestTarget.x, nearestTarget.y, 0.1);
+  }
+  return false; // never moves
 }
 
 /**
@@ -107,7 +128,7 @@ export function creeperAi(alien) {
     moved = true;
   }
   if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < 300) {
-    shootAtPlayer(alien, 0.15);
+    shootAt(alien, ship.x, ship.y, 0.15);
   }
   return moved;
 }

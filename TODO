@@ -1,15 +1,14 @@
 Bugs
  - No transfer onto/off ship when ship is not on selected planet
  - blink thrusters should remove horiz momentum
- - Don't allow equipping two of the same type 
  - Scroll long lists
- - Equip item from equip list, remove from ship view
+ - Aliens + Mines show up in wrong place after death
+ - Using alien ship didn't reset sprite X/Y
+ - Cargo ship can't take off of large planet
 
 TODO
-- pan minimap
-- After crash focus on last planet with mine
 - CSS on info screens
-- Change tabs to not draw unless selected
+- Turret Mines should cost to deploy
 
 Ideas :
 - double click fire to continuous fire
@@ -24,4 +23,5 @@ Ideas :
 - Planet change name
 - Storage edit ship name
 - Planet build turret
-- Equip : multi-shot, autoLander, gunnery droid, missiles, mines,
+- Equip : multi-shot, autoLander, missiles
+
