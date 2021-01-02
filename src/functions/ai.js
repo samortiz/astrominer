@@ -12,12 +12,14 @@ export function moveAliens() {
       turretAi(alien);
     } else if (alien.aiType === c.ALIEN_AI_CREEPER) {
       hasMoved = creeperAi(alien);
-    } else if (alien.aiType === c.EQUIP_AI_TURRET_MINE) {
-      hasMoved = turretMineAi(alien);
+    } else if (alien.aiType === c.EQUIP_AI_TURRET) {
+      hasMoved = playerTurretAi(alien);
+    } else if (alien.aiType === c.EQUIP_AI_MISSILE) {
+      hasMoved = playerMissileAi(alien);
     }
     if (hasMoved) {
       checkForCollisionWithPlanet(alien);
-      checkForCollisionWithAlien(alien);
+      checkForCollisionWithShip(alien);
     }
 
     // If alien is in the viewport
@@ -54,11 +56,8 @@ export function moveAliens() {
  *         PI - shoot completely randomly
  */
 export function shootAt(shooter, x,y, jitter) {
-  let dirToShoot = utils.normalizeRadian(Math.atan2(y - shooter.y, x - shooter.x));
-  let jitterAmt = jitter * Math.random() * (utils.randomBool() ? -1 : 1);
-  shooter.rotation = utils.normalizeRadian(dirToShoot + jitterAmt);
-  fly.firePrimaryWeapon(shooter);
-  shooter.rotation = dirToShoot;
+  shooter.rotation = utils.normalizeRadian(Math.atan2(y - shooter.y, x - shooter.x));
+  fly.firePrimaryWeapon(shooter, jitter);
 }
 
 export function turretAi(alien) {
@@ -67,30 +66,37 @@ export function turretAi(alien) {
     return;
   }
   if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < 300) {
-    shootAt(alien, alien.x, alien.y, 0.7);
+    shootAt(alien, ship.x, ship.y, 0.7);
   }
 }
 
-export function turretMineAi(turret) {
-  let nearestTarget = null;
-  let nearestTargetDist = null;
-  for (let alien of window.world.aliens) {
-    if (alien.alive && alien.owner === c.ALIEN) {
-      let dist = utils.distanceBetween(turret.x, turret.y, alien.x, alien.y);
-      if ((dist < fly.primaryWeaponRange(turret)) && (!nearestTarget || (dist < nearestTargetDist))) {
-        nearestTarget = alien;
-        nearestTargetDist = dist;
-      }
-    }
-  } // for
-  if (nearestTarget) {
-    shootAt(turret, nearestTarget.x, nearestTarget.y, 0.1);
+export function playerTurretAi(turret) {
+  const {target, dist} = getNearestAlienTarget(turret.x, turret.y);
+  if (target && (dist <= fly.primaryWeaponRange(turret))) {
+    shootAt(turret, target.x, target.y, 0.25);
   }
   return false; // never moves
 }
 
+export function playerMissileAi(missile) {
+  const {target, dist} = getNearestAlienTarget(missile.x, missile.y);
+  // Missiles don't track targets really far away
+  if (target && dist < c.SCREEN_WIDTH) {
+    let dirToTarget = utils.directionTo(missile.x, missile.y, target.x, target.y);
+    let {xAmt, yAmt} = utils.dirComponents(dirToTarget, missile.propulsion);
+    missile.vx += xAmt;
+    missile.vy += yAmt;
+    missile.x += missile.vx;
+    missile.y += missile.vy;
+    return true;
+  }
+  // Don't move if there's nobody to move towards
+  return false;
+}
+
+
 /**
- * Runs the AI for moving aliens.
+ * AI for aliens that move toward the player and shoots
  * @return true if alien moved false otherwise
  */
 export function creeperAi(alien) {
@@ -133,6 +139,24 @@ export function creeperAi(alien) {
   return moved;
 }
 
+/**
+ * Finds the nearest alien target to the x,y location
+ * returns {target:X, dist:Y }  x and y will be null if no living targets are found
+ */
+export function getNearestAlienTarget(x,y) {
+  let target = null;
+  let minDist = null;
+  for (let alien of window.world.aliens) {
+    if (alien.alive && alien.owner === c.ALIEN) {
+      let dist = utils.distanceBetween(x, y, alien.x, alien.y);
+      if (!target || (dist < minDist)) {
+        target = alien;
+        minDist = dist;
+      }
+    }
+  } // for
+  return {target: target, dist: minDist};
+}
 
 export function checkForCollisionWithPlanet(alien) {
   for (let planet of window.world.planets) {
@@ -143,12 +167,12 @@ export function checkForCollisionWithPlanet(alien) {
   } // for
 }
 
-export function checkForCollisionWithAlien(alien) {
-  for (let otherAlien of window.world.aliens) {
-    if (otherAlien.alive && alien !== otherAlien) {
-      let dist = utils.distanceBetween(alien.x, alien.y, otherAlien.x, otherAlien.y);
-      if (dist <= (alien.radius + otherAlien.radius)) {
-        fly.shipsCollide(alien, otherAlien);
+export function checkForCollisionWithShip(ship) {
+  for (let otherShip of window.world.aliens) {
+    if (otherShip.alive && ship !== otherShip) {
+      let dist = utils.distanceBetween(ship.x, ship.y, otherShip.x, otherShip.y);
+      if (dist <= (ship.radius + otherShip.radius)) {
+        fly.shipsCollide(ship, otherShip);
       }
     }
   } // for

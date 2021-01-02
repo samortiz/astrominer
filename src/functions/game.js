@@ -56,7 +56,7 @@ export function setupWorld() {
   window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
-  world.ship = createShip(c.SHIP_FIGHTER, c.PLAYER);
+  world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
   shipSprite.visible = true;
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
@@ -65,13 +65,13 @@ export function setupWorld() {
   world.ship.armorMax = 10000;
   world.ship.armor = 10000;
   world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_GUNNERY_DROID), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_MISSILE_LAUNCHER), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
   world.ship.equipMax = world.ship.equip.length;
   world.blueprints.equip = [...c.ALL_EQUIP];
   world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
-  //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
+  createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
   //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y-70);
 
   // DEBUG Planet
@@ -492,6 +492,11 @@ export function addBlueprint(nextLevel) {
   }
 }
 
+/**
+ * Checks if the combined resources of planet and ship can afford the resources
+ * Call this before calling payResourceCost
+ * @return true if there are enough resources available
+ */
 export function canAfford(planet, ship, resources) {
   let titanium = 0;
   let gold = 0;
@@ -511,6 +516,13 @@ export function canAfford(planet, ship, resources) {
       && (uranium >= resources.uranium);
 }
 
+/**
+ * Pays the cost, taking from the planet and the ship as available
+ * NOTE: This will not ensure you have enough resources, you can go into debt if you call this without checking
+ * first using canAfford()
+ * @param planet planet to get resources from
+ * @param ship ship to get resources from
+ */
 export function payResourceCost(planet, ship, resources) {
   payResource(planet, ship, 'titanium', resources.titanium);
   payResource(planet, ship, 'gold', resources.gold);

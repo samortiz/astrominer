@@ -271,21 +271,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">ballship.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>7,7,13,13</rect>
-                <key>scale9Paddings</key>
-                <rect>7,7,13,13</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">bullet.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -425,6 +410,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">ship_ball.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>7,7,13,13</rect>
+                <key>scale9Paddings</key>
+                <rect>7,7,13,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">ship_black.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -555,11 +555,11 @@
             <filename>bullet_blue.png</filename>
             <filename>bullet_white.png</filename>
             <filename>alien_blue.png</filename>
-            <filename>ballship.png</filename>
             <filename>alien_large_blue.png</filename>
             <filename>ship_black.png</filename>
             <filename>missile.png</filename>
             <filename>ship_skeleton.png</filename>
+            <filename>ship_ball.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

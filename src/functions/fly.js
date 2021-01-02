@@ -1,6 +1,7 @@
 import {utils, c, game, manage, ai, fly} from './';
-import {getPlanetSprite, getShipSprite} from "./game";
+import {canAfford, getPlanetSprite, getShipSprite, payResourceCost} from "./game";
 import {shootAt} from "./ai";
+import {DIR_AHEAD_OF_SHIP} from "./constants";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -27,7 +28,7 @@ export function flyLoop(delta) {
       brakeShip(ship);
     }
     if (world.system.keys.space.isDown) {
-      firePrimaryWeapon(ship);
+      firePrimaryWeapon(ship, 0.05);
     }
     if (world.system.keys.x.isDown) {
       fireSecondaryWeapon(ship);
@@ -175,9 +176,8 @@ export function shootAtNearestAlien(ship, weapon) {
   if (nearestAlien && (nearestAlienDist <= weaponRange(weapon))) {
     const origDir = ship.rotation;
     let dirToShoot = utils.normalizeRadian(Math.atan2(nearestAlien.y - ship.y, nearestAlien.x - ship.x));
-    let jitterAmt = 0.1 * Math.random() * (utils.randomBool() ? -1 : 1);
-    ship.rotation = utils.normalizeRadian(dirToShoot + jitterAmt);
-    fireWeapon(weapon, ship);
+    ship.rotation = dirToShoot;
+    fireWeapon(weapon, ship, 0.1);
     ship.rotation = origDir;
   }
 }
@@ -437,32 +437,42 @@ function thrustShip(ship, left) {
 /**
  * Fires the weapon from the location and direction of the ship
  */
-export function fireWeapon(weapon, ship) {
+export function fireWeapon(weapon, ship, jitter) {
   if (weapon && (weapon.cool <= 0)) {
-    fireBullet(ship, weapon);
+    fireBullet(ship, weapon, jitter);
     weapon.cool = weapon.coolTime; // this is decremented in coolWeapons
   }
 }
 
-export function firePrimaryWeapon(ship) {
+export function firePrimaryWeapon(ship, jitter) {
   let gun = getEquip(ship, c.EQUIP_TYPE_PRIMARY_WEAPON);
-  fireWeapon(gun, ship);
+  fireWeapon(gun, ship, jitter);
 }
 
 export function fireSecondaryWeapon(ship) {
   let weapon = getEquip(ship, c.EQUIP_TYPE_SECONDARY_WEAPON);
   if (weapon && (weapon.cool <= 0)) {
-    if (weapon.createShip) {
-      const mine = game.createShip(weapon.createShip, c.PLAYER);
+    if (weapon.createShip && game.canAfford(null, ship, weapon.createShip.type.cost)) {
+      game.payResourceCost(null, ship, weapon.createShip.type.cost);
+      const mine = game.createShip(weapon.createShip.type, c.PLAYER);
       const mineSprite = getShipSprite(mine);
       const mineDistFromShip = ship.spriteWidth/2 + mine.spriteWidth/2 + 20;
-      const {xAmt, yAmt} = utils.dirComponents(ship.rotation, mineDistFromShip);
+      const dir = weapon.createShip.dir === DIR_AHEAD_OF_SHIP ? utils.normalizeRadian(ship.rotation - Math.PI) : ship.rotation;
+      const {xAmt, yAmt} = utils.dirComponents(dir, mineDistFromShip);
       mine.x = ship.x - xAmt;
       mine.y = ship.y - yAmt;
+      if (mine.propulsion) {
+        mine.vx = ship.vx;
+        mine.vy = ship.vy;
+      }
+      mine.rotation = utils.normalizeRadian(dir - Math.PI);
       mineSprite.visible = true;
       mineSprite.x = (mine.x - ship.x) + c.HALF_SCREEN_WIDTH;
       mineSprite.y = (mine.y - ship.y) + c.HALF_SCREEN_HEIGHT;
       window.world.aliens.push(mine);
+      // Since it never moves we only need one check to see if it collides with anything
+      ai.checkForCollisionWithPlanet(mine);
+      ai.checkForCollisionWithShip(mine);
     }
     weapon.cool = weapon.coolTime; // this is decremented in coolWeapons
   }
@@ -471,14 +481,16 @@ export function fireSecondaryWeapon(ship) {
 /**
  * Fires a bullet from the ship
  */
-export function fireBullet(ship, gun) {
+export function fireBullet(ship, gun, jitter) {
   let bullet = findOrCreateBullet(gun.bulletFile);
   bullet.lifetime = gun.lifetime;
   bullet.damage = gun.damage;
-  bullet.vx = ship.vx + gun.speed * Math.cos(ship.rotation);
-  bullet.vy = ship.vy + gun.speed * Math.sin(ship.rotation);
-  bullet.x = ship.x + Math.max(ship.spriteWidth, ship.spriteHeight)/2 * Math.cos(ship.rotation);
-  bullet.y = ship.y + Math.max(ship.spriteWidth, ship.spriteHeight)/2 * Math.sin(ship.rotation);
+  const jitterAmt = jitter ? (jitter * Math.random() * (utils.randomBool() ? -1 : 1)) : 0;
+  const rotation = ship.rotation + jitterAmt;
+  bullet.vx = ship.vx + gun.speed * Math.cos(rotation);
+  bullet.vy = ship.vy + gun.speed * Math.sin(rotation);
+  bullet.x = ship.x + Math.sqrt(ship.spriteWidth*ship.spriteWidth + ship.spriteHeight*ship.spriteHeight)/2 * Math.cos(rotation);
+  bullet.y = ship.y + Math.sqrt(ship.spriteWidth*ship.spriteWidth + ship.spriteHeight*ship.spriteHeight)/2 * Math.sin(rotation);
 }
 
 /**

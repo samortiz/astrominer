@@ -55,9 +55,10 @@ export const FACTORY_FILE = "factory.png";
 export const SHIP_CARGO_FILE = "ship_cargo.png";
 export const SHIP_EXPLORER_FILE = "ship_explorer.png";
 export const SHIP_FAST_FILE = "ship_fast.png";
+export const SHIP_SKELETON_FILE = "ship_skeleton.png";
 export const SHIP_FIGHTER_FILE = "ship_fighter.png";
 export const SHIP_HEAVY_FILE = "ship_heavy.png";
-export const SHIP_BALL_FILE = "ballship.png";
+export const SHIP_BALL_FILE = "ship_ball.png";
 export const STAR_BACKGROUND_FILE = "images/stars.png";
 export const CRASH_JSON = "images/crash.json";
 export const CRASH = "crash"; // animation name in json
@@ -121,14 +122,17 @@ export const EQUIP_TYPE_STORAGE = "Storage";
 export const THRUST_MOMENTUM = "Thrust Momentum";
 export const THRUST_BLINK = "Thrust Blink";
 
-// Object type
 export const OBJ_EQUIP = "Equip";
 export const OBJ_SHIP = "Ship";
 
 export const ALIEN_AI_TURRET = "ALIEN_AI_TURRET";
 export const ALIEN_AI_CREEPER = "ALIEN_AI_CREEPER";
 export const EQUIP_AI_MINE = "EQUIP_AI_MINE";
-export const EQUIP_AI_TURRET_MINE = "EQUIP_AI_TURRET_MINE";
+export const EQUIP_AI_TURRET = "EQUIP_AI_TURRET";
+export const EQUIP_AI_MISSILE = "EQUIP_AI_MISSILE";
+
+export const DIR_AHEAD_OF_SHIP = "ahead";
+export const DIR_BEHIND_SHIP = "behind";
 
 // brakeSpeedPct is best between 0.02 - 0.1 (higher is ok)  
 export const EQUIP_BRAKE = {name: "Brake", objType:OBJ_EQUIP, type:EQUIP_TYPE_BRAKE, brakeSpeedPct:0.04, 
@@ -189,7 +193,7 @@ export const SHIP_EXPLORER = {
 export const SHIP_CARGO = {
   name: "Cargo",
   objType:OBJ_SHIP,
-  propulsion: 0.025, // best between 0.02 - 0.1
+  propulsion: 0.027, // best between 0.02 - 0.1
   turnSpeed: 0.04, // // best between 0.3 - 0.07
   resourcesMax: 600,
   resources: {
@@ -203,7 +207,7 @@ export const SHIP_CARGO = {
   armor: 20,
   crashSpeed: 1.2,
   crashAngle: 0.3,
-  imageScale: 0.45,
+  imageScale: 1,
   imageFile: SHIP_CARGO_FILE,
   cost: {titanium:100, gold:50, uranium:50},
 };
@@ -248,8 +252,8 @@ export const SHIP_SKELETON = {
   armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
-  imageScale: 0.3,
-  imageFile: SHIP_FAST_FILE,
+  imageScale: 0.8,
+  imageFile: SHIP_SKELETON_FILE,
   cost: {titanium:150, gold:150, uranium:50},
 };
 
@@ -429,15 +433,15 @@ export const SHIP_MINE = {
   armor: 100,
   crashSpeed: 2,
   crashAngle: 10,
-  imageScale: 1,
+  imageScale: 1.2,
   imageFile: ALIEN_SHIP_BLUE_FILE,
-  cost: {titanium:5, gold:5, uranium:10},
+  cost: {titanium:5, gold:0, uranium:10},
   aiType: EQUIP_AI_MINE,
   aiData: {mineDistance: 300}
 };
 
-export const SHIP_TURRET_MINE = {
-  name: "Turret Mine",
+export const SHIP_TURRET = {
+  name: "Turret",
   objType:OBJ_SHIP,
   propulsion: 0.0,
   turnSpeed: 0.0,
@@ -453,18 +457,18 @@ export const SHIP_TURRET_MINE = {
   armor: 100,
   crashSpeed: 2,
   crashAngle: 10,
-  imageScale: 0.8,
+  imageScale: 0.6,
   imageFile: ALIEN_SHIP_LARGE_BLUE_FILE,
-  cost: {titanium:5, gold:5, uranium:10},
-  aiType: EQUIP_AI_TURRET_MINE,
+  cost: {titanium:10, gold:10, uranium:20},
+  aiType: EQUIP_AI_TURRET,
   aiData: {mineDistance: 300}
 };
 
-export const SHIP_MISSLE = {
+export const SHIP_MISSILE = {
   name: "Missile",
   objType:OBJ_SHIP,
-  propulsion: 0.08, // best between 0.02 - 0.1
-  turnSpeed: 0.05, // // best between 0.3 - 0.07
+  propulsion: 0.1, // best between 0.02 - 0.1
+  turnSpeed: 0.1, // // best between 0.3 - 0.07
   resourcesMax: 0,
   resources: {
     titanium : 0,
@@ -473,30 +477,32 @@ export const SHIP_MISSLE = {
   },
   equipMax: 0,
   equip : [],
-  armorMax: 20,
-  armor: 20,
+  armorMax: 400,
+  armor: 400,
   crashSpeed: 2,
   crashAngle: 10,
-  imageScale: 1.5,
-  imageFile: ALIEN_SHIP_BLUE_FILE,
+  imageScale: 1,
+  imageFile: SHIP_BALL_FILE,
   cost: {titanium:5, gold:5, uranium:10},
-  aiType: EQUIP_AI_MINE,
+  aiType: EQUIP_AI_MISSILE,
 };
 
 export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER,
   SHIP_ALIEN,  SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_FIRE, SHIP_ALIEN_STEALTH];
 
 // This equipment needs to go after the ships (ugh)
-export const EQUIP_MINE_DEPLOYER = {name: "Mine Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:50, cool:0,
-  createShip: SHIP_MINE,
-  cost: {titanium:30, gold:100, uranium:100}};
-
-export const EQUIP_TURRET_MINE_DEPLOYER = {name: "Turret Mine Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:100, cool:0,
-  createShip: SHIP_TURRET_MINE,
-  cost: {titanium:100, gold:150, uranium:150}};
+export const EQUIP_MINE_DEPLOYER = {name: "Mine Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:25, cool:0,
+  createShip: {type: SHIP_MINE, dir: DIR_BEHIND_SHIP },
+  cost: {titanium:30, gold:50, uranium:100}};
+export const EQUIP_TURRET_DEPLOYER = {name: "Turret Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:100, cool:0,
+  createShip: {type:SHIP_TURRET, dir: DIR_BEHIND_SHIP},
+  cost: {titanium:100, gold:100, uranium:200}};
+export const EQUIP_MISSILE_LAUNCHER = {name: "Missile Launcher", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:50, cool:0,
+  createShip: {type: SHIP_MISSILE, dir: DIR_AHEAD_OF_SHIP},
+  cost: {titanium:50, gold:50, uranium:100}};
 
 export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER,
-  EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR, EQUIP_MINE_DEPLOYER, EQUIP_TURRET_MINE_DEPLOYER];
+  EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR, EQUIP_MINE_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER];
 
 export const PLANET_DENSITY = new Map();
 PLANET_DENSITY.set(GREEN_PLANET_FILE, 0.01)
