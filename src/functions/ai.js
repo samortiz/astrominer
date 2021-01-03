@@ -94,7 +94,6 @@ export function playerMissileAi(missile) {
   return false;
 }
 
-
 /**
  * AI for aliens that move toward the player and shoots
  * @return true if alien moved false otherwise

@@ -65,6 +65,9 @@ export const CRASH = "crash"; // animation name in json
 export const BULLET_FILE = "bullet.png";
 export const BULLET_BLUE_FILE = "bullet_blue.png";
 export const BULLET_STAPLE_FILE = "bullet_white.png";
+export const SHIELD_BLUE_FILE = "shield_blue.png";
+export const SHIELD_WHITE_FILE = "shield_white.png";
+export const SHIELD_GREEN_FILE = "shield_green.png";
 export const ALIEN_SHIP_FILE = "alien.png";
 export const ALIEN_SHIP_SMALL_FILE = "alien_small.png";
 export const ALIEN_SHIP_LARGE_FILE = "alien_large.png";
@@ -149,7 +152,9 @@ export const EQUIP_BLASTER = {name: "Blaster", objType:OBJ_EQUIP, type:EQUIP_TYP
                             cost: {titanium:10, gold:0, uranium:20}};
 export const EQUIP_FAST_BLASTER = {name: "Fast Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:10, cool:0, damage:10, speed:4, lifetime:80, bulletFile:BULLET_FILE,
                             cost: {titanium:20, gold:20, uranium:40}};
-export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:7, speed:6, lifetime:70, bulletFile:BULLET_FILE,
+export const EQUIP_SPRINKLER_BLASTER = {name: "Sprinkler Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:2, cool:2, damage:6, speed:2.5, lifetime:150, jitter:1, bulletFile:BULLET_FILE,
+  cost: {titanium:20, gold:10, uranium:80}};
+export const EQUIP_STREAM_BLASTER = {name: "Stream Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:7, speed:7, lifetime:70, bulletFile:BULLET_FILE,
                             cost: {titanium:30, gold:30, uranium:60}};
 export const EQUIP_THRUSTER = {name: "Thruster", objType:OBJ_EQUIP, type:EQUIP_TYPE_THRUSTER, thrustSpeed:0.08, thrustType:THRUST_MOMENTUM,
                             cost: {titanium:40, gold:40, uranium:10}};
@@ -166,6 +171,9 @@ export const EQUIP_STAPLE_GUN = {name: "Staple Gun", objType:OBJ_EQUIP, type:EQU
   cost: {titanium:10, gold:30, uranium:50}};
 export const EQUIP_ARMOR = {name: "Armor Plate", objType:OBJ_EQUIP, type:EQUIP_TYPE_ARMOR, armorAmt:100,
                             cost: {titanium:50, gold:0, uranium:0}};
+export const EQUIP_SHIELD = {name: "Force Shield", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 240,
+  shield: {active:false, armor: 500, armorMax:500, lifetime:1240, lifetimeMax:1240, spriteFile: SHIELD_BLUE_FILE, radius:0},
+  cost: {titanium:0, gold:0, uranium:100}};
 
 // Ships
 export const SHIP_EXPLORER = {
@@ -229,7 +237,7 @@ export const SHIP_FAST = {
   armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
-  imageScale: 0.3,
+  imageScale: 1,
   imageFile: SHIP_FAST_FILE,
   cost: {titanium:200, gold:100, uranium:50},
 };
@@ -477,8 +485,8 @@ export const SHIP_MISSILE = {
   },
   equipMax: 0,
   equip : [],
-  armorMax: 400,
-  armor: 400,
+  armorMax: 200,
+  armor: 200,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 1,

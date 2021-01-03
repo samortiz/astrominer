@@ -38,6 +38,7 @@ export function createEmptyWorld() {
       bullets: [], // contains all the bullets
       planetSpriteCache: {}, // {"green_planet.png" : Map(id:sprite, id:sprite)... }
       shipSpriteCache: {}, // {"alien_small.png" : Map(id:sprite, id:sprite)... }
+      shieldSpriteCache: new Map(), // These sprites are each added to a ship and not reused
       spriteContainers: {background:null, planets:null, bullets:null, ships:null, minimap:null},
       miniMapGraphics: null, // used as a canvas for drawing the miniMap
       initializing: true, // set to false when the game fully running (after first draw)
@@ -53,7 +54,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  window.world.shipStartX = +1550;
+  //window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
@@ -65,14 +66,14 @@ export function setupWorld() {
   world.ship.armorMax = 10000;
   world.ship.armor = 10000;
   world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_MISSILE_LAUNCHER), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
   world.ship.equipMax = world.ship.equip.length;
   world.blueprints.equip = [...c.ALL_EQUIP];
   world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
-  createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 250, c.PLAYER_START_Y+70);
-  //createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 250, c.PLAYER_START_Y-70);
+  createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y+70);
+  createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y-70);
 
   // DEBUG Planet
   let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
@@ -318,6 +319,7 @@ export function getShipSprite(ship) {
       return foundSprite;
     }
   } // foundSprite
+
   // No sprite found - create a new one
   let spriteSheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
   sprite = new window.PIXI.Sprite(spriteSheet.textures[ship.imageFile]);
@@ -334,6 +336,44 @@ export function getShipSprite(ship) {
   window.world.system.spriteContainers.ships.addChild(sprite);
   //console.log('created new ship sprite '+ship.imageFile, sprite);
   return sprite;
+}
+
+/**
+ * @return The original width/height of the sprite before scaling was applied
+ *   {width, height}
+ */
+export function getSpriteOrigWithHeight(sprite) {
+  const origWidth = sprite.width;
+  const origHeight = sprite.height;
+  sprite.scale.set(1,1);
+  const width = sprite.width;
+  const height = sprite.height;
+  sprite.width = origWidth;
+  sprite.height = origHeight;
+  return {width, height};
+}
+
+export function getShieldSprite(ship, shield) {
+  const cacheId = ship.id+'~'+shield.spriteFile;
+  // Lookup the sprite in the cache by ID
+  let shieldSprite = window.world.system.shieldSpriteCache.get(cacheId);
+  if (shieldSprite) {
+    return shieldSprite;
+  }
+  // Add a new shield image to the ship
+  const shipSprite = getShipSprite(ship);
+  let spriteSheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
+  shieldSprite = new window.PIXI.Sprite(spriteSheet.textures[shield.spriteFile]);
+  shieldSprite.anchor.set(0.5, 0.5);  // pivot on center
+  const {width, height} = getSpriteOrigWithHeight(shipSprite);
+  // Radius within the scaled ship sprite
+  const shieldWidth = Math.max(width, height) * 1.5; // 1.5 to make it larger than the ship
+  shieldSprite.width = shieldWidth;
+  shieldSprite.height = shieldWidth;
+  shield.radius = (shieldWidth * ship.imageScale) / 2; // size without ship scaling
+  shipSprite.addChild(shieldSprite);
+  window.world.system.shieldSpriteCache.set(cacheId, shieldSprite);
+  return shieldSprite;
 }
 
 // Creates and returns a ship object

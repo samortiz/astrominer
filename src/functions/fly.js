@@ -1,5 +1,5 @@
 import {utils, c, game, manage, ai, fly} from './';
-import {canAfford, getPlanetSprite, getShipSprite, payResourceCost} from "./game";
+import {canAfford, getPlanetSprite, getShieldSprite, getShipSprite, payResourceCost} from "./game";
 import {shootAt} from "./ai";
 import {DIR_AHEAD_OF_SHIP} from "./constants";
 
@@ -33,7 +33,6 @@ export function flyLoop(delta) {
     if (world.system.keys.x.isDown) {
       fireSecondaryWeapon(ship);
     }
-
     if (world.system.keys.q.isDown) {
       thrustShip(ship, true);
     }
@@ -129,6 +128,13 @@ export function coolWeapons(ship) {
     if (equip.weapon && equip.weapon.cool) {
       equip.weapon.cool -= 1;
     }
+    if (equip.shield && equip.shield.active) {
+      equip.shield.lifetime  -= 1;
+      if (equip.shield.lifetime <= 0) {
+        equip.shield.lifetime = 0;
+        disableShield(ship, equip.shield);
+      }
+    }
   }
 }
 
@@ -175,8 +181,7 @@ export function shootAtNearestAlien(ship, weapon) {
   } // for
   if (nearestAlien && (nearestAlienDist <= weaponRange(weapon))) {
     const origDir = ship.rotation;
-    let dirToShoot = utils.normalizeRadian(Math.atan2(nearestAlien.y - ship.y, nearestAlien.x - ship.x));
-    ship.rotation = dirToShoot;
+    ship.rotation = utils.normalizeRadian(Math.atan2(nearestAlien.y - ship.y, nearestAlien.x - ship.x));
     fireWeapon(weapon, ship, 0.1);
     ship.rotation = origDir;
   }
@@ -217,8 +222,25 @@ export function planetInView(ship, planet) {
   return true;
 }
 
+/**
+ * @return the first active shield the ship is equipped with
+ */
+export function getActiveShield(ship) {
+  for (const equip of ship.equip) {
+    if (equip.shield && equip.shield.active) {
+      return equip.shield;
+    }
+  }
+  return null;
+}
+
 // Returns true if there is a collision and false otherwise
 export function detectCollisionWithPlanet(ship, shipSprite, planet) {
+  const shield = getActiveShield(ship);
+  if (shield) {
+    // shield collision is round
+    return utils.distanceBetween(ship.x, ship.y, planet.x, planet.y) < (planet.radius + shield.radius);
+  }
   // [[x,y],[x,y]]
   let collisionPoints = utils.getVertexData(ship.x, ship.y, shipSprite);
   for (let point of collisionPoints) {
@@ -232,6 +254,11 @@ export function detectCollisionWithPlanet(ship, shipSprite, planet) {
 
 // Returns true if there is a collision and false otherwise
 export function detectCollisionWithAlien(ship, shipSprite, alien) {
+  const shield = getActiveShield(ship);
+  if (shield) {
+    // shield collision is round
+    return utils.distanceBetween(ship.x, ship.y, alien.x, alien.y) < (alien.radius + shield.radius);
+  }
   let collisionPoints = utils.getVertexData(ship.x, ship.y, shipSprite);
   for (let point of collisionPoints) {
     // Only works with circular aliens (need different logic for squares)
@@ -271,6 +298,11 @@ function landShip(ship, planet) {
     let dmg = dmgPct * ship.armorMax;
     damageShip(ship, dmg, resetGame);
   }
+  // Disable shields when landing
+  const shield = getActiveShield(ship);
+  if (shield) {
+    disableShield(ship, shield);
+  }
   // If the ship survived the landing
   if (ship.armor > 0) {
     window.world.selectedPlanet = planet;
@@ -283,6 +315,7 @@ function landShip(ship, planet) {
     ship.rotation = dir;
     planet.lastLandingDir = dir;
     getShipSprite(ship).rotation = dir;
+    repositionScreen();
     game.changeGameState(c.GAME_STATE.MANAGE);
   }
 }
@@ -446,7 +479,9 @@ export function fireWeapon(weapon, ship, jitter) {
 
 export function firePrimaryWeapon(ship, jitter) {
   let gun = getEquip(ship, c.EQUIP_TYPE_PRIMARY_WEAPON);
-  fireWeapon(gun, ship, jitter);
+  if (gun) {
+    fireWeapon(gun, ship, gun.jitter ? gun.jitter : jitter);
+  }
 }
 
 export function fireSecondaryWeapon(ship) {
@@ -474,8 +509,41 @@ export function fireSecondaryWeapon(ship) {
       ai.checkForCollisionWithPlanet(mine);
       ai.checkForCollisionWithShip(mine);
     }
+    if (weapon.shield) {
+      enableShield(ship, weapon.shield);
+    }
     weapon.cool = weapon.coolTime; // this is decremented in coolWeapons
   }
+}
+
+/**
+ * Called to enable a ship's shield.
+ * This will add a shield sprite to the ship and set it to visible
+ */
+export function enableShield(ship, shield) {
+  const shieldSprite = game.getShieldSprite(ship, shield);
+  shieldSprite.visible = true;
+  shield.active = true;
+  shield.lifetime = shield.lifetimeMax;
+  shield.armor = shield.armorMax;
+  // Increase the ship size to the size of the shield
+  ship.spriteWidth = shield.radius * 2;
+  ship.spriteHeight = shield.radius * 2;
+  console.log('Enable ship w='+ship.spriteWidth+' h='+ship.spriteHeight);
+}
+
+/**
+ * Called to disable, and stop drawing a shield on a ship
+ */
+export function disableShield(ship, shield) {
+  const shieldSprite = game.getShieldSprite(ship, shield);
+  shieldSprite.visible = false;
+  shield.active = false;
+  // Reset the ship size back to regular
+  const shipSprite = getShipSprite(ship);
+  ship.spriteWidth = shipSprite.width;
+  ship.spriteHeight = shipSprite.height;
+  console.log('Disable ship w='+ship.spriteWidth+' h='+ship.spriteHeight);
 }
 
 /**
@@ -559,18 +627,26 @@ function checkForBulletCollision(bullet) {
   }
   // Collision with ship
   if (ship.alive) {
-    const shipSprite = getShipSprite(ship);
-    if (shipSprite.containsPoint({x:bullet.sprite.x, y:bullet.sprite.y})) {
+    const shield = getActiveShield(ship);
+    if (shield && utils.distanceBetween(ship.x, ship.y, bullet.x, bullet.y) < shield.radius) {
       bulletHitShip(bullet, ship, resetGame);
+    } else {
+      const shipSprite = getShipSprite(ship);
+      if (shipSprite.containsPoint({x:bullet.sprite.x, y:bullet.sprite.y})) {
+        bulletHitShip(bullet, ship, resetGame);
+      }
     }
   } 
   // Collision with alien ship
   for (let alien of window.world.aliens) {
-    // This check will only work with circular aliens, need a separate check for rectangular ones
-    if (alien.alive && alien.radius && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius) {
-      bulletHitShip(bullet, alien, null);
+    if (alien.alive && alien.radius) {
+      const shield = getActiveShield(alien);
+      if ((shield && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) < shield.radius) || // hit alien shield
+          (utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius)) { // hit alien ship
+        bulletHitShip(bullet, alien, null);
+      }
     }
-  }
+  } // for alien
 }
 
 /**
@@ -585,10 +661,19 @@ function bulletHitShip(bullet, ship, afterExplosion) {
  * applies damage to the ship, destroying the ship if needed
  */
 export function damageShip(ship, damage, afterExplosion) {
-  ship.armor = ship.armor - damage;
-  if (ship.armor <= 0) {
-    ship.armor = 0;
-    destroyShip(ship, afterExplosion);
+  const shield = getActiveShield(ship);
+  if (shield) {
+    shield.armor -= damage;
+    if (shield.armor <= 0) {
+      shield.armor = 0;
+      disableShield(ship, shield);
+    }
+  } else { // no shield
+    ship.armor = ship.armor - damage;
+    if (ship.armor <= 0) {
+      ship.armor = 0;
+      destroyShip(ship, afterExplosion);
+    }
   }
 }
 

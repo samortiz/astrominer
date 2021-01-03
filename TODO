@@ -4,11 +4,9 @@ Bugs
  - Scroll long lists
  - Aliens + Mines show up in wrong place after death
  - Using alien ship didn't reset sprite X/Y
- - Cargo ship can't take off of large planet
 
 TODO
 - CSS on info screens
-- Turret Mines should cost to deploy
 
 Ideas :
 - double click fire to continuous fire
@@ -19,9 +17,8 @@ Ideas :
 - Self Destruct on FlyInfo
 - switching view to planet sets view on planet (without changing ship position?)
 - Factory progress bar
-- Alien drop (resources), pickup drops? Hmm... storage of non-resources?
 - Planet change name
 - Storage edit ship name
-- Planet build turret
-- Equip : multi-shot, autoLander, missiles
+- Equip : multi-shot, autoLander, shields
 
+- Alien drop (resources), pickup drops? Hmm... storage of non-resources?
