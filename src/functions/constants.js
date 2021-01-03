@@ -1,9 +1,9 @@
 // Colors
 export const BLACK = 0X000000;
-export const RED = 0xFF0000;
+//export const RED = 0xFF0000;
 export const BLUE = 0x00AAFF;
 export const WHITE = 0xFFFFFF;
-export const MED_GREY = 0x808080;
+//export const MED_GREY = 0x808080;
 export const DARK_GREY = 0x303030;
 export const LIGHT_GREY = 0x909090;
 
@@ -66,8 +66,8 @@ export const BULLET_FILE = "bullet.png";
 export const BULLET_BLUE_FILE = "bullet_blue.png";
 export const BULLET_STAPLE_FILE = "bullet_white.png";
 export const SHIELD_BLUE_FILE = "shield_blue.png";
-export const SHIELD_WHITE_FILE = "shield_white.png";
-export const SHIELD_GREEN_FILE = "shield_green.png";
+//export const SHIELD_WHITE_FILE = "shield_white.png";
+//export const SHIELD_GREEN_FILE = "shield_green.png";
 export const ALIEN_SHIP_FILE = "alien.png";
 export const ALIEN_SHIP_SMALL_FILE = "alien_small.png";
 export const ALIEN_SHIP_LARGE_FILE = "alien_large.png";
@@ -75,7 +75,6 @@ export const ALIEN_SHIP_FIRE_FILE = "alien_fire.png";
 export const ALIEN_SHIP_BLUE_FILE = "alien_blue.png";
 export const ALIEN_SHIP_LARGE_BLUE_FILE = "alien_large_blue.png";
 export const ALIEN_SHIP_BLACK_FILE = "ship_black.png";
-
 
 export const UNIVERSE_RADIUS = 30000;
 export const PLANET_CACHE_STEP_SIZE = SCREEN_WIDTH;
@@ -509,7 +508,7 @@ export const EQUIP_MISSILE_LAUNCHER = {name: "Missile Launcher", objType:OBJ_EQU
   createShip: {type: SHIP_MISSILE, dir: DIR_AHEAD_OF_SHIP},
   cost: {titanium:50, gold:50, uranium:100}};
 
-export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER,
+export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER,
   EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR, EQUIP_MINE_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER];
 
 export const PLANET_DENSITY = new Map();

@@ -1,7 +1,6 @@
 Bugs
  - No transfer onto/off ship when ship is not on selected planet
  - blink thrusters should remove horiz momentum
- - Scroll long lists
  - Aliens + Mines show up in wrong place after death
  - Using alien ship didn't reset sprite X/Y
 
@@ -9,16 +8,15 @@ TODO
 - CSS on info screens
 
 Ideas :
-- double click fire to continuous fire
+- Scroll long lists
+- Factory progress bar
 - AI don't crash into other aliens
 - Aliens destroy buildings
+- double click fire to continuous fire
 - Aliens build buildings
 - zoom minimap
 - Self Destruct on FlyInfo
-- switching view to planet sets view on planet (without changing ship position?)
-- Factory progress bar
+- Switching view to planet sets view on planet (without changing ship position?)
 - Planet change name
 - Storage edit ship name
-- Equip : multi-shot, autoLander, shields
 
-- Alien drop (resources), pickup drops? Hmm... storage of non-resources?
