@@ -67,7 +67,8 @@ export function setupWorld() {
   world.ship.armorMax = 10000;
   world.ship.armor = 10000;
   world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
+  // NOTE: This equip doesn't have ids, so they don't always work
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_BLINK_THRUSTER, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
   world.ship.equipMax = world.ship.equip.length;
   world.blueprints.equip = [...c.ALL_EQUIP];
   world.blueprints.ship = [...c.ALL_SHIPS];

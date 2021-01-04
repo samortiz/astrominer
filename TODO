@@ -1,5 +1,5 @@
 Bugs
- - blink thrusters should remove horiz momentum
+ - blink thrusters should remove horiz momentum (the math is hard)
  - Aliens + Mines show up in wrong place after death
  - Using alien ship didn't reset sprite X/Y
 

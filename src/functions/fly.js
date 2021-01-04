@@ -449,12 +449,14 @@ function thrustShip(ship, left) {
   let thruster = getEquip(ship, c.EQUIP_TYPE_THRUSTER);
   if (thruster) {
     let dir =utils.normalizeRadian(ship.rotation + ((left ? -1 : 1) * Math.PI/2)); // 90 deg turn
+    const thrustX = thruster.thrustSpeed * Math.cos(dir);
+    const thrustY = thruster.thrustSpeed * Math.sin(dir);
     if (thruster.thrustType === c.THRUST_MOMENTUM) {
-      ship.vx += thruster.thrustSpeed * Math.cos(dir);
-      ship.vy += thruster.thrustSpeed * Math.sin(dir);
+      ship.vx += thrustX;
+      ship.vy += thrustY
     } else if (thruster.thrustType === c.THRUST_BLINK) {
-      ship.x += thruster.thrustSpeed * Math.cos(dir);
-      ship.y += thruster.thrustSpeed * Math.sin(dir);
+      ship.x += thrustX;
+      ship.y += thrustY;
     } else {
       console.warn("Unable to use thruster with type "+thruster.thrustType);
     }
