@@ -13,7 +13,7 @@ export class ManageStorage extends React.Component {
   }
 
   startUsingShip() {
-    manage.switchToShip(this.state.selectedShip, window.world.selectedPlanet);    
+    manage.switchToShip(this.state.selectedShip);
     this.setState({selectedShip:null});
   }
 
@@ -22,9 +22,10 @@ export class ManageStorage extends React.Component {
     let planet = world.selectedPlanet;
     let currentShip = world.ship;
     let selectedShip = this.state.selectedShip;
-    
+    let shipOnPlanet = ((planet === window.world.lastPlanetLanded) && currentShip.alive);
+
     // Default to selecting the current ship
-    if (!selectedShip && currentShip.alive) {
+    if (!selectedShip && shipOnPlanet) {
       selectedShip = currentShip;
     }
 
@@ -44,7 +45,7 @@ export class ManageStorage extends React.Component {
         <div className='storage-section'> 
           <div className='title'>Ships</div>
           <span className='item-list'>
-            {(currentShip.alive ? [currentShip] : []).concat(planet.ships).map((ship, i) => {
+            {(shipOnPlanet ? [currentShip] : []).concat(planet.ships).map((ship, i) => {
               return <div key={i} 
                           onClick={() => this.viewShip(ship)} 
                           className={`ship ${selectedShip===ship ? 'selected-item' : 'non-selected-item'}`} >{ship.name}</div>

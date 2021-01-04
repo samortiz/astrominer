@@ -16,6 +16,7 @@ export function createEmptyWorld() {
     aliens:[],
     planets:[],
     selectedPlanet: {resources:{}},
+    lastPlanetLanded: null,
     blueprints: {
       ship:[c.SHIP_EXPLORER],
       equip:[c.EQUIP_BRAKE],
@@ -562,6 +563,7 @@ export function canAfford(planet, ship, resources) {
  * first using canAfford()
  * @param planet planet to get resources from
  * @param ship ship to get resources from
+ * @param resources amount to pay
  */
 export function payResourceCost(planet, ship, resources) {
   payResource(planet, ship, 'titanium', resources.titanium);

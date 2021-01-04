@@ -36,7 +36,6 @@ export function loadLocalStorage(key) {
 }
 
 function upgradeDB(event) {
-  console.log('upgrading');
   let db = event.target.result;
   if (event.oldVersion >= 1) {
     db.deleteObjectStore(WORLD_STORE);

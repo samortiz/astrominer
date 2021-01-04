@@ -1,9 +1,8 @@
 // Colors
 export const BLACK = 0X000000;
-//export const RED = 0xFF0000;
+export const YELLOW = 0xCC55CC;
 export const BLUE = 0x00AAFF;
 export const WHITE = 0xFFFFFF;
-//export const MED_GREY = 0x808080;
 export const DARK_GREY = 0x303030;
 export const LIGHT_GREY = 0x909090;
 
@@ -40,6 +39,7 @@ export const MINIMAP_SCALE_Y = MINIMAP_HEIGHT / MINIMAP_VIEW_HEIGHT;
 export const MINIMAP_BORDER_COLOR = LIGHT_GREY;
 export const MINIMAP_BACKGROUND_COLOR = DARK_GREY;
 export const MINIMAP_PLANET_COLOR = LIGHT_GREY;
+export const MINIMAP_SELECTED_PLANET_COLOR = YELLOW;
 export const MINIMAP_BUILDING_COLOR = BLUE;
 export const MINIMAP_SHIP_COLOR = WHITE;
 
@@ -170,8 +170,8 @@ export const EQUIP_STAPLE_GUN = {name: "Staple Gun", objType:OBJ_EQUIP, type:EQU
   cost: {titanium:10, gold:30, uranium:50}};
 export const EQUIP_ARMOR = {name: "Armor Plate", objType:OBJ_EQUIP, type:EQUIP_TYPE_ARMOR, armorAmt:100,
                             cost: {titanium:50, gold:0, uranium:0}};
-export const EQUIP_SHIELD = {name: "Force Shield", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 240,
-  shield: {active:false, armor: 500, armorMax:500, lifetime:1240, lifetimeMax:1240, spriteFile: SHIELD_BLUE_FILE, radius:0},
+export const EQUIP_SHIELD = {name: "Force Shield", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 600,
+  shield: {active:false, armor: 500, armorMax:500, lifetime:240, lifetimeMax:240, spriteFile: SHIELD_BLUE_FILE, radius:0},
   cost: {titanium:0, gold:0, uranium:100}};
 
 // Ships

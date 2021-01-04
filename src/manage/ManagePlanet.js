@@ -19,18 +19,19 @@ export class ManagePlanet extends React.Component {
     let world = window.world;
     let planet = window.world.selectedPlanet;
     let ship = window.world.ship;
+    let shipOnPlanet = ((planet === window.world.lastPlanetLanded) && ship.alive);
     return (
       <div className='planet-info'> 
-        <div className='section'><b>Name</b> {world.selectedPlanet.name}</div>
+        <div className='section'><b>Planet Name</b> {world.selectedPlanet.name}</div>
         <div className='build-button'>
           <button 
-            disabled={!game.canAfford(planet, ship, c.MINE_COST)} 
+            disabled={!game.canAfford(planet, (shipOnPlanet ? ship : null), c.MINE_COST)}
             onClick={() => manage.buildMine()}>Build Mine</button>
             Cost: T:{c.MINE_COST.titanium} G:{c.MINE_COST.gold}
         </div>
         <div className='build-button'>
           <button 
-            disabled={!game.canAfford(planet, ship, c.FACTORY_COST)} 
+            disabled={!game.canAfford(planet, (shipOnPlanet ? ship : null), c.FACTORY_COST)}
             onClick={() => manage.buildFactory()}>Build Factory</button>
             Cost: T:{c.FACTORY_COST.titanium} G:{c.FACTORY_COST.gold} U:{c.FACTORY_COST.uranium}
         </div>
@@ -39,7 +40,7 @@ export class ManagePlanet extends React.Component {
         <div>Gold {Math.floor(planet.resources.raw.gold)}</div>
         <div>Uranium {Math.floor(planet.resources.raw.uranium)}</div>
 
-        <table>
+        {shipOnPlanet && <table>
           <thead>
             <tr>
               <th>Resource</th>
@@ -98,7 +99,31 @@ export class ManagePlanet extends React.Component {
               <td>{Math.floor(ship.resources.uranium)}</td>
             </tr>
           </tbody>
-        </table>
+        </table>}
+
+        {!shipOnPlanet &&
+        <table>
+          <thead>
+          <tr>
+            <th>Resource</th>
+            <th>Planet</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Titanium</td>
+            <td>{Math.floor(planet.resources.stored.titanium)}</td>
+          </tr>
+          <tr>
+            <td>Gold</td>
+            <td>{Math.floor(planet.resources.stored.gold)}</td>
+          </tr>
+          <tr>
+            <td>Uranium</td>
+            <td>{Math.floor(planet.resources.stored.uranium)}</td>
+          </tr>
+          </tbody>
+        </table>}
       </div>);
   }
 }

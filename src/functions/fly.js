@@ -187,7 +187,6 @@ export function shootAtNearestAlien(ship, weapon) {
   }
 }
 
-
 export function moveBackground(ship) {
   let bgSprite = window.world.system.bgSprite;
   bgSprite.tilePosition.x = (100 - ship.x) + c.HALF_SCREEN_WIDTH;
@@ -305,7 +304,8 @@ function landShip(ship, planet) {
   }
   // If the ship survived the landing
   if (ship.armor > 0) {
-    window.world.selectedPlanet = planet;
+    window.world.selectedPlanet = planet; // currently selected planet (for manage UI)
+    window.world.lastPlanetLanded = planet; // last planet landed on
     //Set ship position and angle on the planet surface
     let dir = utils.directionTo(planet.x, planet.y, ship.x, ship.y)
     let r = planet.radius + ship.spriteWidth / 2;
@@ -378,31 +378,25 @@ function resetGame() {
 
   // If the most recently used planet doesn't have any buildings
   if (!planet || (planet.buildings.length === 0)) {
-    console.log("Looking for suitable planet");
     // find a planet with a mine
     for (let planet of window.world.planets) {
       if (planet.buildings.length > 0) {
-        console.log("Found "+planet.name+" with buildings");
         window.world.selectedPlanet = planet;
         break;
       }
     }
     // No buildings on any planet- game over! 
     if (!planet) {
-      console.log("no planets with buildings");
       window.world.selectedPlanet = window.world.planets[0];
     }
   }
-  console.log('before finding new location');
   let {x,y,rotation} = manage.getAvailablePlanetXY(planet, ship, planet.lastLandingDir, 20, 0);
   ship.x = x;
   ship.y = y;
   ship.vx = 0;
   ship.vy = 0;
   ship.rotation = rotation;
-  console.log('start fly');
   flyLoop(0); // redraw the screen once
-  console.log('end fly');
   game.changeGameState(c.GAME_STATE.MANAGE);
 }
 
@@ -529,7 +523,6 @@ export function enableShield(ship, shield) {
   // Increase the ship size to the size of the shield
   ship.spriteWidth = shield.radius * 2;
   ship.spriteHeight = shield.radius * 2;
-  console.log('Enable ship w='+ship.spriteWidth+' h='+ship.spriteHeight);
 }
 
 /**
@@ -543,7 +536,6 @@ export function disableShield(ship, shield) {
   const shipSprite = getShipSprite(ship);
   ship.spriteWidth = shipSprite.width;
   ship.spriteHeight = shipSprite.height;
-  console.log('Disable ship w='+ship.spriteWidth+' h='+ship.spriteHeight);
 }
 
 /**
@@ -722,20 +714,23 @@ export function drawMiniMap() {
     if (planetOnMap(view, planet)) {
       let x = l + c.HALF_MINIMAP_WIDTH + ((planet.x - view.x) * c.MINIMAP_SCALE_X);
       let y = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - view.y) * c.MINIMAP_SCALE_Y);
-      g.lineStyle(1, c.MINIMAP_PLANET_COLOR);
+      const planetColor = window.world.selectedPlanet === planet ? c.MINIMAP_SELECTED_PLANET_COLOR : c.MINIMAP_PLANET_COLOR;
+      g.lineStyle(2, planetColor);
       g.drawCircle(x,y, planet.radius * c.MINIMAP_SCALE_X);
       // Buildings
       for (let building of planet.buildings) {
         let buildingX = l + c.HALF_MINIMAP_WIDTH + ((building.x - view.x) * c.MINIMAP_SCALE_X) -1.5;
         let buildingY = t + c.HALF_MINIMAP_HEIGHT + ((building.y - view.y) * c.MINIMAP_SCALE_Y) -1.5;
         g.lineStyle(1, c.MINIMAP_BUILDING_COLOR);
-        g.drawRect(buildingX,buildingY,3,3); 
+        g.drawRect(buildingX,buildingY,2,2);
       }
     }
   }
   // Ship
   g.lineStyle(1, c.MINIMAP_SHIP_COLOR);
-  g.drawCircle(l+c.MINIMAP_WIDTH/2,t+c.MINIMAP_HEIGHT/2, 2);
+  const x = l + c.HALF_MINIMAP_WIDTH + ((window.world.ship.x - view.x) * c.MINIMAP_SCALE_X);
+  const y = t + c.HALF_MINIMAP_HEIGHT + ((window.world.ship.y - view.y) * c.MINIMAP_SCALE_Y);
+  g.drawCircle(x,y, 2);
 }
 
 /**

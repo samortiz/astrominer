@@ -1,5 +1,4 @@
 Bugs
- - No transfer onto/off ship when ship is not on selected planet
  - blink thrusters should remove horiz momentum
  - Aliens + Mines show up in wrong place after death
  - Using alien ship didn't reset sprite X/Y
@@ -8,6 +7,7 @@ TODO
 - CSS on info screens
 
 Ideas :
+- Visual indicator of secondary weapon ready
 - Scroll long lists
 - Factory progress bar
 - AI don't crash into other aliens

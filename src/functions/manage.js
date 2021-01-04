@@ -41,6 +41,8 @@ function getBuildingInfo(buildingType) {
 /**
  * Creates a factory sprite and adds it to the planet container using the factory x,y and rotation
  * NOTE: The building x,y,rot need to be set before calling this
+ * @param building building to build
+ * @param planet planet to build on
  * @param planetSprite optional, if null this will lookup the sprite using getPlanetSprite()
  */
 export function makeBuildingSprite(building, planet, planetSprite = null) {
@@ -56,7 +58,6 @@ export function makeBuildingSprite(building, planet, planetSprite = null) {
   }
   buildingSprite.anchor.set(0.5, 0.5);
   buildingSprite.scale.set(spriteScale, spriteScale);
-  console.log(spriteFile+' scale='+spriteScale+' width='+buildingSprite.height);
   buildingSprite.rotation = building.rotation;
   buildingSprite.x = (building.x - planet.x);
   buildingSprite.y = (building.y - planet.y);
@@ -202,13 +203,15 @@ export function buildShip(shipTemplate) {
  * Called when the user clicks to switch to a new ship 
  * NOTE: the new ship should already be created and stored in a planet
  */
-export function switchToShip(newShip, planet) {
+export function switchToShip(newShip) {
   let oldShip = window.world.ship;
-  if (!removeShipFromStorage(newShip, planet)) {
-    console.warn("Unable to remove ship from planet ",newShip," planet=",planet);
+  let selectedPlanet = window.world.selectedPlanet;
+  let lastPlanetLanded = window.world.lastPlanetLanded;
+  if (!removeShipFromStorage(newShip, selectedPlanet)) {
+    console.warn("Unable to remove ship from planet ",newShip," planet=",selectedPlanet);
     return;
   }
-  addShipToStorage(oldShip, planet);
+  addShipToStorage(oldShip, lastPlanetLanded);
 
   window.world.ship = newShip;
   // check to ensure oldShip is not destroyed
@@ -221,16 +224,13 @@ export function switchToShip(newShip, planet) {
   // Get the new sprite (adds it to the container)
   const newShipSprite = game.getShipSprite(newShip);
   newShipSprite.visible = true;
-  if (oldShip && oldShip.alive) {
-    newShip.rotation = oldShip.rotation;
-  } else {
-    newShip.rotation = planet.lastLandingDir;
-  }
+  newShip.rotation = selectedPlanet.lastLandingDir;
   newShipSprite.rotation = newShip.rotation;
 
-  let r = planet.radius + (newShip.spriteWidth / 2);
-  newShip.x = planet.x + (r * Math.cos(newShip.rotation));
-  newShip.y = planet.y + (r * Math.sin(newShip.rotation));
+  let r = selectedPlanet.radius + (newShip.spriteWidth / 2);
+  newShip.x = selectedPlanet.x + (r * Math.cos(newShip.rotation));
+  newShip.y = selectedPlanet.y + (r * Math.sin(newShip.rotation));
+  window.world.lastPlanetLanded = selectedPlanet;
   fly.repositionScreen();
 }
 
