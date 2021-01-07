@@ -18,12 +18,11 @@ export function createEmptyWorld() {
     selectedPlanet: {resources:{}},
     lastPlanetLanded: null,
     blueprints: {
-      ship:[c.SHIP_EXPLORER],
-      equip:[c.EQUIP_BRAKE],
-      miningXp: 0, // total amount mined
-      miningXpLevels: lodash.cloneDeep(c.MINING_XP_LEVELS),
-      alienXp: 0, // aliens killed 
-      alienXpLevels: lodash.cloneDeep(c.ALIEN_XP_LEVELS),
+      ship:[],
+      equip:[],
+      xp: { [c.ROCK_PLANET_FILE]: 0, [c.RED_PLANET_FILE]: 0, [c.GREEN_PLANET_FILE]: 0, [c.PURPLE_PLANET_FILE]: 0,
+           [c.SHIP_ALIEN_TURRET.name]: 0, [c.SHIP_ALIEN.name]: 0, [c.SHIP_ALIEN_LARGE.name]: 0, [c.SHIP_ALIEN_STEALTH.name]: 0, [c.SHIP_ALIEN_FIRE.name]: 0},
+      xpLevels: lodash.cloneDeep(c.XP_LEVELS),
     },
     nextId: 100, // unique ID for sprites, equip, etc...
     // everything in system is transient and not serialized when saving the game
@@ -57,35 +56,36 @@ export function setupWorld() {
   window.world.shipStartX = c.PLAYER_START_X;
   //window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
-  //world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
-  world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
+  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
+  //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
   shipSprite.visible = true;
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  world.ship.armorMax = 10000;
-  world.ship.armor = 10000;
-  world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
+  // world.ship.armorMax = 1000;
+  // world.ship.armor = 1000;
+  // world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
+  // world.ship.resourcesMax = 10000000;
   // NOTE: This equip doesn't have ids, so they don't always work
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_BLINK_THRUSTER, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
-  world.ship.equipMax = world.ship.equip.length;
-  world.blueprints.equip = [...c.ALL_EQUIP];
-  world.blueprints.ship = [...c.ALL_SHIPS];
+  //world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_BLINK_THRUSTER, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
+  //world.ship.equipMax = world.ship.equip.length;
+  //world.blueprints.equip = [...c.ALL_EQUIP];
+  //world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
-  createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y+70);
-  createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y-70);
+  // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y+70);
+  // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y-70);
 
   // DEBUG Planet
-  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
-    titanium : 20500,
-    gold : 51000,
-    uranium : 5000,
-  });
-  testPlanet.x = c.PLAYER_START_X - 150;
-  testPlanet.y = c.PLAYER_START_Y ;
-  testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
+  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
+  //   titanium : 20500,
+  //   gold : 51000,
+  //   uranium : 5000,
+  // });
+  // testPlanet.x = c.PLAYER_START_X - 150;
+  // testPlanet.y = c.PLAYER_START_Y ;
+  // testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
   createAliens();
   setupMiniMap();
@@ -496,29 +496,29 @@ function mineResource(planet, resourceType, amount) {
     if (planet.resources.raw[resourceType] <= 0) {
       planet.resources.raw[resourceType] = 0;
     }
-    addMiningXp(amount);
+    addMiningXp(amount, planet);
   }
 }
 
-function addMiningXp(amount) {
+function addMiningXp(amount, planet) {
   let blueprints = window.world.blueprints;
-  blueprints.miningXp += amount;
-  let nextLevel = blueprints.miningXpLevels[0];
-  if (nextLevel && (nextLevel.xp <= blueprints.miningXp)) {
+  const xp = blueprints.xp[planet.spriteFile] += amount;
+  let nextLevel = blueprints.xpLevels[planet.spriteFile][0];
+  if (nextLevel && (nextLevel.xp <= xp)) {
     addBlueprint(nextLevel);
     // Remove the item
-    blueprints.miningXpLevels.shift();
+    blueprints.xpLevels[planet.spriteFile].shift();
   }
 }
 
 export function addAlienXp(ship) {
   let blueprints = window.world.blueprints;
-  blueprints.alienXp += ship.armorMax;
-  let nextLevel = blueprints.alienXpLevels[0];
-  if (nextLevel && (nextLevel.xp <= blueprints.alienXp)) {
+  const xp = blueprints.xp[ship.name] += 1;
+  let nextLevel = blueprints.xpLevels[ship.name][0];
+  if (nextLevel && (nextLevel.xp <= xp)) {
     addBlueprint(nextLevel);
     // Remove the item
-    blueprints.alienXpLevels.shift();
+    blueprints.xpLevels[ship.name].shift();
   }
 }
 

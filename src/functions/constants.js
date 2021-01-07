@@ -355,7 +355,7 @@ export const SHIP_ALIEN = {
 };
 
 export const SHIP_ALIEN_LARGE = {
-  name: "Alien Ship",
+  name: "Alien Large",
   objType:OBJ_SHIP,
   propulsion: 0.03, // best between 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
@@ -508,8 +508,65 @@ export const EQUIP_MISSILE_LAUNCHER = {name: "Missile Launcher", objType:OBJ_EQU
   createShip: {type: SHIP_MISSILE, dir: DIR_AHEAD_OF_SHIP},
   cost: {titanium:50, gold:50, uranium:100}};
 
-export const ALL_EQUIP = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER,
-  EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_ALIEN_BLASTER, EQUIP_ARMOR, EQUIP_MINE_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER];
+export const EQUIP_BRAKES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE];
+export const EQUIP_THRUSTERS = [EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER];
+export const EQUIP_UPGRADES = [EQUIP_ARMOR, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST, EQUIP_STORAGE ];
+export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN];
+export const EQUIP_SECONDARY_WEAPONS = [EQUIP_MINE_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_SHIELD];
+export const EQUIP_MISC = [EQUIP_R2D2, EQUIP_GUNNERY_DROID];
+export const ALL_EQUIP = [...EQUIP_BRAKES, ...EQUIP_THRUSTERS, ...EQUIP_UPGRADES, ...EQUIP_PRIMARY_WEAPONS, ...EQUIP_SECONDARY_WEAPONS, ...EQUIP_MISC];
+
+export const XP_LEVELS = {
+  // Mining resources
+  [ROCK_PLANET_FILE] : [
+    {xp:1, obj:SHIP_EXPLORER},
+    {xp:50, obj:EQUIP_BRAKE},
+    {xp:80, obj:EQUIP_BLASTER},
+    {xp:100, obj:SHIP_CARGO},
+    {xp:200, obj:EQUIP_ARMOR},
+    {xp:500, obj:EQUIP_SPEED_BOOST},
+  ],
+  [RED_PLANET_FILE] : [
+    {xp:10, obj:EQUIP_STORAGE},
+    {xp:50, obj:EQUIP_THRUSTER},
+    {xp:100, obj:SHIP_FAST},
+  ],
+  [GREEN_PLANET_FILE] : [
+    {xp:10, obj:SHIP_SKELETON},
+    {xp:50, obj:EQUIP_R2D2},
+    {xp:100, obj:EQUIP_BLINK_THRUSTER},
+    {xp:1000, obj:SHIP_HEAVY},
+  ],
+  [PURPLE_PLANET_FILE] : [
+    {xp:10, obj:EQUIP_TURN_BOOST},
+    {xp:500, obj:EQUIP_GUNNERY_DROID},
+    {xp:1000, obj:SHIP_FIGHTER}
+  ],
+  // Killing aliens
+  [SHIP_ALIEN_TURRET.name] : [
+    {xp:1, obj:EQUIP_FAST_BLASTER},
+    {xp:5, obj:EQUIP_BLINK_BRAKE},
+    {xp:10, obj:EQUIP_ALIEN_BLASTER},
+  ],
+  [SHIP_ALIEN.name] : [
+    {xp:1, obj:EQUIP_MINE_DEPLOYER},
+    {xp:5, obj:EQUIP_STREAM_BLASTER},
+    {xp:10, obj:SHIP_ALIEN},
+  ],
+  [SHIP_ALIEN_LARGE.name] : [
+    {xp:1, obj:EQUIP_SHIELD},
+    {xp:5, obj:EQUIP_TURRET_DEPLOYER},
+    {xp:10, obj:SHIP_ALIEN_LARGE},
+  ],
+  [SHIP_ALIEN_STEALTH.name] : [
+    {xp:1, obj:EQUIP_SPRINKLER_BLASTER},
+    {xp:5, obj:EQUIP_MISSILE_LAUNCHER},
+  ],
+  [SHIP_ALIEN_FIRE.name] : [
+    {xp:1, obj:EQUIP_STAPLE_GUN},
+    {xp:10, obj:SHIP_ALIEN_FIRE},
+  ],
+}
 
 export const PLANET_DENSITY = new Map();
 PLANET_DENSITY.set(GREEN_PLANET_FILE, 0.01)
@@ -531,28 +588,28 @@ export const UNIVERSE_RINGS = [
     minDistToOtherPlanet:200,
     minPlanetRadius:200, maxPlanetRadius:200,
     planetFiles:[],
-    aliens: [{count: 50, file: SHIP_ALIEN_STEALTH}],
+    aliens: [{count: 50, file: SHIP_ALIEN_STEALTH}, {count: 50, file: SHIP_ALIEN_FIRE}, ],
   },
   { planetCount: 200,
     minDist: 2500, maxDist: 10000,
     minDistToOtherPlanet:150,
     minPlanetRadius:250, maxPlanetRadius:500,
     planetFiles:[RED_PLANET_FILE, PURPLE_PLANET_FILE, GREEN_PLANET_FILE],
-    aliens: [{count: 500, file: SHIP_ALIEN_LARGE}, {count: 500, file: SHIP_ALIEN_FIRE}, {count: 200, file: SHIP_ALIEN}, {count: 200, file: SHIP_ALIEN_TURRET}],
+    aliens: [{count: 200, file: SHIP_ALIEN_TURRET}, {count: 200, file: SHIP_ALIEN}, {count: 700, file: SHIP_ALIEN_LARGE}, {count: 300, file: SHIP_ALIEN_STEALTH}, ],
   },
   { planetCount: 600,
     minDist: 10000, maxDist: 15000,
     minDistToOtherPlanet:150,
     minPlanetRadius:150, maxPlanetRadius:250,
     planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE, GREEN_PLANET_FILE],
-    aliens: [{count: 1000, file: SHIP_ALIEN}, {count: 300, file: SHIP_ALIEN_LARGE}, {count: 500, file: SHIP_ALIEN_TURRET}],
+    aliens: [{count: 1000, file: SHIP_ALIEN_TURRET}, {count: 1000, file: SHIP_ALIEN}, {count: 300, file: SHIP_ALIEN_LARGE},],
   },
   { planetCount: 1800,
     minDist: 15000, maxDist: 25000,
     minDistToOtherPlanet:200,
     minPlanetRadius:100, maxPlanetRadius:200,
     planetFiles:[ROCK_PLANET_FILE, RED_PLANET_FILE],
-    aliens: [{count: 1600, file: SHIP_ALIEN_TURRET}, {count: 150, file: SHIP_ALIEN}],
+    aliens: [{count: 1500, file: SHIP_ALIEN_TURRET}, {count: 100, file: SHIP_ALIEN}],
   },
   { planetCount: 1000,
     minDist: 25000, maxDist: UNIVERSE_RADIUS,
@@ -561,28 +618,4 @@ export const UNIVERSE_RINGS = [
     planetFiles:[ROCK_PLANET_FILE],
     aliens: [],
   },
-];
-
-export const MINING_XP_LEVELS = [
-  {xp:10, obj:EQUIP_BLASTER},
-  {xp:100, obj:SHIP_CARGO},
-  {xp:200, obj:EQUIP_ARMOR},
-  {xp:400, obj:SHIP_FAST},
-  {xp:1000, obj:EQUIP_FAST_BLASTER},
-  {xp:1500, obj:EQUIP_SPEED_BOOST},
-  {xp:2000, obj:EQUIP_TURN_BOOST},
-  {xp:3000, obj:SHIP_SKELETON},
-  {xp:5000, obj:EQUIP_STORAGE},
-  {xp:8000, obj:EQUIP_THRUSTER},
-  {xp:10000, obj:SHIP_HEAVY},
-  {xp:15000, obj:SHIP_FIGHTER},
-]
-
-export const ALIEN_XP_LEVELS = [
-  {xp:100, obj:EQUIP_ALIEN_BLASTER},
-  {xp:300, obj:EQUIP_BLINK_BRAKE},
-  {xp:500, obj:EQUIP_BLINK_THRUSTER},
-  {xp:1000, obj:EQUIP_STREAM_BLASTER},
-  {xp:1500, obj:EQUIP_R2D2},
-  {xp:2000, obj:SHIP_ALIEN},
 ];
