@@ -1,14 +1,20 @@
 Bugs
- - blink thrusters should remove horiz momentum (the math is hard)
- - Aliens + Mines show up in wrong place after death
- - Using alien ship didn't reset sprite X/Y
+ - Aliens + Mines show up in wrong place after death (need to set sprite visible to false)
+ - Using alien ship bugs didn't reset sprite X/Y
 
 TODO
 - CSS on info screens
+- hookify components
+- use planetCache
+- collision detection : use neighbor store? AI neighbors?  Maybe profile
+- Storage shows Equip by type with tabs
 
 Ideas :
 - Visual indicator of secondary weapon ready
+- Shield key c
 - Scroll long lists
+- Equip : drones, Blink Lander (brake)
+- Enemy : mothership that constantly spawns small ships when in range
 - Factory progress bar
 - AI don't crash into other aliens
 - Aliens destroy buildings

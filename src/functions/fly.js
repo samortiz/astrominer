@@ -1,7 +1,4 @@
-import {utils, c, game, manage, ai, fly} from './';
-import {canAfford, getPlanetSprite, getShieldSprite, getShipSprite, payResourceCost} from "./game";
-import {shootAt} from "./ai";
-import {DIR_AHEAD_OF_SHIP} from "./constants";
+import {utils, c, game, manage, ai } from './';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -61,7 +58,7 @@ export function flyLoop(delta) {
     world.view.x = ship.x;
     world.view.y = ship.y;
 
-    let shipSprite = getShipSprite(ship);
+    let shipSprite = game.getShipSprite(ship);
     shipSprite.rotation = ship.rotation;
 
     // Don't detect collisions until all the drawing is done
@@ -205,7 +202,7 @@ export function planetInView(ship, planet) {
       (ship.y - c.HALF_SCREEN_HEIGHT - planet.radius > planet.y)) { // Top
     // Planet is not currently visible, but if it has an Id then it used to be visible
     if (planet.spriteId) {
-      const sprite = getPlanetSprite(planet);
+      const sprite = game.getPlanetSprite(planet);
       if (sprite.visible) {
         sprite.visible = false;
       }
@@ -213,7 +210,7 @@ export function planetInView(ship, planet) {
     return false;
   }
   // Here we know this planet is in view
-  const sprite = getPlanetSprite(planet);
+  const sprite = game.getPlanetSprite(planet);
   sprite.visible = true;
   // Set planet relative to the ship's viewport
   sprite.x = (planet.x - ship.x) + c.HALF_SCREEN_WIDTH;
@@ -314,7 +311,7 @@ function landShip(ship, planet) {
     ship.y = planet.y + yAmt;
     ship.rotation = dir;
     planet.lastLandingDir = dir;
-    getShipSprite(ship).rotation = dir;
+    game.getShipSprite(ship).rotation = dir;
     repositionScreen();
     game.changeGameState(c.GAME_STATE.MANAGE);
   }
@@ -350,7 +347,7 @@ export function destroyShip(ship, afterExplosion) {
     game.addAlienXp(ship);
   }
   let explosionSprite = getExplosionSprite(ship);
-  const shipSprite = getShipSprite(ship);
+  const shipSprite = game.getShipSprite(ship);
   shipSprite.visible = false;
   ship.alive = false;
   ship.spriteId = null;
@@ -486,9 +483,9 @@ export function fireSecondaryWeapon(ship) {
     if (weapon.createShip && game.canAfford(null, ship, weapon.createShip.type.cost)) {
       game.payResourceCost(null, ship, weapon.createShip.type.cost);
       const mine = game.createShip(weapon.createShip.type, c.PLAYER);
-      const mineSprite = getShipSprite(mine);
+      const mineSprite = game.getShipSprite(mine);
       const mineDistFromShip = ship.spriteWidth/2 + mine.spriteWidth/2 + 20;
-      const dir = weapon.createShip.dir === DIR_AHEAD_OF_SHIP ? utils.normalizeRadian(ship.rotation - Math.PI) : ship.rotation;
+      const dir = weapon.createShip.dir === c.DIR_AHEAD_OF_SHIP ? utils.normalizeRadian(ship.rotation - Math.PI) : ship.rotation;
       const {xAmt, yAmt} = utils.dirComponents(dir, mineDistFromShip);
       mine.x = ship.x - xAmt;
       mine.y = ship.y - yAmt;
@@ -535,7 +532,7 @@ export function disableShield(ship, shield) {
   shieldSprite.visible = false;
   shield.active = false;
   // Reset the ship size back to regular
-  const shipSprite = getShipSprite(ship);
+  const shipSprite = game.getShipSprite(ship);
   ship.spriteWidth = shipSprite.width;
   ship.spriteHeight = shipSprite.height;
 }
@@ -625,7 +622,7 @@ function checkForBulletCollision(bullet) {
     if (shield && utils.distanceBetween(ship.x, ship.y, bullet.x, bullet.y) < shield.radius) {
       bulletHitShip(bullet, ship, resetGame);
     } else {
-      const shipSprite = getShipSprite(ship);
+      const shipSprite = game.getShipSprite(ship);
       if (shipSprite.containsPoint({x:bullet.sprite.x, y:bullet.sprite.y})) {
         bulletHitShip(bullet, ship, resetGame);
       }
@@ -754,17 +751,14 @@ export function clickOnMinimap(clickX, clickY) {
   }
 }
 
-
 function planetOnMap(view, planet) {
   // Right side
-  if ((view.x + c.HALF_MINIMAP_VIEW_WIDTH + planet.radius < planet.x) || // Right
-      (view.x - c.HALF_MINIMAP_VIEW_WIDTH - planet.radius > planet.x) || // Left
-      (view.y + c.HALF_MINIMAP_VIEW_HEIGHT + planet.radius < planet.y) || // Bottom
-      (view.y - c.HALF_MINIMAP_VIEW_HEIGHT - planet.radius > planet.y)) { // Top
-    return false;
-  }
-  return true;
+  return !((view.x + c.HALF_MINIMAP_VIEW_WIDTH + planet.radius < planet.x) || // Right
+    (view.x - c.HALF_MINIMAP_VIEW_WIDTH - planet.radius > planet.x) || // Left
+    (view.y + c.HALF_MINIMAP_VIEW_HEIGHT + planet.radius < planet.y) || // Bottom
+    (view.y - c.HALF_MINIMAP_VIEW_HEIGHT - planet.radius > planet.y));
 }
+
 /**
  * @return the max range of the weapon
  */

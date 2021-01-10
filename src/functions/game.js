@@ -150,7 +150,7 @@ export function createPlanets() {
 
 /**
  * Distance to the nearest planet that is not equal to origPlanet
- * @return {nearestAlien, nearestPlanetDist}
+ * @return {{nearestPlanetDist: number, nearestPlanet: null}}
  */
 function nearestPlanetDistance(origPlanet, x, y) {
   let minDist = 99999999999; 
@@ -172,7 +172,7 @@ function nearestPlanetDistance(origPlanet, x, y) {
 
 /**
  * Distance to the nearest alien
- * @return {nearestAlien, nearestAlienDist}
+ * @return {{nearestAlien: null, nearestAlienDist: number}}
  */
 function nearestAlienDistance(x, y) {
   let minDist = 99999999999; 
@@ -191,7 +191,7 @@ function nearestAlienDistance(x, y) {
 /**
  * Find a free spot of space to stick something
  * This will recurse until it finds a free spot.
- * @return {x,y}
+ * @return {{x, y}}
  */
 function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, failCount=0) {
   let dir = utils.randomFloat(0, Math.PI*2);

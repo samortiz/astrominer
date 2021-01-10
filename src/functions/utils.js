@@ -167,7 +167,7 @@ export function showToast(text) {
   Swal.fire({
     title: text,
     timer: 5000,
-    position:'top',
+    position:'top-left',
     showConfirmButton: false,
     toast:true,
     width: Math.floor(c.SCREEN_WIDTH/2)+'px',
