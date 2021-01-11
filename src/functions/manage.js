@@ -142,6 +142,7 @@ export function buildingFits(planet, ship, rotation, buildingWidth) {
  * Move a resource ship <-> planet 
  */
 export function transferResource(source, target, resourceType, requestedAmtStr, maxCapacity) {
+  console.log('transfering '+requestedAmtStr+' of '+resourceType);
   let requestedAmt = Number(requestedAmtStr);
   if (isNaN(requestedAmt)) {
     requestedAmt = 0;
@@ -156,9 +157,35 @@ export function transferResource(source, target, resourceType, requestedAmtStr, 
   if (spaceLeft < amt) {
     amt = spaceLeft;
   }
-  
   target[resourceType] += amt;
   source[resourceType] -= amt;
+}
+
+/**
+ * Choose some default resources to resupply the ship with.
+ * This is for quick restocking of resources
+ * NOTE: This may need to do multiple passes to fill up the space properly especially when planets are low on uranium
+ */
+export function resupplyShip(ship, planet) {
+  const desiredAmt = Math.floor(ship.resourcesMax / 3);
+  let freeAmt = ship.resourcesMax - (ship.resources.titanium + ship.resources.gold + ship.resources.uranium);
+  if (freeAmt <= 0) {
+    // no space for more resources
+    return;
+  }
+  // 20 is the min required to build a mine - you probably want at least 20
+  const desiredTitanium = desiredAmt >= 20 ? desiredAmt : 20;
+  if (ship.resources.titanium < desiredTitanium) {
+    transferResource(planet.resources.stored, ship.resources, 'titanium', desiredTitanium - ship.resources.titanium, ship.resourcesMax);
+  }
+  if (ship.resources.gold < desiredAmt) {
+    transferResource(planet.resources.stored, ship.resources, 'gold', desiredAmt - ship.resources.gold, ship.resourcesMax);
+  }
+  // Fill up the rest of the space with uranium (it's the rarest)
+  freeAmt = ship.resourcesMax - (ship.resources.titanium + ship.resources.gold + ship.resources.uranium);
+  if (ship.resources.uranium < freeAmt) {
+    transferResource(planet.resources.stored, ship.resources, 'uranium', freeAmt, ship.resourcesMax);
+  }
 }
 
 export function buildFactory() {

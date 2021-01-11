@@ -55,7 +55,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  window.world.shipStartX = +1550;
+  //window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
@@ -64,13 +64,13 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  world.ship.armorMax = 1000;
-  world.ship.armor = 1000;
-  world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
-  world.ship.resourcesMax = 10000000;
+  // world.ship.armorMax = 1000;
+  // world.ship.armor = 1000;
+  // world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
+  // world.ship.resourcesMax = 10000000;
   // NOTE: This equip doesn't have ids, so they don't always work
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_BLINK_THRUSTER, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
-  world.ship.equipMax = world.ship.equip.length;
+  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_BLINK_THRUSTER, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
+  // world.ship.equipMax = world.ship.equip.length;
   world.blueprints.equip = [...c.ALL_EQUIP];
   world.blueprints.ship = [...c.ALL_SHIPS];
 

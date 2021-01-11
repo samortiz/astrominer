@@ -5,8 +5,6 @@ Bugs
 TODO
 - CSS on info screens
 - hookify components
-- use planetCache
-- collision detection : use neighbor store? AI neighbors?  Maybe profile
 - Storage shows Equip by type with tabs
 
 Ideas :
