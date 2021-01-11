@@ -21,6 +21,8 @@ export const SCREEN_WIDTH = 1000;
 export const SCREEN_HEIGHT = 1000;
 export const HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2;
 export const HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
+export const NEARBY_WIDTH = SCREEN_WIDTH * 2;
+export const NEARBY_HEIGHT = SCREEN_HEIGHT * 2;
 // size of minimap on screen
 export const MINIMAP_WIDTH = 120; 
 export const MINIMAP_HEIGHT = 120;
@@ -34,7 +36,6 @@ export const HALF_MINIMAP_VIEW_HEIGHT = MINIMAP_VIEW_HEIGHT / 2;
 // convert minimap pixels to real pixels
 export const MINIMAP_SCALE_X = MINIMAP_WIDTH / MINIMAP_VIEW_WIDTH;  
 export const MINIMAP_SCALE_Y = MINIMAP_HEIGHT / MINIMAP_VIEW_HEIGHT; 
-
 // MiniMap colors
 export const MINIMAP_BORDER_COLOR = LIGHT_GREY;
 export const MINIMAP_BACKGROUND_COLOR = DARK_GREY;
@@ -42,7 +43,6 @@ export const MINIMAP_PLANET_COLOR = LIGHT_GREY;
 export const MINIMAP_SELECTED_PLANET_COLOR = YELLOW;
 export const MINIMAP_BUILDING_COLOR = BLUE;
 export const MINIMAP_SHIP_COLOR = WHITE;
-
 
 // Files
 export const SPRITESHEET_JSON = "images/spritesheet.json";
@@ -77,8 +77,6 @@ export const ALIEN_SHIP_LARGE_BLUE_FILE = "alien_large_blue.png";
 export const ALIEN_SHIP_BLACK_FILE = "ship_black.png";
 
 export const UNIVERSE_RADIUS = 33000;
-export const PLANET_CACHE_STEP_SIZE = SCREEN_WIDTH;
-export const PLANET_CACHE_NUM_STEPS = UNIVERSE_RADIUS * 2 / PLANET_CACHE_STEP_SIZE;
 export const PLAYER = "player";
 export const ALIEN = "alien";
 export const PLAYER_STARTING_RESOURCES = {titanium:30, gold:20, uranium:0};
@@ -88,7 +86,6 @@ export const TAKEOFF_SPEED = 10; // in units of planet gravity
 export const PLANET_RESOURCE_MAX = 99999999;
 export const PLAYER_START_X = -(UNIVERSE_RADIUS + 1000); // left of the universe
 export const PLAYER_START_Y = 0;
-export const NUM_ALIENS = 1000;
 export const MIN_ALIEN_DIST_TO_PLANET = 50;
 export const MIN_ALIEN_DIST_TO_ALIEN = 3;
 

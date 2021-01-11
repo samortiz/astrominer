@@ -73,14 +73,11 @@ export function loadWorld(key) {
       window.world.system.shipSpriteCache = {};
       window.world.system.spriteContainers.ships.removeChildren();
 
-      // Reset the planetCache (all new planets)
-      game.setupPlanetCache();
-
       // Reset/Redraw all the sprites
       window.world.ship.spriteId = null;
       const shipSprite = getShipSprite(window.world.ship);
       shipSprite.visible = true;
-      for (const alien of  window.world.aliens) {
+      for (const alien of  window.world.ships) {
         if (alien.spriteId) {
           alien.spriteId = null;
           getShipSprite(alien).visible = true;

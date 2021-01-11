@@ -3,7 +3,7 @@ import {getShipSprite} from "./game";
 
 export function moveAliens() {
   let ship = window.world.ship;
-  for (let alien of window.world.aliens) {
+  for (let alien of window.world.system.nearby.ships) {
     if (!alien.alive) {
       continue;
     }
@@ -110,7 +110,7 @@ export function creeperAi(alien) {
     let dirToPlayer = utils.directionTo(alien.x, alien.y, ship.x, ship.y);
     let {xAmt, yAmt} = utils.dirComponents(dirToPlayer, 25 * alien.propulsion);
     // Check if we are too close to a planet (need to move around the planet)
-    for (let planet of game.getPlanetsNear(alien.x, alien.y)) {
+    for (let planet of window.world.system.nearby.planets) {
       if (utils.distanceBetween(alien.x + xAmt, alien.y + yAmt, planet.x, planet.y) < (planet.radius + alien.radius + 10)) {
         const dirToPlanet = utils.directionTo(alien.x, alien.y, planet.x, planet.y);
         let dirDiff = dirToPlanet - dirToPlayer;
@@ -145,7 +145,7 @@ export function creeperAi(alien) {
 export function getNearestAlienTarget(x,y) {
   let target = null;
   let minDist = null;
-  for (let alien of window.world.aliens) {
+  for (let alien of window.world.system.nearby.ships) {
     if (alien.alive && alien.owner === c.ALIEN) {
       let dist = utils.distanceBetween(x, y, alien.x, alien.y);
       if (!target || (dist < minDist)) {
@@ -158,7 +158,7 @@ export function getNearestAlienTarget(x,y) {
 }
 
 export function checkForCollisionWithPlanet(alien) {
-  for (let planet of window.world.planets) {
+  for (let planet of window.world.system.nearby.planets) {
     let dist = utils.distanceBetween(alien.x, alien.y, planet.x, planet.y);
     if (dist <= (alien.radius + planet.radius)) {
       fly.destroyShip(alien, null);
@@ -167,7 +167,7 @@ export function checkForCollisionWithPlanet(alien) {
 }
 
 export function checkForCollisionWithShip(ship) {
-  for (let otherShip of window.world.aliens) {
+  for (let otherShip of window.world.system.nearby.ships) {
     if (otherShip.alive && ship !== otherShip) {
       let dist = utils.distanceBetween(ship.x, ship.y, otherShip.x, otherShip.y);
       if (dist <= (ship.radius + otherShip.radius)) {

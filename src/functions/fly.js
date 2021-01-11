@@ -6,8 +6,15 @@ export function enterFlyState() {
 
 // Main play mode - flying
 export function flyLoop(delta) {
+  if (delta > 1.005) {
+    console.log('Lagging with delta='+delta);
+  }
   let world = window.world;
   let ship = window.world.ship;
+
+  // Cache all the nearby planets and ships
+  setupNearby();
+
   // When ship.alive is false the ship is exploding
   if (ship.alive) {
     runDroids(ship);
@@ -39,7 +46,7 @@ export function flyLoop(delta) {
 
     // Find planets in view
     let planetsInView = [];
-    for (let planet of world.planets) {
+    for (let planet of world.system.nearby.planets) {
       if (planetInView(ship, planet)) {
         planetsInView.push(planet);
       }
@@ -72,7 +79,7 @@ export function flyLoop(delta) {
         }
       } // for planet
       // Ship-Alien collision
-      for (let alien of world.aliens) {
+      for (let alien of world.system.nearby.ships) {
         if (alien.alive && detectCollisionWithAlien(ship, shipSprite, alien)) {
           shipsCollide(ship, alien);
         }
@@ -89,12 +96,43 @@ export function flyLoop(delta) {
   }
 }
 
+
+/**
+ * Creates a cache of all nearby planets and ships
+ */
+export function setupNearby() {
+  const nearby = window.world.system.nearby;
+  const ship = window.world.ship;
+  const minX = ship.x - c.NEARBY_WIDTH / 2;
+  const maxX = ship.x + c.NEARBY_WIDTH / 2;
+  const minY = ship.y - c.NEARBY_HEIGHT / 2;
+  const maxY = ship.y + c.NEARBY_HEIGHT / 2;
+
+  nearby.planets = [];
+  // for every planet
+  for (const planet of window.world.planets) {
+    if ((planet.x  + planet.radius >= minX) && (planet.x - planet.radius <= maxX ) &&
+        (planet.y + planet.radius >= minY) && (planet.y - planet.radius <= maxY )) {
+      nearby.planets.push(planet);
+    }
+  } // for planet
+
+  // for every ship
+  nearby.ships = [];
+  for (const ship of window.world.ships) {
+    if ((ship.x  + ship.radius >= minX) && (ship.x - ship.radius <= maxX ) &&
+      (ship.y + ship.radius >= minY) && (ship.y - ship.radius <= maxY )) {
+      nearby.ships.push(ship);
+    }
+  } // for ship
+}
+
 /**
  * Recalculates all the locations of planets and aliens
  */
 export function repositionScreen() {
   // Reposition all the planets
-  for (let planet of window.world.planets) {
+  for (let planet of window.world.system.nearby.planets) {
     planetInView(window.world.ship, planet);
   }
   // Reposition all the aliens
@@ -107,7 +145,7 @@ export function repositionScreen() {
  */
 export function coolAllWeapons() {
   coolWeapons(window.world.ship);
-  for (let alien of window.world.aliens) {
+  for (let alien of window.world.system.nearby.ships) {
     coolWeapons(alien);
   }
 }
@@ -167,7 +205,7 @@ export function shootAtNearestAlien(ship, weapon) {
   }
   let nearestAlien = null;
   let nearestAlienDist = null;
-  for (let alien of window.world.aliens) {
+  for (let alien of window.world.system.nearby.ships) {
     if (alien.alive && alien.owner === c.ALIEN) {
       let dist = utils.distanceBetween(ship.x, ship.y, alien.x, alien.y);
       if (!nearestAlien || (dist < nearestAlienDist)) {
@@ -497,7 +535,7 @@ export function fireSecondaryWeapon(ship) {
       mineSprite.visible = true;
       mineSprite.x = (mine.x - ship.x) + c.HALF_SCREEN_WIDTH;
       mineSprite.y = (mine.y - ship.y) + c.HALF_SCREEN_HEIGHT;
-      window.world.aliens.push(mine);
+      window.world.ships.push(mine);
       // Since it never moves we only need one check to see if it collides with anything
       ai.checkForCollisionWithPlanet(mine);
       ai.checkForCollisionWithShip(mine);
@@ -610,7 +648,7 @@ export function moveBullets() {
 function checkForBulletCollision(bullet) {
   let ship = window.world.ship;
   // Collision with planet
-  for (let planet of window.world.planets) {
+  for (let planet of window.world.system.nearby.planets) {
     if (utils.distanceBetween(planet.x, planet.y, bullet.x, bullet.y) < planet.radius) {
       // TODO: Check for building damage
       killBullet(bullet);
@@ -629,7 +667,7 @@ function checkForBulletCollision(bullet) {
     }
   } 
   // Collision with alien ship
-  for (let alien of window.world.aliens) {
+  for (let alien of window.world.system.nearby.ships) {
     if (alien.alive && alien.radius) {
       const shield = getActiveShield(alien);
       if ((shield && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) < shield.radius) || // hit alien shield

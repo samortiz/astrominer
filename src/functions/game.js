@@ -13,7 +13,7 @@ export function createEmptyWorld() {
       x:0,
       y:0,
     },
-    aliens:[],
+    ships:[],
     planets:[],
     selectedPlanet: {resources:{}},
     lastPlanetLanded: null,
@@ -36,6 +36,7 @@ export function createEmptyWorld() {
       explosionSheet: null, // spritesheet for explosions
       explosions : [], //contains sprites
       bullets: [], // contains all the bullets
+      nearby: {planets:[], ships:[]}, // ships and planets near enough for collision detection and running AI
       planetSpriteCache: {}, // {"green_planet.png" : Map(id:sprite, id:sprite)... }
       shipSpriteCache: {}, // {"alien_small.png" : Map(id:sprite, id:sprite)... }
       shieldSpriteCache: new Map(), // These sprites are each added to a ship and not reused
@@ -54,7 +55,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  //window.world.shipStartX = +1550;
+  window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
@@ -63,34 +64,33 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  // world.ship.armorMax = 1000;
-  // world.ship.armor = 1000;
-  // world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
-  // world.ship.resourcesMax = 10000000;
+  world.ship.armorMax = 1000;
+  world.ship.armor = 1000;
+  world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
+  world.ship.resourcesMax = 10000000;
   // NOTE: This equip doesn't have ids, so they don't always work
-  //world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_BLINK_THRUSTER, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
-  //world.ship.equipMax = world.ship.equip.length;
-  //world.blueprints.equip = [...c.ALL_EQUIP];
-  //world.blueprints.ship = [...c.ALL_SHIPS];
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_BLINK_THRUSTER, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
+  world.ship.equipMax = world.ship.equip.length;
+  world.blueprints.equip = [...c.ALL_EQUIP];
+  world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
   // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y+70);
   // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y-70);
 
   // DEBUG Planet
-  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
-  //   titanium : 20500,
-  //   gold : 51000,
-  //   uranium : 5000,
-  // });
-  // testPlanet.x = c.PLAYER_START_X - 150;
-  // testPlanet.y = c.PLAYER_START_Y ;
-  // testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
+  let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
+    titanium : 20500,
+    gold : 51000,
+    uranium : 5000,
+  });
+  testPlanet.x = c.PLAYER_START_X - 150;
+  testPlanet.y = c.PLAYER_START_Y ;
+  testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
   createAliens();
   setupMiniMap();
   setupExplosionSheet();
-  setupPlanetCache();
 }
 
 /**
@@ -177,7 +177,7 @@ function nearestPlanetDistance(origPlanet, x, y) {
 function nearestAlienDistance(x, y) {
   let minDist = 99999999999; 
   let nearestAlien = null;
-  for (let alien of window.world.aliens) {
+  for (let alien of window.world.system.nearby.ships) {
     // This assumes the calling code alien is the same size
     let dist = utils.distanceBetween(x,y, alien.x, alien.y) - (alien.radius * 2);
     if (!nearestAlien || (dist < minDist)) {
@@ -399,7 +399,7 @@ export function createShip(shipType, owner) {
 
 export function createAlien(shipType, x, y) {
   let alien = createShip(shipType, c.ALIEN);
-  window.world.aliens.push(alien);
+  window.world.ships.push(alien);
   alien.x = x;
   alien.y = y;
   alien.radius = 50; // will be set to a real value when sprite loads
@@ -615,54 +615,3 @@ export function createExplosionSprite() {
   window.world.system.spriteContainers.bullets.addChild(sprite);
   return sprite;
 }
-
-/**
- * Creates a cache for all positions in the universe and stores the nearby planets
- */
-export function setupPlanetCache() {
-  const planetCache = new Array(c.PLANET_CACHE_NUM_STEPS);
-  // for every position in the universe
-  for (let stepX=0; stepX <c.PLANET_CACHE_NUM_STEPS; stepX++) {
-    planetCache[stepX] = new Array(c.PLANET_CACHE_NUM_STEPS);
-    for (let stepY=0; stepY<c.PLANET_CACHE_NUM_STEPS; stepY++) {
-      const minX = ((stepX - 1) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
-      const maxX = ((stepX + 2) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
-      const minY = ((stepY - 1) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
-      const maxY = ((stepY + 2) * c.PLANET_CACHE_STEP_SIZE) - c.UNIVERSE_RADIUS;
-      //console.log('Step ('+stepX+','+stepY+')  x:'+minX+' to '+maxX+'   y:'+minY+' to '+maxY);
-      const stepPlanets = [];
-      // Find planets within view of this location
-      for (const planet of window.world.planets) {
-        if ((planet.x  - planet.radius >= minX) && (planet.x + planet.radius <= maxX ) &&
-            (planet.y - planet.radius >= minY) && (planet.y + planet.radius <= maxY )) {
-          stepPlanets.push(planet);
-        }
-      } // for planets
-      planetCache[stepX][stepY] = { planets: stepPlanets };
-    } // for stepY
-  } // for stepX
-
-  window.world.system.planetCache = planetCache;
-}
-
-/**
- * Find planets from the planetCache that are somewhat near (within SCREEN_SIZE)
- */
-export function getPlanetsNear(x, y) {
-  let stepX = Math.floor((x + c.UNIVERSE_RADIUS) / c.PLANET_CACHE_STEP_SIZE);
-  let stepY = Math.floor((y + c.UNIVERSE_RADIUS) / c.PLANET_CACHE_STEP_SIZE);
-  if (stepX < 0) {
-    stepX = 0;
-  }
-  if (stepX >= c.PLANET_CACHE_NUM_STEPS) {
-    stepX = c.PLANET_CACHE_NUM_STEPS - 1;
-  }
-  if (stepY < 0) {
-    stepY = 0;
-  }
-  if (stepY >= c.PLANET_CACHE_NUM_STEPS) {
-    stepY = c.PLANET_CACHE_NUM_STEPS - 1;
-  }
-  return window.world.system.planetCache[stepX][stepY].planets;
-}
-
