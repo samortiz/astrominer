@@ -1,47 +1,31 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { ManagePlanet } from './ManagePlanet';
 import './ManageTabs.css';
-import { ManageFactory } from './ManageFactory';
+import { FactoryTabs } from './factory/FactoryTabs';
 import { ManageStorage } from './ManageStorage';
 import {ManageSystem} from "./ManageSystem";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Tab, Tabs} from "react-bootstrap";
 
 export function ManageTabs() {
-  const TAB_PLANET = 'planet';
-  const TAB_FACTORY = 'factory';
-  const TAB_STORAGE = 'storage';
-  const TAB_SYSTEM = 'system';
-
-  function getTabBody(key) {
-    if (key === TAB_PLANET) {
-      return <ManagePlanet/>;
-    } else if (key === TAB_FACTORY) {
-      return <ManageFactory/>;
-    } else if (key === TAB_STORAGE) {
-      return <ManageStorage/>;
-    } else if (key === TAB_SYSTEM) {
-      return <ManageSystem/>;
-    }
-  }
-
-  const TABS = [
-    { key: TAB_PLANET, name: 'Planet'},
-    { key: TAB_FACTORY, name: 'Factory'},
-    { key: TAB_STORAGE, name: 'Storage'},
-    { key: TAB_SYSTEM, name: 'System'},
-  ];
-  const [selectedTab, setSelectedTab] = useState(TAB_PLANET);
-
 
   return (
-    <div className='tab-set'>
-      {TABS.map(tab =>
-        <span key={tab.key} className={`tab ${selectedTab === tab.key ? 'active-tab' : 'non-active-tab'}`}
-              onClick={() => setSelectedTab(tab.key)}
-        >{tab.name}</span>
-      )}
-      <div className='tab-body'>
-        {getTabBody(selectedTab)}
-      </div>
-    </div>);
+    <Tabs defaultActiveKey='planet' id='manage-tabs' mountOnEnter unmountOnExit>
+      <Tab eventKey='planet' title='Planet'>
+        <ManagePlanet/>
+      </Tab>
+
+      <Tab eventKey='factory' title='Factory'>
+        <FactoryTabs/>
+      </Tab>
+
+      <Tab eventKey='storage' title='Storage'>
+        <ManageStorage/>
+      </Tab>
+
+      <Tab eventKey='system' title='System'>
+        <ManageSystem/>
+      </Tab>
+    </Tabs>);
 }
 

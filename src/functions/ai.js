@@ -1,4 +1,4 @@
-import {c, fly, game, utils} from './';
+import {c, fly, utils} from './';
 import {getShipSprite} from "./game";
 
 export function moveAliens() {

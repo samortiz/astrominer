@@ -2,6 +2,7 @@ Bugs
 
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
+ - Disable Resupply button when no ship is selected
 
 TODO
 - Storage show Equip by type with tabs

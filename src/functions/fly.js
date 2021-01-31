@@ -1,4 +1,4 @@
-import {utils, c, game, manage, ai, fly} from './';
+import {utils, c, game, manage, ai } from './';
 
 export function enterFlyState() {
   console.log("Take off");

@@ -1,4 +1,4 @@
-import {fly, game, utils} from './';
+import {fly, utils} from './';
 import lodash from 'lodash';
 import {getPlanetSprite, getShipSprite} from "./game";
 
