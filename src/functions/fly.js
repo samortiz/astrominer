@@ -1,4 +1,4 @@
-import {utils, c, game, manage, ai } from './';
+import {utils, c, game, manage, ai, fly} from './';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -132,7 +132,7 @@ export function setupNearby() {
  */
 export function repositionScreen() {
   // Reposition all the planets
-  for (let planet of window.world.system.nearby.planets) {
+  for (let planet of window.world.planets) {
     planetInView(window.world.ship, planet);
   }
   // Reposition all the aliens
@@ -431,7 +431,7 @@ function resetGame() {
   ship.vx = 0;
   ship.vy = 0;
   ship.rotation = rotation;
-  flyLoop(0); // redraw the screen once
+  repositionScreen();
   game.changeGameState(c.GAME_STATE.MANAGE);
 }
 

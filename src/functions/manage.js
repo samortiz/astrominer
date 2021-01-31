@@ -253,6 +253,7 @@ export function switchToShip(newShip) {
   newShipSprite.visible = true;
   newShip.rotation = selectedPlanet.lastLandingDir;
   newShipSprite.rotation = newShip.rotation;
+  newShipSprite.position.set(c.HALF_SCREEN_WIDTH, c.HALF_SCREEN_HEIGHT);
 
   let r = selectedPlanet.radius + (newShip.spriteWidth / 2);
   newShip.x = selectedPlanet.x + (r * Math.cos(newShip.rotation));

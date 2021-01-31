@@ -182,8 +182,8 @@ export const EQUIP_ALIEN_BLASTER_LIGHTNING = {name: "Alien Lighting Blaster", ob
 // Dmg 66/c Range:750
 export const EQUIP_STAPLE_GUN = {name: "Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:2, speed:3, lifetime:250, jitter:0.2, bulletFile:BULLET_STAPLE_FILE,
   cost: {titanium:10, gold:30, uranium:50}};
-// Dmg 150/c Range:900
-export const EQUIP_STAPLE_GUN_HEAVY = {name: "Heavy Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:4.5, speed:3, lifetime:300, jitter:0.15, bulletFile:BULLET_STAPLE_FILE,
+// Dmg 166/c Range:900
+export const EQUIP_STAPLE_GUN_HEAVY = {name: "Heavy Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:5, speed:3, lifetime:300, jitter:0.15, bulletFile:BULLET_STAPLE_FILE,
   cost: {titanium:10, gold:30, uranium:50}};
 
 // Secondary (more at end of file after the ships)
@@ -269,7 +269,7 @@ export const SHIP_FAST = {
   armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
-  imageScale: 1,
+  imageScale: 0.6,
   imageFile: SHIP_FAST_FILE,
   cost: {titanium:200, gold:100, uranium:50},
 };
@@ -292,7 +292,7 @@ export const SHIP_SKELETON = {
   armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
-  imageScale: 0.8,
+  imageScale: 0.75,
   imageFile: SHIP_SKELETON_FILE,
   cost: {titanium:150, gold:150, uranium:50},
 };
@@ -314,7 +314,7 @@ export const SHIP_HEAVY = {
   armor: 300,
   crashSpeed: 1.5,
   crashAngle: 0.4,
-  imageScale: 0.4,
+  imageScale: 0.5,
   imageFile: SHIP_HEAVY_FILE,
   cost: {titanium:500, gold:300, uranium:150},
 };
@@ -336,7 +336,7 @@ export const SHIP_FIGHTER = {
   armor: 200,
   crashSpeed: 1.5,
   crashAngle: 0.6,
-  imageScale: 0.5,
+  imageScale: 0.6,
   imageFile: SHIP_FIGHTER_FILE,
   cost: {titanium:500, gold:500, uranium:500},
 };
@@ -426,7 +426,7 @@ export const SHIP_ALIEN_FIRE = {
   armorMax: 250,
   armor: 250,
   crashSpeed: 2,
-  crashAngle: 10,
+  crashAngle: 0.4,
   imageScale: 1.5,
   imageFile: ALIEN_SHIP_FIRE_FILE,
   cost: {titanium:250, gold:200, uranium:80},
@@ -507,8 +507,8 @@ export const SHIP_TURRET = {
 export const SHIP_MISSILE = {
   name: "Missile",
   objType:OBJ_SHIP,
-  propulsion: 0.1, // best between 0.02 - 0.1
-  turnSpeed: 0.1, // // best between 0.3 - 0.07
+  propulsion: 0.08, // best between 0.02 - 0.1
+  turnSpeed: 0.25, // // best between 0.3 - 0.07
   resourcesMax: 0,
   resources: {
     titanium : 0,
@@ -517,8 +517,8 @@ export const SHIP_MISSILE = {
   },
   equipMax: 0,
   equip : [],
-  armorMax: 200,
-  armor: 200,
+  armorMax: 150,
+  armor: 150,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 1,
@@ -527,8 +527,8 @@ export const SHIP_MISSILE = {
   aiType: EQUIP_AI_MISSILE,
 };
 
-export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_HEAVY, SHIP_FIGHTER,
-  SHIP_ALIEN,  SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_FIRE, SHIP_ALIEN_STEALTH];
+export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_SKELETON, SHIP_HEAVY, SHIP_FIGHTER,
+ SHIP_ALIEN, SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_FIRE, SHIP_ALIEN_STEALTH];
 
 // This equipment needs to go after the ships (ugh)
 export const EQUIP_MINE_DEPLOYER = {name: "Mine Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:25, cool:0,
@@ -537,7 +537,7 @@ export const EQUIP_MINE_DEPLOYER = {name: "Mine Deployer", objType:OBJ_EQUIP, ty
 export const EQUIP_TURRET_DEPLOYER = {name: "Turret Deployer", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:100, cool:0,
   createShip: {type:SHIP_TURRET, dir: DIR_BEHIND_SHIP},
   cost: {titanium:100, gold:100, uranium:200}};
-export const EQUIP_MISSILE_LAUNCHER = {name: "Missile Launcher", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:50, cool:0,
+export const EQUIP_MISSILE_LAUNCHER = {name: "Missile Launcher", objType:OBJ_EQUIP, type:EQUIP_TYPE_SECONDARY_WEAPON, coolTime:75, cool:0,
   createShip: {type: SHIP_MISSILE, dir: DIR_AHEAD_OF_SHIP},
   cost: {titanium:50, gold:50, uranium:100}};
 

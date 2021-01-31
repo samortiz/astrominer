@@ -1,22 +1,23 @@
 Bugs
- - Aliens + Mines show up in wrong place after death (need to set sprite visible to false)
- - Using alien ship bugs didn't reset sprite X/Y
+
+Minor Bugs
+ - planet hugging aliens (maybe created too near planet)
 
 TODO
+- Storage show Equip by type with tabs
+- Factory buy equip by type with tabs
+- Factory progress bar
 - CSS on info screens
-- hookify components
-- Storage shows Equip by type with tabs
+- Visual indicator of secondary weapon ready
+- Switch secondary weapon in fly mode
+- Scroll long lists
 
 Ideas :
-- Visual indicator of secondary weapon ready
-- Shield key c
-- Scroll long lists
-- Equip : drones, Blink Lander (brake)
-- Enemy : mothership that constantly spawns small ships when in range
-- Factory progress bar
 - AI don't crash into other aliens
+- Enemy : mothership that spawns small ships when in range
+- Equip : drones, Blink Lander (brake)
+- continuous fire wo keypress
 - Aliens destroy buildings
-- double click fire to continuous fire
 - Aliens build buildings
 - zoom minimap
 - Self Destruct on FlyInfo

@@ -8,6 +8,7 @@ const DB_NAME = 'astrominer';
 const DB_VERSION = 1;
 
 /** Saves an object in localstorage.
+ * @param key key to store/retrieve
  * @param objToSave: should be an Object or Array, NOT a primitive as the JSON.parse will fail
  */
 export function saveLocalStorage(key, objToSave) {
