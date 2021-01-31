@@ -308,7 +308,7 @@ export const SHIP_HEAVY = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 6,
+  equipMax: 5,
   equip : [EQUIP_BRAKE],
   armorMax : 300,
   armor: 300,
@@ -316,7 +316,7 @@ export const SHIP_HEAVY = {
   crashAngle: 0.4,
   imageScale: 0.5,
   imageFile: SHIP_HEAVY_FILE,
-  cost: {titanium:500, gold:300, uranium:150},
+  cost: {titanium:500, gold:300, uranium:250},
 };
 
 export const SHIP_FIGHTER = {
@@ -324,7 +324,7 @@ export const SHIP_FIGHTER = {
   objType:OBJ_SHIP,
   propulsion: 0.08, // best between 0.02 - 0.1
   turnSpeed: 0.07, // // best between 0.3 - 0.07
-  resourcesMax: 120,
+  resourcesMax: 200,
   resources: {
     titanium : 0,
     gold : 0,
@@ -332,13 +332,13 @@ export const SHIP_FIGHTER = {
   },
   equipMax: 6,
   equip : [EQUIP_BRAKE],
-  armorMax : 200,
-  armor: 200,
+  armorMax : 300,
+  armor: 300,
   crashSpeed: 1.5,
   crashAngle: 0.6,
   imageScale: 0.6,
   imageFile: SHIP_FIGHTER_FILE,
-  cost: {titanium:500, gold:500, uranium:500},
+  cost: {titanium:500, gold:500, uranium:400},
 };
 
 export const SHIP_ALIEN_TURRET = {

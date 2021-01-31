@@ -7,23 +7,21 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log("created world");
     window.world = game.createEmptyWorld();
     this.pixiRef = React.createRef();
   }
 
 componentDidMount() {
-  console.log("mounted");
   this.createPixiApp();
 }
 
 render() {
   return (
-    <table>
+    <table className='root-app'>
       <tbody>
       <tr>
         <td>
-        <div ref={this.pixiRef} />
+        <div className='viewport' ref={this.pixiRef} />
         </td>
         <td className='info-panel'>
           <InfoPanel />
@@ -35,7 +33,6 @@ render() {
   }
 
   createPixiApp = () => {
-    console.log("Creating PIXI app");
     let app = new window.PIXI.Application({width: c.SCREEN_WIDTH, height: c.SCREEN_HEIGHT});
     app.renderer.backgroundColor = c.BLACK;
     this.pixiRef.current.appendChild(app.view);

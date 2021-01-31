@@ -1,3 +1,50 @@
 .info-panel {
   vertical-align: top;
 }
+
+.viewport {
+  border-right:2px solid #404040;
+}
+
+.root-app {
+  border: 2px solid #404040;
+  background-color: #202020;
+  color:#ccc
+}
+
+input {
+  background-color:#C5C5C5;
+  color:black;
+}
+
+button {
+  border-color:#e0e0ff;
+  background-color: #d0d0d5;
+}
+
+button:active {
+  background-color: #f0f0ff;
+}
+
+button:disabled,
+button[disabled] {
+  background-color: #aaa;
+  color:#555;
+  border-color:#ccc;
+}
+
+.nav-item {
+  background-color: #555;
+  color:#ccc;
+}
+
+a.nav-item:hover {
+  border-color:#55f;
+  color:#eef;
+}
+
+.nav-tabs a.nav-link.active {
+  background-color: #aaa;
+  color:black;
+  border-color:#ccc
+}

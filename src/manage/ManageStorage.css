@@ -22,11 +22,11 @@
 
 .selected-item {
   font-weight:bold;
+  background-color: #555;
 }
 
 .non-selected-item {
   font-weight:normal;
-  background-color: #CECECE;  
 }
 
 .item-details {
