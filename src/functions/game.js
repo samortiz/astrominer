@@ -78,7 +78,7 @@ export function setupWorld() {
   // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y-70);
 
   // DEBUG Planet
-  // let testPlanet = createPlanet(c.GREEN_PLANET_FILE, "home", 100, 200, {
+  // let testPlanet = createPlanet(c.ROCK_PLANET_FILE, "home", 100, 200, {
   //   titanium : 20500,
   //   gold : 51000,
   //   uranium : 5000,

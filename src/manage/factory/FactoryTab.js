@@ -5,7 +5,7 @@ import {FactoryButton} from "./FactoryButton";
 
 export function FactoryTab({type, templateList}) {
   return (
-    <div  className='container factory-tab' style={{maxHeight: (c.SCREEN_HEIGHT - 200)}}>
+    <div className='container factory-tab' style={{maxHeight: (c.SCREEN_HEIGHT - 200), minWidth:'400px'}}>
       {templateList.map((template, i) => {
         return <FactoryButton key={type+i} template={template} />;
       })}

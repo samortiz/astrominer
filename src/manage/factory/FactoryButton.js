@@ -25,12 +25,12 @@ export function FactoryButton({template}) {
   }
 
   return (
-    <Row className='build-button'>
+    <Row className="pt-2">
       <Col xs='1'>
         {existingInventory}
       </Col>
       <Col xs='5'>
-      <button
+      <button className="factory-button"
         disabled={!manage.hasFactory(planet) || !game.canAfford(planet, ship, template.cost)}
         onClick={() => build(template)}>{template.name}</button>
       </Col>

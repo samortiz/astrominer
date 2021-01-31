@@ -1,7 +1,8 @@
-.build-button {
-  padding:5px;
+.factory-button {
+  white-space: nowrap;
 }
 
 .cost {
   padding-left:5px;
+  white-space: nowrap;
 }
