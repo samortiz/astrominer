@@ -4,7 +4,8 @@
 }
 
 .game-list-row {
-  padding-top:10px;
+  padding-top:5px;
+  padding-bottom:5px;
 }
 
 .game-list-item {
@@ -12,5 +13,5 @@
 }
 
 .selected-game {
-  background-color: #AAFFFF;
+  background-color: #335555;
 }

@@ -179,8 +179,8 @@ export const EQUIP_ALIEN_BLASTER_FAST = {name: "Alien Fast Blaster", objType:OBJ
 // Dmg 125/c Range:600
 export const EQUIP_ALIEN_BLASTER_LIGHTNING = {name: "Alien Lighting Blaster", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:8, cool:0, damage:10, speed:12, lifetime:50, jitter:0.08, bulletFile:BULLET_BLUE_FILE,
   cost: {titanium:10, gold:30, uranium:50}};
-// Dmg 66/c Range:750
-export const EQUIP_STAPLE_GUN = {name: "Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:2, speed:3, lifetime:250, jitter:0.2, bulletFile:BULLET_STAPLE_FILE,
+// Dmg 100/c Range:750
+export const EQUIP_STAPLE_GUN = {name: "Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:3, speed:3, lifetime:250, jitter:0.2, bulletFile:BULLET_STAPLE_FILE,
   cost: {titanium:10, gold:30, uranium:50}};
 // Dmg 166/c Range:900
 export const EQUIP_STAPLE_GUN_HEAVY = {name: "Heavy Staple Gun", objType:OBJ_EQUIP, type:EQUIP_TYPE_PRIMARY_WEAPON, coolTime:3, cool:0, damage:5, speed:3, lifetime:300, jitter:0.15, bulletFile:BULLET_STAPLE_FILE,
@@ -219,23 +219,23 @@ export const SHIP_EXPLORER = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 2,
-  equip : [EQUIP_BRAKE, EQUIP_BLASTER], // DEBUG blaster
+  equipMax: 3,
+  equip : [EQUIP_BRAKE],
   armorMax: 50,
   armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
   imageScale: 0.6,
   imageFile: SHIP_EXPLORER_FILE,
-  cost: {titanium:40, gold:30, uranium:30},
+  cost: {titanium:40, gold:20, uranium:10},
 };
 
 export const SHIP_CARGO = {
   name: "Cargo",
   objType:OBJ_SHIP,
-  propulsion: 0.027, // best between 0.02 - 0.1
-  turnSpeed: 0.04, // // best between 0.3 - 0.07
-  resourcesMax: 600,
+  propulsion: 0.025, // best between 0.02 - 0.1
+  turnSpeed: 0.02, // // best between 0.3 - 0.07
+  resourcesMax: 750,
   resources: {
     titanium : 0,
     gold : 0,
@@ -256,14 +256,14 @@ export const SHIP_FAST = {
   name: "Fast",
   objType:OBJ_SHIP,
   propulsion: 0.1, // best between 0.02 - 0.1
-  turnSpeed: 0.08, // // best between 0.3 - 0.07
+  turnSpeed: 0.07, // // best between 0.3 - 0.07
   resourcesMax: 40,
   resources: {
     titanium : 0,
     gold : 0,
     uranium : 0,
   },
-  equipMax: 3,
+  equipMax: 4,
   equip : [EQUIP_BRAKE],
   armorMax : 50,
   armor: 50,
@@ -274,12 +274,11 @@ export const SHIP_FAST = {
   cost: {titanium:200, gold:100, uranium:50},
 };
 
-
 export const SHIP_SKELETON = {
   name: "Skeleton",
   objType:OBJ_SHIP,
   propulsion: 0.03, // best between 0.02 - 0.1
-  turnSpeed: 0.045, // // best between 0.3 - 0.07
+  turnSpeed: 0.03, // // best between 0.3 - 0.07
   resourcesMax: 30,
   resources: {
     titanium : 0,
@@ -292,9 +291,9 @@ export const SHIP_SKELETON = {
   armor: 50,
   crashSpeed: 2,
   crashAngle: 0.5,
-  imageScale: 0.75,
+  imageScale: 0.7,
   imageFile: SHIP_SKELETON_FILE,
-  cost: {titanium:150, gold:150, uranium:50},
+  cost: {titanium:200, gold:200, uranium:50},
 };
 
 export const SHIP_HEAVY = {
@@ -308,10 +307,10 @@ export const SHIP_HEAVY = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 5,
+  equipMax: 6,
   equip : [EQUIP_BRAKE],
-  armorMax : 300,
-  armor: 300,
+  armorMax : 400,
+  armor: 400,
   crashSpeed: 1.5,
   crashAngle: 0.4,
   imageScale: 0.5,
@@ -330,7 +329,7 @@ export const SHIP_FIGHTER = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 6,
+  equipMax: 7,
   equip : [EQUIP_BRAKE],
   armorMax : 300,
   armor: 300,
@@ -338,13 +337,13 @@ export const SHIP_FIGHTER = {
   crashAngle: 0.6,
   imageScale: 0.6,
   imageFile: SHIP_FIGHTER_FILE,
-  cost: {titanium:500, gold:500, uranium:400},
+  cost: {titanium:500, gold:500, uranium:500},
 };
 
 export const SHIP_ALIEN_TURRET = {
   name: "Alien Turret",
   objType:OBJ_SHIP,
-  propulsion: 0.05, // best between 0.02 - 0.1
+  propulsion: 0.001, // best between 0.02 - 0.1
   turnSpeed: 0.05, // // best between 0.3 - 0.07
   resourcesMax: 100,
   resources: {
@@ -375,7 +374,7 @@ export const SHIP_ALIEN = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 3,
+  equipMax: 4,
   equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
   armorMax: 100,
   armor: 100,
@@ -398,8 +397,8 @@ export const SHIP_ALIEN_LARGE = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 3,
-  equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
+  equipMax: 6,
+  equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER_FAST],
   armorMax: 300,
   armor: 300,
   crashSpeed: 2,
@@ -421,7 +420,7 @@ export const SHIP_ALIEN_FIRE = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 3,
+  equipMax: 5,
   equip : [EQUIP_BRAKE, EQUIP_STAPLE_GUN],
   armorMax: 250,
   armor: 250,
@@ -444,8 +443,8 @@ export const SHIP_ALIEN_STEALTH = {
     gold : 0,
     uranium : 0,
   },
-  equipMax: 3,
-  equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER],
+  equipMax: 5,
+  equip : [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER_FAST],
   armorMax: 150,
   armor: 150,
   crashSpeed: 2,
@@ -611,7 +610,7 @@ export const XP_LEVELS = {
 export const PLANET_DENSITY = new Map();
 PLANET_DENSITY.set(GREEN_PLANET_FILE, 0.01)
 PLANET_DENSITY.set(PURPLE_PLANET_FILE, 0.015)
-PLANET_DENSITY.set(RED_PLANET_FILE, 0.02)
+PLANET_DENSITY.set(RED_PLANET_FILE, 0.019)
 PLANET_DENSITY.set(ROCK_PLANET_FILE, 0.025)
 
 // Universe Rings

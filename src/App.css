@@ -7,7 +7,6 @@
 }
 
 .root-app {
-  border: 2px solid #404040;
   background-color: #202020;
   color:#ccc
 }
@@ -33,18 +32,26 @@ button[disabled] {
   border-color:#ccc;
 }
 
+/* Tab bg/fg */
 .nav-item {
   background-color: #555;
   color:#ccc;
 }
 
+/* Tab when clicking */
 a.nav-item:hover {
   border-color:#55f;
   color:#eef;
 }
 
+/* Active tab */
 .nav-tabs a.nav-link.active {
   background-color: #aaa;
   color:black;
   border-color:#ccc
+}
+
+/* Dark line below the tabs */
+nav.nav-tabs {
+  border-bottom: 1px solid #101010;
 }

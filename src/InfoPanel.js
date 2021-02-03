@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from './functions';
 import './InfoPanel.css';
-import { InfoFly } from './InfoFly';
+import { InfoFly } from './fly/InfoFly';
 import { ManageTabs } from './manage/ManageTabs';
 
 export class InfoPanel extends React.Component {

@@ -1,0 +1,16 @@
+.heatbar-container {
+  position:relative;
+  display:inline-block;
+}
+
+.heatbar-base {
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.heatbar-color {
+  position:absolute;
+  top:0;
+  left:0;
+}

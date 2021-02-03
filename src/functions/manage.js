@@ -327,12 +327,24 @@ export function addEquip(ship, newEquip) {
   }
 }
 
+export function selectFirstSecondaryWeapon(ship) {
+  for (let i=0; i< ship.equip.length; i++) {
+    if (ship.equip[i].type === c.EQUIP_TYPE_SECONDARY_WEAPON) {
+      ship.selectedSecondaryWeaponIndex = i;
+      return;
+    }
+  } // for
+  // Couldn't find a secondary weapon
+  ship.selectedSecondaryWeaponIndex = -1;
+}
+
 export function moveEquipFromPlanetToShip(ship, planet, equipToMove) {
   // Remove from the planet
   ship.equip.push(equipToMove);
   addEquip(ship, equipToMove);
   // Remove the oldEquip from the planet
   lodash.remove(planet.equip, (e) => e.id === equipToMove.id);
+  selectFirstSecondaryWeapon(ship);
 }
 
 export function moveEquipFromShipToPlanet(ship, planet, equipToMove) {
@@ -361,6 +373,7 @@ export function moveEquipFromShipToPlanet(ship, planet, equipToMove) {
   }
   // Remove the oldEquip from the ship (no new equipment added)
   lodash.remove(ship.equip, (e) => e.id === equipToMove.id);
+  selectFirstSecondaryWeapon(ship);
 }
 
 /**

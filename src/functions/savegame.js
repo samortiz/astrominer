@@ -46,7 +46,7 @@ function upgradeDB(event) {
 
 /**
  * Start using a newWorld, the old world and it's state will be discarded.
- * @param key : storage key where the world is kept
+ * param key:  storage key where the world is kept
  */
 export function loadWorld(key) {
   let dbRequest = indexedDB.open(DB_NAME, DB_VERSION);

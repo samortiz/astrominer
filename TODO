@@ -3,26 +3,30 @@ Bugs
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
  - Disable Resupply button when no ship is selected
+ - Resupply doesn't always fill ship
 
 TODO
-- Storage show Equip by type with tabs
+- Add brushed metal background
+- Add Repair button to planet for fast ship repair
+- Repair should use resources based on ship cost (too much titanium needed in game)
 - Factory buy equip by type with tabs
 - Factory progress bar
-- CSS on info screens
-- Visual indicator of secondary weapon ready
-- Switch secondary weapon in fly mode
+- Redo layout on Storage screen
 - Scroll long lists
+- Salvage / Destroy unwanted equipment and ships
 
 Ideas :
 - AI don't crash into other aliens
 - Enemy : mothership that spawns small ships when in range
 - Equip : drones, Blink Lander (brake)
 - continuous fire wo keypress
-- Aliens destroy buildings
-- Aliens build buildings
 - zoom minimap
 - Self Destruct on FlyInfo
 - Switching view to planet sets view on planet (without changing ship position?)
 - Planet change name
 - Storage edit ship name
+
+Maybe someday Ideas:
+- Aliens destroy buildings
+- Aliens build buildings
 

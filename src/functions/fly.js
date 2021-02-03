@@ -268,6 +268,23 @@ export function getActiveShield(ship) {
   return null;
 }
 
+/**
+ * @return the first active shield equip in the ship, and if none are active, returns the first shield it finds.
+ * returns an equip (not equip.shield like getActiveShield)
+ */
+export function getEquippedShield(ship) {
+  let shield = null;
+  for (const equip of ship.equip) {
+    if (equip.shield) {
+      shield = equip;
+      if (equip.shield.active) {
+        return shield;
+      }
+    }
+  } // for equip
+  return shield;
+}
+
 // Returns true if there is a collision and false otherwise
 export function detectCollisionWithPlanet(ship, shipSprite, planet) {
   const shield = getActiveShield(ship);
@@ -515,10 +532,28 @@ export function firePrimaryWeapon(ship, jitter) {
   }
 }
 
+export function getSecondaryWeapon(ship) {
+  if (!ship.selectedSecondaryWeaponIndex  || ship.selectedSecondaryWeaponIndex < 0) {
+    // Just find any secondary weapon - none was selected
+    return getEquip(ship, c.EQUIP_TYPE_SECONDARY_WEAPON);
+  }
+  // Find the equipped weapon
+  const equip = ship.equip[ship.selectedSecondaryWeaponIndex];
+  if (equip.type !== c.EQUIP_TYPE_SECONDARY_WEAPON) {
+    manage.selectFirstSecondaryWeapon(ship);
+    return getEquip(ship, c.EQUIP_TYPE_SECONDARY_WEAPON);
+  }
+  return equip;
+}
+
 export function fireSecondaryWeapon(ship) {
-  let weapon = getEquip(ship, c.EQUIP_TYPE_SECONDARY_WEAPON);
+  let weapon = getSecondaryWeapon(ship);
   if (weapon && (weapon.cool <= 0)) {
-    if (weapon.createShip && game.canAfford(null, ship, weapon.createShip.type.cost)) {
+    if (weapon.createShip) {
+      if (!game.canAfford(null, ship, weapon.createShip.type.cost)) {
+        // We don't fire the weapon - we can't afford it
+        return;
+      }
       game.payResourceCost(null, ship, weapon.createShip.type.cost);
       const mine = game.createShip(weapon.createShip.type, c.PLAYER);
       const mineSprite = game.getShipSprite(mine);

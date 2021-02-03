@@ -1,0 +1,16 @@
+.statusbutton-container {
+  position:relative;
+  display:inline-block;
+}
+
+.statusbutton-base {
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.statusbutton-color {
+  position:absolute;
+  top:0;
+  left:0;
+}

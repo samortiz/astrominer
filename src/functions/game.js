@@ -55,7 +55,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  //window.world.shipStartX = +1550;
+  // window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
@@ -78,14 +78,14 @@ export function setupWorld() {
   // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y-70);
 
   // DEBUG Planet
-  let testPlanet = createPlanet(c.ROCK_PLANET_FILE, "home", 100, 200, {
-    titanium : 20500,
-    gold : 51000,
-    uranium : 5000,
-  });
-  testPlanet.x = c.PLAYER_START_X - 150;
-  testPlanet.y = c.PLAYER_START_Y ;
-  testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
+  // let testPlanet = createPlanet(c.ROCK_PLANET_FILE, "home", 100, 200, {
+  //   titanium : 20500,
+  //   gold : 51000,
+  //   uranium : 5000,
+  // });
+  // testPlanet.x = c.PLAYER_START_X - 150;
+  // testPlanet.y = c.PLAYER_START_Y ;
+  // testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
 
   createAliens();
   setupMiniMap();
@@ -384,6 +384,7 @@ export function createShip(shipType, owner) {
   for (let equip of ship.equip) {
     equip.id = window.world.nextId++;
   }
+  ship.selectedSecondaryWeaponIndex = -1;
   ship.owner = owner;
   ship.vx = 0; // velocityX
   ship.vy = 0; // velocityY
