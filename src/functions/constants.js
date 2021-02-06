@@ -550,17 +550,18 @@ export const ALL_EQUIP = [...EQUIP_UPGRADES, ...EQUIP_PRIMARY_WEAPONS, ...EQUIP_
 export const XP_LEVELS = {
   // Mining resources
   [ROCK_PLANET_FILE] : [
-    {xp:1, obj:SHIP_EXPLORER},
-    {xp:50, obj:EQUIP_BRAKE},
-    {xp:80, obj:EQUIP_BLASTER},
+    {xp:1, obj:EQUIP_BLASTER},
+    {xp:10, obj:EQUIP_BRAKE},
+    {xp:50, obj:SHIP_EXPLORER},
     {xp:100, obj:SHIP_CARGO},
     {xp:200, obj:EQUIP_ARMOR},
-    {xp:500, obj:EQUIP_SPEED_BOOST},
+    {xp:1000, obj:EQUIP_SPEED_BOOST},
   ],
   [RED_PLANET_FILE] : [
     {xp:10, obj:EQUIP_STORAGE},
-    {xp:50, obj:EQUIP_THRUSTER},
-    {xp:100, obj:SHIP_FAST},
+    {xp:50, obj:EQUIP_BLINK_BRAKE},
+    {xp:100, obj:EQUIP_THRUSTER},
+    {xp:500, obj:SHIP_FAST},
   ],
   [GREEN_PLANET_FILE] : [
     {xp:10, obj:SHIP_SKELETON},
@@ -570,28 +571,27 @@ export const XP_LEVELS = {
   ],
   [PURPLE_PLANET_FILE] : [
     {xp:10, obj:EQUIP_TURN_BOOST},
-    {xp:400, obj:EQUIP_GUNNERY_DROID},
-    {xp:750, obj:EQUIP_SHIELD_STRONG},
+    {xp:300, obj:EQUIP_SHIELD_STRONG},
+    {xp:750, obj:EQUIP_GUNNERY_DROID},
     {xp:1000, obj:SHIP_FIGHTER}
   ],
   // Killing aliens
   [SHIP_ALIEN_TURRET.name] : [
     {xp:1, obj:EQUIP_FAST_BLASTER},
-    {xp:3, obj:EQUIP_BLINK_BRAKE},
     {xp:5, obj:EQUIP_ALIEN_BLASTER},
-    {xp:7, obj:EQUIP_SHIELD},
+    {xp:10, obj:EQUIP_SHIELD},
   ],
   [SHIP_ALIEN.name] : [
     {xp:1, obj:EQUIP_MINE_DEPLOYER},
-    {xp:4, obj:EQUIP_STREAM_BLASTER},
-    {xp:7, obj:EQUIP_ENHANCED_STORAGE},
-    {xp:10, obj:SHIP_ALIEN},
+    {xp:5, obj:EQUIP_ALIEN_BLASTER_FAST},
+    {xp:10, obj:EQUIP_STREAM_BLASTER},
+    {xp:20, obj:SHIP_ALIEN},
   ],
   [SHIP_ALIEN_LARGE.name] : [
-    {xp:5, obj:EQUIP_SHIELD_LONG},
-    {xp:4, obj:EQUIP_ALIEN_BLASTER_FAST},
+    {xp:3, obj:EQUIP_SHIELD_LONG},
     {xp:7, obj:EQUIP_TURRET_DEPLOYER},
-    {xp:10, obj:SHIP_ALIEN_LARGE},
+    {xp:10, obj:EQUIP_ENHANCED_STORAGE},
+    {xp:15, obj:SHIP_ALIEN_LARGE},
   ],
   [SHIP_ALIEN_STEALTH.name] : [
     {xp:1, obj:EQUIP_SPRINKLER_BLASTER},

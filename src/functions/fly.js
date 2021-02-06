@@ -1,4 +1,4 @@
-import {utils, c, game, manage, ai } from './';
+import {ai, c, game, manage, utils} from './';
 
 export function enterFlyState() {
   console.log("Take off");
@@ -7,7 +7,7 @@ export function enterFlyState() {
 // Main play mode - flying
 export function flyLoop(delta) {
   if (delta > 1.005) {
-    console.log('Lagging with delta='+delta);
+    console.log('Lagging with delta=' + delta);
   }
   let world = window.world;
   let ship = window.world.ship;
@@ -111,8 +111,8 @@ export function setupNearby() {
   nearby.planets = [];
   // for every planet
   for (const planet of window.world.planets) {
-    if ((planet.x  + planet.radius >= minX) && (planet.x - planet.radius <= maxX ) &&
-        (planet.y + planet.radius >= minY) && (planet.y - planet.radius <= maxY )) {
+    if ((planet.x + planet.radius >= minX) && (planet.x - planet.radius <= maxX) &&
+      (planet.y + planet.radius >= minY) && (planet.y - planet.radius <= maxY)) {
       nearby.planets.push(planet);
     }
   } // for planet
@@ -120,8 +120,8 @@ export function setupNearby() {
   // for every ship
   nearby.ships = [];
   for (const ship of window.world.ships) {
-    if ((ship.x  + ship.radius >= minX) && (ship.x - ship.radius <= maxX ) &&
-      (ship.y + ship.radius >= minY) && (ship.y - ship.radius <= maxY )) {
+    if ((ship.x + ship.radius >= minX) && (ship.x - ship.radius <= maxX) &&
+      (ship.y + ship.radius >= minY) && (ship.y - ship.radius <= maxY)) {
       nearby.ships.push(ship);
     }
   } // for ship
@@ -131,6 +131,7 @@ export function setupNearby() {
  * Recalculates all the locations of planets and aliens
  */
 export function repositionScreen() {
+  setupNearby();
   // Reposition all the planets
   for (let planet of window.world.planets) {
     planetInView(window.world.ship, planet);
@@ -141,7 +142,7 @@ export function repositionScreen() {
 }
 
 /**
- * Cools all ship weapons, run in mainLoop 
+ * Cools all ship weapons, run in mainLoop
  */
 export function coolAllWeapons() {
   coolWeapons(window.world.ship);
@@ -164,7 +165,7 @@ export function coolWeapons(ship) {
       equip.weapon.cool -= 1;
     }
     if (equip.shield && equip.shield.active) {
-      equip.shield.lifetime  -= 1;
+      equip.shield.lifetime -= 1;
       if (equip.shield.lifetime <= 0) {
         equip.shield.lifetime = 0;
         disableShield(ship, equip.shield);
@@ -184,7 +185,7 @@ export function resetWeaponsCool(ship) {
 export function runDroids(ship) {
   for (let droid of ship.equip) {
     if ((droid.type === c.EQUIP_TYPE_REPAIR_DROID) && (ship.armor < ship.armorMax)) {
-      let cost = {titanium:droid.repairSpeed, gold:0, uranium:0};
+      let cost = {titanium: droid.repairSpeed, gold: 0, uranium: 0};
       if (game.canAfford(null, ship, cost)) {
         ship.armor += droid.repairSpeed;
         game.payResourceCost(null, ship, cost);
@@ -235,9 +236,9 @@ export function moveBackground(ship) {
 export function planetInView(ship, planet) {
   // Right side
   if ((ship.x + c.HALF_SCREEN_WIDTH + planet.radius < planet.x) || // Right
-      (ship.x - c.HALF_SCREEN_WIDTH - planet.radius > planet.x) || // Left
-      (ship.y + c.HALF_SCREEN_HEIGHT + planet.radius < planet.y) || // Bottom
-      (ship.y - c.HALF_SCREEN_HEIGHT - planet.radius > planet.y)) { // Top
+    (ship.x - c.HALF_SCREEN_WIDTH - planet.radius > planet.x) || // Left
+    (ship.y + c.HALF_SCREEN_HEIGHT + planet.radius < planet.y) || // Bottom
+    (ship.y - c.HALF_SCREEN_HEIGHT - planet.radius > planet.y)) { // Top
     // Planet is not currently visible, but if it has an Id then it used to be visible
     if (planet.spriteId) {
       const sprite = game.getPlanetSprite(planet);
@@ -298,7 +299,7 @@ export function detectCollisionWithPlanet(ship, shipSprite, planet) {
     let dist = utils.distanceBetween(point[0], point[1], planet.x, planet.y);
     if (dist < planet.radius - c.ALLOWED_OVERLAP) {
       return true;
-    } 
+    }
   }
   return false;
 }
@@ -315,9 +316,9 @@ export function detectCollisionWithAlien(ship, shipSprite, alien) {
     // Only works with circular aliens (need different logic for squares)
     if (alien.radius) {
       let dist = utils.distanceBetween(point[0], point[1], alien.x, alien.y);
-      if (dist < alien.radius - c.ALLOWED_OVERLAP) { 
+      if (dist < alien.radius - c.ALLOWED_OVERLAP) {
         return true;
-      } 
+      }
     }
   }
   return false;
@@ -334,7 +335,7 @@ function landShip(ship, planet) {
   let speed = Math.abs(ship.vx) + Math.abs(ship.vy);
   // 0 and PI*2 are right beside each other, so large values are very close to small values
   let success = ((dirDiff < ship.crashAngle) || (dirDiff > (Math.PI * 2 - ship.crashAngle)))
-                && (speed < ship.crashSpeed)
+    && (speed < ship.crashSpeed)
   // Stop moving
   ship.vx = 0;
   ship.vy = 0;
@@ -408,7 +409,7 @@ export function destroyShip(ship, afterExplosion) {
   ship.spriteId = null;
   explosionSprite.play();
   // This function runs after the animation finishes a loop
-  explosionSprite.onLoop= () => {
+  explosionSprite.onLoop = () => {
     explosionSprite.stop(); // pause until we crash again
     explosionSprite.visible = false;
     if (afterExplosion) {
@@ -423,7 +424,7 @@ function resetGame() {
   let planet = window.world.selectedPlanet;
   // The current ship is gone
   ship.resourcesMax = 0;
-  ship.resources = {titanium : 0,gold : 0,uranium : 0};
+  ship.resources = {titanium: 0, gold: 0, uranium: 0};
   ship.equip = [];
   ship.armorMax = 0;
   ship.armor = 0;
@@ -442,7 +443,7 @@ function resetGame() {
       window.world.selectedPlanet = window.world.planets[0];
     }
   }
-  let {x,y,rotation} = manage.getAvailablePlanetXY(planet, ship, planet.lastLandingDir, 20, 0);
+  let {x, y, rotation} = manage.getAvailablePlanetXY(planet, ship, planet.lastLandingDir, 20, 0);
   ship.x = x;
   ship.y = y;
   ship.vx = 0;
@@ -500,7 +501,7 @@ function brakeShip(ship) {
 function thrustShip(ship, left) {
   let thruster = getEquip(ship, c.EQUIP_TYPE_THRUSTER);
   if (thruster) {
-    let dir =utils.normalizeRadian(ship.rotation + ((left ? -1 : 1) * Math.PI/2)); // 90 deg turn
+    let dir = utils.normalizeRadian(ship.rotation + ((left ? -1 : 1) * Math.PI / 2)); // 90 deg turn
     const thrustX = thruster.thrustSpeed * Math.cos(dir);
     const thrustY = thruster.thrustSpeed * Math.sin(dir);
     if (thruster.thrustType === c.THRUST_MOMENTUM) {
@@ -510,7 +511,7 @@ function thrustShip(ship, left) {
       ship.x += thrustX;
       ship.y += thrustY;
     } else {
-      console.warn("Unable to use thruster with type "+thruster.thrustType);
+      console.warn("Unable to use thruster with type " + thruster.thrustType);
     }
   }
 }
@@ -533,7 +534,7 @@ export function firePrimaryWeapon(ship, jitter) {
 }
 
 export function getSecondaryWeapon(ship) {
-  if (!ship.selectedSecondaryWeaponIndex  || ship.selectedSecondaryWeaponIndex < 0) {
+  if (!ship.selectedSecondaryWeaponIndex || ship.selectedSecondaryWeaponIndex < 0) {
     // Just find any secondary weapon - none was selected
     return getEquip(ship, c.EQUIP_TYPE_SECONDARY_WEAPON);
   }
@@ -557,7 +558,7 @@ export function fireSecondaryWeapon(ship) {
       game.payResourceCost(null, ship, weapon.createShip.type.cost);
       const mine = game.createShip(weapon.createShip.type, c.PLAYER);
       const mineSprite = game.getShipSprite(mine);
-      const mineDistFromShip = ship.spriteWidth/2 + mine.spriteWidth/2 + 20;
+      const mineDistFromShip = ship.spriteWidth / 2 + mine.spriteWidth / 2 + 20;
       const dir = weapon.createShip.dir === c.DIR_AHEAD_OF_SHIP ? utils.normalizeRadian(ship.rotation - Math.PI) : ship.rotation;
       const {xAmt, yAmt} = utils.dirComponents(dir, mineDistFromShip);
       mine.x = ship.x - xAmt;
@@ -621,8 +622,8 @@ export function fireBullet(ship, gun, jitter) {
   const rotation = ship.rotation + jitterAmt;
   bullet.vx = ship.vx + gun.speed * Math.cos(rotation);
   bullet.vy = ship.vy + gun.speed * Math.sin(rotation);
-  bullet.x = ship.x + Math.sqrt(ship.spriteWidth*ship.spriteWidth + ship.spriteHeight*ship.spriteHeight)/2 * Math.cos(rotation);
-  bullet.y = ship.y + Math.sqrt(ship.spriteWidth*ship.spriteWidth + ship.spriteHeight*ship.spriteHeight)/2 * Math.sin(rotation);
+  bullet.x = ship.x + Math.sqrt(ship.spriteWidth * ship.spriteWidth + ship.spriteHeight * ship.spriteHeight) / 2 * Math.cos(rotation);
+  bullet.y = ship.y + Math.sqrt(ship.spriteWidth * ship.spriteWidth + ship.spriteHeight * ship.spriteHeight) / 2 * Math.sin(rotation);
 }
 
 /**
@@ -637,7 +638,7 @@ function findOrCreateBullet(bulletFile) {
     }
   }
   // Create a new bullet
-  let bullet = {active:true, damage:0, x:0, y:0, vx:0, vy:0, lifetime:1, fileName:bulletFile};
+  let bullet = {active: true, damage: 0, x: 0, y: 0, vx: 0, vy: 0, lifetime: 1, fileName: bulletFile};
   // Setup sprite
   let spritesheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
   let sprite = new window.PIXI.Sprite(spritesheet.textures[bulletFile]);
@@ -671,7 +672,7 @@ export function moveBullets() {
       bullet.y = bullet.y + bullet.vy;
       bullet.sprite.x = (bullet.x - ship.x) + c.HALF_SCREEN_WIDTH;
       bullet.sprite.y = (bullet.y - ship.y) + c.HALF_SCREEN_HEIGHT;
-      bullet.lifetime =  bullet.lifetime - 1;
+      bullet.lifetime = bullet.lifetime - 1;
       if (bullet.lifetime <= 0) {
         killBullet(bullet);
       }
@@ -696,17 +697,17 @@ function checkForBulletCollision(bullet) {
       bulletHitShip(bullet, ship, resetGame);
     } else {
       const shipSprite = game.getShipSprite(ship);
-      if (shipSprite.containsPoint({x:bullet.sprite.x, y:bullet.sprite.y})) {
+      if (shipSprite.containsPoint({x: bullet.sprite.x, y: bullet.sprite.y})) {
         bulletHitShip(bullet, ship, resetGame);
       }
     }
-  } 
+  }
   // Collision with alien ship
   for (let alien of window.world.system.nearby.ships) {
     if (alien.alive && alien.radius) {
       const shield = getActiveShield(alien);
       if ((shield && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) < shield.radius) || // hit alien shield
-          (utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius)) { // hit alien ship
+        (utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius)) { // hit alien ship
         bulletHitShip(bullet, alien, null);
       }
     }
@@ -788,13 +789,13 @@ export function drawMiniMap() {
       let y = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - view.y) * c.MINIMAP_SCALE_Y);
       const planetColor = window.world.selectedPlanet === planet ? c.MINIMAP_SELECTED_PLANET_COLOR : c.MINIMAP_PLANET_COLOR;
       g.lineStyle(2, planetColor);
-      g.drawCircle(x,y, planet.radius * c.MINIMAP_SCALE_X);
+      g.drawCircle(x, y, planet.radius * c.MINIMAP_SCALE_X);
       // Buildings
       for (let building of planet.buildings) {
-        let buildingX = l + c.HALF_MINIMAP_WIDTH + ((building.x - view.x) * c.MINIMAP_SCALE_X) -1.5;
-        let buildingY = t + c.HALF_MINIMAP_HEIGHT + ((building.y - view.y) * c.MINIMAP_SCALE_Y) -1.5;
+        let buildingX = l + c.HALF_MINIMAP_WIDTH + ((building.x - view.x) * c.MINIMAP_SCALE_X) - 1.5;
+        let buildingY = t + c.HALF_MINIMAP_HEIGHT + ((building.y - view.y) * c.MINIMAP_SCALE_Y) - 1.5;
         g.lineStyle(1, c.MINIMAP_BUILDING_COLOR);
-        g.drawRect(buildingX,buildingY,2,2);
+        g.drawRect(buildingX, buildingY, 2, 2);
       }
     }
   }
@@ -802,24 +803,24 @@ export function drawMiniMap() {
   g.lineStyle(1, c.MINIMAP_SHIP_COLOR);
   const x = l + c.HALF_MINIMAP_WIDTH + ((window.world.ship.x - view.x) * c.MINIMAP_SCALE_X);
   const y = t + c.HALF_MINIMAP_HEIGHT + ((window.world.ship.y - view.y) * c.MINIMAP_SCALE_Y);
-  g.drawCircle(x,y, 2);
+  g.drawCircle(x, y, 2);
 }
 
 /**
- * Handles clicks on the minimap 
+ * Handles clicks on the minimap
  */
 export function clickOnMinimap(clickX, clickY) {
   if (window.world.system.gameState === c.GAME_STATE.MANAGE) {
     const view = window.world.view
-    let globalX = view.x + ((clickX - c.HALF_MINIMAP_WIDTH) * (1/c.MINIMAP_SCALE_X));
-    let globalY = view.y + (((clickY - (c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT)) - c.HALF_MINIMAP_HEIGHT) * (1/c.MINIMAP_SCALE_X));
+    let globalX = view.x + ((clickX - c.HALF_MINIMAP_WIDTH) * (1 / c.MINIMAP_SCALE_X));
+    let globalY = view.y + (((clickY - (c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT)) - c.HALF_MINIMAP_HEIGHT) * (1 / c.MINIMAP_SCALE_X));
     for (let planet of window.world.planets) {
       if (utils.distanceBetween(globalX, globalY, planet.x, planet.y) <= planet.radius) {
         window.world.selectedPlanet = planet;
       }
     }
     view.x = globalX;
-    view.y =  globalY;
+    view.y = globalY;
     drawMiniMap();
   }
 }

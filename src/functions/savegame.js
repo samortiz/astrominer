@@ -41,7 +41,7 @@ function upgradeDB(event) {
   if (event.oldVersion >= 1) {
     db.deleteObjectStore(WORLD_STORE);
   }
-  db.createObjectStore(WORLD_STORE, { keyPath: "saveGameName" });
+  db.createObjectStore(WORLD_STORE, {keyPath: "saveGameName"});
 }
 
 /**
@@ -50,19 +50,19 @@ function upgradeDB(event) {
  */
 export function loadWorld(key) {
   let dbRequest = indexedDB.open(DB_NAME, DB_VERSION);
-  dbRequest.onerror = function(event) {
+  dbRequest.onerror = function (event) {
     console.log('error ', event);
   };
   dbRequest.onupgradeneeded = upgradeDB;
-  dbRequest.onsuccess = function(event) {
+  dbRequest.onsuccess = function (event) {
     let db = event.target.result;
     let transaction = db.transaction([WORLD_STORE]);
     let objectStore = transaction.objectStore(WORLD_STORE);
     let request = objectStore.get(key);
-    request.onerror = function(event) {
+    request.onerror = function (event) {
       console.log('Request error loading:', event);
     };
-    request.onsuccess = function(event) {
+    request.onsuccess = function (event) {
       const newWorld = request.result;
       const oldSystem = window.world.system;
       window.world = newWorld;
@@ -78,7 +78,7 @@ export function loadWorld(key) {
       window.world.ship.spriteId = null;
       const shipSprite = getShipSprite(window.world.ship);
       shipSprite.visible = true;
-      for (const alien of  window.world.ships) {
+      for (const alien of window.world.ships) {
         if (alien.spriteId) {
           alien.spriteId = null;
           getShipSprite(alien).visible = true;
@@ -102,19 +102,19 @@ export function saveWorld(key) {
   worldToStore.saveGameName = key;
 
   let dbRequest = indexedDB.open(DB_NAME, DB_VERSION);
-  dbRequest.onerror = function(event) {
+  dbRequest.onerror = function (event) {
     console.log('DB Request Error:', event);
   };
   dbRequest.onupgradeneeded = upgradeDB;
-  dbRequest.onsuccess = function(event) {
+  dbRequest.onsuccess = function (event) {
     let db = event.target.result;
     let transaction = db.transaction([WORLD_STORE], "readwrite");
     let objectStore = transaction.objectStore(WORLD_STORE);
     let objectStoreRequest = objectStore.put(worldToStore);
-    objectStoreRequest.onsuccess = function(event) {
+    objectStoreRequest.onsuccess = function (event) {
       utils.showToast('Saved game');
     };
-    objectStoreRequest.onerror = function(event) {
+    objectStoreRequest.onerror = function (event) {
       console.log('failed to save ', event.target);
     }
   }
@@ -122,19 +122,19 @@ export function saveWorld(key) {
 
 export function deleteWorld(key) {
   let dbRequest = indexedDB.open(DB_NAME, DB_VERSION);
-  dbRequest.onerror = function(event) {
+  dbRequest.onerror = function (event) {
     console.log('DB Request Error:', event);
   };
   dbRequest.onupgradeneeded = upgradeDB;
-  dbRequest.onsuccess = function(event) {
+  dbRequest.onsuccess = function (event) {
     let db = event.target.result;
     let transaction = db.transaction([WORLD_STORE], "readwrite");
     let objectStore = transaction.objectStore(WORLD_STORE);
     let objectStoreRequest = objectStore.delete(key);
-    objectStoreRequest.onsuccess = function(event) {
-      utils.showToast('Deleted game '+key);
+    objectStoreRequest.onsuccess = function (event) {
+      utils.showToast('Deleted game ' + key);
     };
-    objectStoreRequest.onerror = function(event) {
+    objectStoreRequest.onerror = function (event) {
       console.log('failed to delete ', event.target);
     }
   }

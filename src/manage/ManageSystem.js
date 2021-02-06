@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import { savegame, c } from '../functions';
+import {c, savegame} from '../functions';
 import './ManageSystem.css';
 import lodash from 'lodash';
 import {showToast} from "../functions/utils";
@@ -9,12 +9,10 @@ export function ManageSystem() {
   const nameInput = useRef();
   let gameNames = savegame.loadLocalStorage(c.LOCALSTORAGE_GAME_NAMES_KEY);
 
-  console.log('curr '+world.saveGameName);
-
   function setCurrentGame(newName) {
     nameInput.current.value = newName;
     world.saveGameName = newName;
-    console.log('new name '+newName);
+    console.log('new name ' + newName);
   }
 
   /**
@@ -52,11 +50,11 @@ export function ManageSystem() {
   }
 
   function deleteGame(gameName) {
-    if (!window.confirm("Are you sure you want to delete "+gameName+"?")) {
+    if (!window.confirm("Are you sure you want to delete " + gameName + "?")) {
       return;
     }
     savegame.deleteWorld(gameName);
-    gameNames = lodash.remove(gameNames, (name) => name !== gameName );
+    gameNames = lodash.remove(gameNames, (name) => name !== gameName);
     savegame.saveLocalStorage(c.LOCALSTORAGE_GAME_NAMES_KEY, gameNames);
     if (world.saveGameName === gameName) {
       world.saveGameName = null;
@@ -70,11 +68,12 @@ export function ManageSystem() {
     <div>
       <div className='system-section'>
         <div className='section'><b>Current Game</b></div>
-        <input type='text' defaultValue={world.saveGameName} onFocus={() => world.system.isTyping = true } onBlur={() => world.system.isTyping = false } ref={nameInput} />
-        <button name="Save" onClick={() => saveGame() }>Save</button>
+        <input type='text' defaultValue={world.saveGameName} onFocus={() => world.system.isTyping = true}
+               onBlur={() => world.system.isTyping = false} ref={nameInput}/>
+        <button name="Save" onClick={() => saveGame()}>Save</button>
         <div className='section'><b>Saved Game</b></div>
         {gameNames.map(gameName => (
-          <div key={gameName} className={'game-list-row '+(world.saveGameName === gameName ? 'selected-game' : '')}>
+          <div key={gameName} className={'game-list-row ' + (world.saveGameName === gameName ? 'selected-game' : '')}>
             <span className='game-list-item'><button onClick={() => loadGame(gameName)}>Load </button></span>
             <span className='game-list-item'><button onClick={() => deleteGame(gameName)}>Delete</button></span>
             <span className='game-list-item'>{gameName}</span>

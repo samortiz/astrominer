@@ -3,21 +3,21 @@
 }
 
 .viewport {
-  border-right:2px solid #404040;
+  border-right: 2px solid #404040;
 }
 
 .root-app {
   background-color: #202020;
-  color:#ccc
+  color: #ccc;
 }
 
 input {
-  background-color:#C5C5C5;
-  color:black;
+  background-color: #C5C5C5;
+  color: black;
 }
 
 button {
-  border-color:#e0e0ff;
+  border-color: #e0e0ff;
   background-color: #d0d0d5;
 }
 
@@ -28,27 +28,27 @@ button:active {
 button:disabled,
 button[disabled] {
   background-color: #aaa;
-  color:#555;
-  border-color:#ccc;
+  color: #555;
+  border-color: #ccc;
 }
 
 /* Tab bg/fg */
 .nav-item {
   background-color: #555;
-  color:#ccc;
+  color: #ccc;
 }
 
 /* Tab when clicking */
 a.nav-item:hover {
-  border-color:#55f;
-  color:#eef;
+  border-color: #55f;
+  color: #eef;
 }
 
 /* Active tab */
 .nav-tabs a.nav-link.active {
   background-color: #aaa;
-  color:black;
-  border-color:#ccc
+  color: black;
+  border-color: #ccc
 }
 
 /* Dark line below the tabs */

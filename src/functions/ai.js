@@ -55,7 +55,7 @@ export function moveAliens() {
  *         0 - shoots directly at player
  *         PI - shoot completely randomly
  */
-export function shootAt(shooter, x,y, jitter) {
+export function shootAt(shooter, x, y, jitter) {
   shooter.rotation = utils.normalizeRadian(Math.atan2(y - shooter.y, x - shooter.x));
   fly.firePrimaryWeapon(shooter, jitter);
 }
@@ -142,7 +142,7 @@ export function creeperAi(alien) {
  * Finds the nearest alien target to the x,y location
  * returns {target:X, dist:Y }  x and y will be null if no living targets are found
  */
-export function getNearestAlienTarget(x,y) {
+export function getNearestAlienTarget(x, y) {
   let target = null;
   let minDist = null;
   for (let alien of window.world.system.nearby.ships) {

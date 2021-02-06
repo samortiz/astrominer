@@ -10,7 +10,8 @@ export function InfoFly() {
   const shield = fly.getEquippedShield(ship);
 
   return (
-    <div className='section'>
+    <div className='section'
+         style={{backgroundImage: 'url("images/metalbackground.png")', backgroundSize: 'cover', height: '100%'}}>
       <div>{ship.name}</div>
 
       <table>
@@ -38,8 +39,8 @@ export function InfoFly() {
           <td>
             {Math.floor(ship.armor)} / {ship.armorMax}
           </td>
-          <td> </td>
-          <td> </td>
+          <td></td>
+          <td></td>
         </tr>
         </tbody>
       </table>
@@ -59,7 +60,7 @@ export function InfoFly() {
                 <StatusButton curr={equip.coolTime - equip.cool} max={equip.coolTime}/>
               </td>
               <td>
-              {equip.name}
+                {equip.name}
               </td>
             </tr>
           })}
@@ -67,11 +68,36 @@ export function InfoFly() {
         </table>
       </div>
 
-      <div className='section'>Resources</div>
-      <div> Titatium {Math.floor(ship.resources.titanium)}</div>
-      <div> Gold {Math.floor(ship.resources.gold)}</div>
-      <div> Uranium {Math.floor(ship.resources.uranium)}</div>
-
+      <div className='section'>
+        <table>
+          <tr>
+            <td className='bluescreen-container'>
+              <div className='bluescreen-background'>
+                <img src='images/blue_screen.png' className='stretch'/>
+              </div>
+              <div className='bluescreen-text'>
+                <table cellpadding='4'>
+                  <tr>
+                    <th colspan='100%'>Resources</th>
+                  </tr>
+                  <tr>
+                    <td>Titatium</td>
+                    <td>{Math.floor(ship.resources.titanium)}</td>
+                  </tr>
+                  <tr>
+                    <td>Gold</td>
+                    <td>{Math.floor(ship.resources.gold)}</td>
+                  </tr>
+                  <tr>
+                    <td>Uranium</td>
+                    <td>{Math.floor(ship.resources.uranium)}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
 
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import { InfoPanel } from './InfoPanel';
-import { utils, c, game, fly, ai } from './functions';
+import {InfoPanel} from './InfoPanel';
+import {ai, c, fly, game, utils} from './functions';
 
 export default class App extends React.Component {
 
@@ -11,25 +11,25 @@ export default class App extends React.Component {
     this.pixiRef = React.createRef();
   }
 
-componentDidMount() {
-  this.createPixiApp();
-}
+  componentDidMount() {
+    this.createPixiApp();
+  }
 
-render() {
-  return (
-    <table className='root-app'>
-      <tbody>
-      <tr>
-        <td>
-        <div className='viewport' ref={this.pixiRef} />
-        </td>
-        <td className='info-panel'>
-          <InfoPanel />
-        </td>
-      </tr>
-      </tbody>
-    </table>
-   );
+  render() {
+    return (
+      <table className='root-app' width='100%'>
+        <tbody>
+        <tr>
+          <td width='10%'>
+            <div className='viewport' ref={this.pixiRef}/>
+          </td>
+          <td className='info-panel' width='100%' height={c.SCREEN_HEIGHT + 'px'}>
+            <InfoPanel/>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    );
   }
 
   createPixiApp = () => {
@@ -53,7 +53,7 @@ render() {
     });
     window.world.system.app.ticker.add(delta => this.mainLoop(delta));
   }
-  
+
   // Main loop runs 60 times per sec
   mainLoop = (delta) => {
     if (window.world.system.gameLoop) {
@@ -80,5 +80,5 @@ render() {
     window.world.system.keys.e = utils.keyboardListener("e"); // thrust right
     window.world.system.keys.x = utils.keyboardListener("x"); // secondary weapon
   }
-  
+
 }

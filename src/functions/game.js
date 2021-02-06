@@ -1,27 +1,36 @@
-import { c, utils, fly, manage } from './';
+import {c, fly, manage, utils} from './';
 import lodash from 'lodash';
 
 /**
- * Creates an empty world object, with only basic properties. 
+ * Creates an empty world object, with only basic properties.
  * This will be populated by setupWorld()
  */
 export function createEmptyWorld() {
   return {
     saveGameName: null, // name of last game saved/loaded
-    ship:null,
+    ship: null,
     view: { // global XY for current view (in manage mode, always ship.xy in fly mode)
-      x:0,
-      y:0,
+      x: 0,
+      y: 0,
     },
-    ships:[],
-    planets:[],
-    selectedPlanet: {resources:{}},
+    ships: [],
+    planets: [],
+    selectedPlanet: {resources: {}},
     lastPlanetLanded: null,
     blueprints: {
-      ship:[],
-      equip:[],
-      xp: { [c.ROCK_PLANET_FILE]: 0, [c.RED_PLANET_FILE]: 0, [c.GREEN_PLANET_FILE]: 0, [c.PURPLE_PLANET_FILE]: 0,
-           [c.SHIP_ALIEN_TURRET.name]: 0, [c.SHIP_ALIEN.name]: 0, [c.SHIP_ALIEN_LARGE.name]: 0, [c.SHIP_ALIEN_STEALTH.name]: 0, [c.SHIP_ALIEN_FIRE.name]: 0},
+      ship: [],
+      equip: [],
+      xp: {
+        [c.ROCK_PLANET_FILE]: 0,
+        [c.RED_PLANET_FILE]: 0,
+        [c.GREEN_PLANET_FILE]: 0,
+        [c.PURPLE_PLANET_FILE]: 0,
+        [c.SHIP_ALIEN_TURRET.name]: 0,
+        [c.SHIP_ALIEN.name]: 0,
+        [c.SHIP_ALIEN_LARGE.name]: 0,
+        [c.SHIP_ALIEN_STEALTH.name]: 0,
+        [c.SHIP_ALIEN_FIRE.name]: 0
+      },
       xpLevels: lodash.cloneDeep(c.XP_LEVELS),
     },
     nextId: 100, // unique ID for sprites, equip, etc...
@@ -34,13 +43,13 @@ export function createEmptyWorld() {
       gameLoop: null, // loop function in this state
       bgSprite: null, // star background
       explosionSheet: null, // spritesheet for explosions
-      explosions : [], //contains sprites
+      explosions: [], //contains sprites
       bullets: [], // contains all the bullets
-      nearby: {planets:[], ships:[]}, // ships and planets near enough for collision detection and running AI
+      nearby: {planets: [], ships: []}, // ships and planets near enough for collision detection and running AI
       planetSpriteCache: {}, // {"green_planet.png" : Map(id:sprite, id:sprite)... }
       shipSpriteCache: {}, // {"alien_small.png" : Map(id:sprite, id:sprite)... }
       shieldSpriteCache: new Map(), // These sprites are each added to a ship and not reused
-      spriteContainers: {background:null, planets:null, bullets:null, ships:null, minimap:null},
+      spriteContainers: {background: null, planets: null, bullets: null, ships: null, minimap: null},
       miniMapGraphics: null, // used as a canvas for drawing the miniMap
       initializing: true, // set to false when the game fully running (after first draw)
     },
@@ -55,7 +64,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  // window.world.shipStartX = +1550;
+  //window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
@@ -64,28 +73,28 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  // world.ship.armorMax = 1000;
-  // world.ship.armor = 1000;
-  // world.ship.resources = {titanium:10000, gold:10000, uranium:10000 };
-  // world.ship.resourcesMax = 10000000;
-  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, c.EQUIP_BLINK_THRUSTER, lodash.cloneDeep(c.EQUIP_SHIELD), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
-  // world.ship.equipMax = world.ship.equip.length;
-  // world.blueprints.equip = [...c.ALL_EQUIP];
-  // world.blueprints.ship = [...c.ALL_SHIPS];
+  world.ship.armorMax = 5000;
+  world.ship.armor = 5000;
+  world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  world.ship.resourcesMax = 10000000;
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_ALIEN_BLASTER_FAST)];
+  world.ship.equipMax = world.ship.equip.length;
+  world.blueprints.equip = [...c.ALL_EQUIP];
+  world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
-  // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y+70);
-  // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y-70);
+  createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
+  createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);
 
   // DEBUG Planet
   // let testPlanet = createPlanet(c.ROCK_PLANET_FILE, "home", 100, 200, {
-  //   titanium : 20500,
-  //   gold : 51000,
-  //   uranium : 5000,
+  //   titanium: 20500,
+  //   gold: 51000,
+  //   uranium: 5000,
   // });
   // testPlanet.x = c.PLAYER_START_X - 150;
-  // testPlanet.y = c.PLAYER_START_Y ;
-  // testPlanet.resources.stored = {titanium:10000, gold:10000, uranium:10000};
+  // testPlanet.y = c.PLAYER_START_Y;
+  // testPlanet.resources.stored = {titanium: 10000, gold: 10000, uranium: 10000};
 
   createAliens();
   setupMiniMap();
@@ -127,20 +136,20 @@ export function createBackground() {
 export function createPlanets() {
   let container = window.world.system.spriteContainers.planets;
   for (let ring of c.UNIVERSE_RINGS) {
-    for (let i=0; i<ring.planetCount; i++) {
-      let fileName = ring.planetFiles[utils.randomInt(0, ring.planetFiles.length-1)];
-      let name = String.fromCharCode(65+Math.floor(Math.random() * 26)) + utils.randomInt(1000,999999);
+    for (let i = 0; i < ring.planetCount; i++) {
+      let fileName = ring.planetFiles[utils.randomInt(0, ring.planetFiles.length - 1)];
+      let name = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + utils.randomInt(1000, 999999);
       let radius = utils.randomInt(ring.minPlanetRadius, ring.maxPlanetRadius);
       let mass = radius * radius * c.PLANET_DENSITY.get(fileName);
       let maxResource = mass * 2 * 0.3;
       let minResource = mass * 0.1;
       // Setup the planet
       let planet = createPlanet(fileName, name, radius, mass, {
-        titanium : utils.randomInt(minResource, maxResource),
-        gold : utils.randomInt(minResource, maxResource),
-        uranium : utils.randomInt(minResource, maxResource),
+        titanium: utils.randomInt(minResource, maxResource),
+        gold: utils.randomInt(minResource, maxResource),
+        uranium: utils.randomInt(minResource, maxResource),
       }, container);
-      let {x,y} = getFreeXy(planet, ring.minDistToOtherPlanet, 0, ring.minDist, ring.maxDist);
+      let {x, y} = getFreeXy(planet, ring.minDistToOtherPlanet, 0, ring.minDist, ring.maxDist);
       planet.x = x;
       planet.y = y;
     }
@@ -152,11 +161,11 @@ export function createPlanets() {
  * @return {{nearestPlanetDist: number, nearestPlanet: null}}
  */
 function nearestPlanetDistance(origPlanet, x, y) {
-  let minDist = 99999999999; 
+  let minDist = 99999999999;
   let nearestPlanet = null;
   for (let planet of window.world.planets) {
     if (planet !== origPlanet) {
-      let dist = utils.distanceBetween(x,y, planet.x,planet.y) - planet.radius;
+      let dist = utils.distanceBetween(x, y, planet.x, planet.y) - planet.radius;
       if (origPlanet) {
         dist -= origPlanet.radius;
       }
@@ -166,7 +175,7 @@ function nearestPlanetDistance(origPlanet, x, y) {
       }
     }
   } // for planet
-  return {nearestPlanet:nearestPlanet, nearestPlanetDist:minDist};
+  return {nearestPlanet: nearestPlanet, nearestPlanetDist: minDist};
 }
 
 /**
@@ -174,17 +183,17 @@ function nearestPlanetDistance(origPlanet, x, y) {
  * @return {{nearestAlien: null, nearestAlienDist: number}}
  */
 function nearestAlienDistance(x, y) {
-  let minDist = 99999999999; 
+  let minDist = 99999999999;
   let nearestAlien = null;
   for (let alien of window.world.system.nearby.ships) {
     // This assumes the calling code alien is the same size
-    let dist = utils.distanceBetween(x,y, alien.x, alien.y) - (alien.radius * 2);
+    let dist = utils.distanceBetween(x, y, alien.x, alien.y) - (alien.radius * 2);
     if (!nearestAlien || (dist < minDist)) {
       minDist = dist;
       nearestAlien = alien;
     }
   } // for
-  return {nearestAlien:nearestAlien, nearestAlienDist:minDist};
+  return {nearestAlien: nearestAlien, nearestAlienDist: minDist};
 }
 
 /**
@@ -192,39 +201,39 @@ function nearestAlienDistance(x, y) {
  * This will recurse until it finds a free spot.
  * @return {{x, y}}
  */
-function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, failCount=0) {
-  let dir = utils.randomFloat(0, Math.PI*2);
+function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, failCount = 0) {
+  let dir = utils.randomFloat(0, Math.PI * 2);
   let dist = utils.randomInt(minDist, maxDist);
-  let {x,y} = utils.getPointFrom(0,0, dir, dist);
+  let {x, y} = utils.getPointFrom(0, 0, dir, dist);
   let np = 9999;
   if (minDistToPlanet > 0) {
-    let {nearestPlanetDist} = nearestPlanetDistance(planet, x,y);
+    let {nearestPlanetDist} = nearestPlanetDistance(planet, x, y);
     if (nearestPlanetDist < minDistToPlanet) {
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
     np = nearestPlanetDist;
   }
   if (minDistToAlien > 0) {
-    let {nearestAlienDist} = nearestAlienDistance(x,y);
+    let {nearestAlienDist} = nearestAlienDistance(x, y);
     if (nearestAlienDist < minDistToAlien) {
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
   }
   if (failCount > 200) {
-    console.warn("Had a hard time finding a spot, it took "+failCount+" tries on ring "+minDist+" np="+np);
+    console.warn("Had a hard time finding a spot, it took " + failCount + " tries on ring " + minDist + " np=" + np);
   }
-  return {x,y};
+  return {x, y};
 }
 
 // Creates and returns a planet (and adds it to the app)
 export function createPlanet(planetFile, name, radius, mass, resources) {
   let planet = {};
-  planet.name = name; 
+  planet.name = name;
   planet.x = 0; // temp should get reset
   planet.y = 0; // temp should get reset
   planet.mass = mass;
   planet.resources = {
-    stored: {titanium:0, gold:0, uranium:0},
+    stored: {titanium: 0, gold: 0, uranium: 0},
     raw: resources
   };
   planet.ships = []; // stored ships 
@@ -248,7 +257,7 @@ export function getPlanetSprite(planet) {
   let planetSpriteCache = window.world.system.planetSpriteCache[planet.spriteFile];
   // No cache for this file yet - create an empty cache
   if (!planetSpriteCache) {
-    planetSpriteCache= new Map();
+    planetSpriteCache = new Map();
     window.world.system.planetSpriteCache[planet.spriteFile] = planetSpriteCache;
   }
   // Lookup the sprite in the cache by ID
@@ -299,7 +308,7 @@ export function getShipSprite(ship) {
   let shipSpriteCache = window.world.system.shipSpriteCache[ship.imageFile];
   // No cache for this file yet - create an empty cache
   if (!shipSpriteCache) {
-    shipSpriteCache= new Map();
+    shipSpriteCache = new Map();
     window.world.system.shipSpriteCache[ship.imageFile] = shipSpriteCache;
   }
   // Lookup the sprite in the cache by ID
@@ -314,7 +323,7 @@ export function getShipSprite(ship) {
       foundSprite.rotation = ship.rotation;
       ship.spriteWidth = foundSprite.width;
       ship.spriteHeight = foundSprite.height;
-      ship.radius = foundSprite.width/2; // used for circular aliens
+      ship.radius = foundSprite.width / 2; // used for circular aliens
       ship.spriteId = spriteId;
       //console.log('found old sprite '+spriteId+' '+ship.imageFile);
       return foundSprite;
@@ -331,7 +340,7 @@ export function getShipSprite(ship) {
   sprite.visible = false;
   ship.spriteWidth = sprite.width;
   ship.spriteHeight = sprite.height;
-  ship.radius = sprite.width/2; // used for circular aliens
+  ship.radius = sprite.width / 2; // used for circular aliens
   ship.spriteId = window.world.nextId++;
   shipSpriteCache.set(ship.spriteId, sprite);
   window.world.system.spriteContainers.ships.addChild(sprite);
@@ -346,7 +355,7 @@ export function getShipSprite(ship) {
 export function getSpriteOrigWithHeight(sprite) {
   const origWidth = sprite.width;
   const origHeight = sprite.height;
-  sprite.scale.set(1,1);
+  sprite.scale.set(1, 1);
   const width = sprite.width;
   const height = sprite.height;
   sprite.width = origWidth;
@@ -355,7 +364,7 @@ export function getSpriteOrigWithHeight(sprite) {
 }
 
 export function getShieldSprite(ship, shield) {
-  const cacheId = ship.id+'~'+shield.spriteFile;
+  const cacheId = ship.id + '~' + shield.spriteFile;
   // Lookup the sprite in the cache by ID
   let shieldSprite = window.world.system.shieldSpriteCache.get(cacheId);
   if (shieldSprite) {
@@ -409,7 +418,7 @@ export function createAlien(shipType, x, y) {
 export function createAliens() {
   for (let ring of c.UNIVERSE_RINGS) {
     for (const alienInfo of ring.aliens) {
-      for (let i=0; i<alienInfo.count; i++) {
+      for (let i = 0; i < alienInfo.count; i++) {
         let {x, y} = getFreeXy(null, c.MIN_ALIEN_DIST_TO_PLANET, c.MIN_ALIEN_DIST_TO_ALIEN, ring.minDist, ring.maxDist);
         createAlien(alienInfo.file, x, y);
       } // for i
@@ -424,26 +433,26 @@ export function setupMiniMap() {
 
   // Mask so drawings don't spill out of the map
   let mask = new window.PIXI.Graphics();
-  mask.drawRect(0, c.SCREEN_HEIGHT-c.MINIMAP_HEIGHT, c.MINIMAP_WIDTH, c.SCREEN_HEIGHT);
+  mask.drawRect(0, c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT, c.MINIMAP_WIDTH, c.SCREEN_HEIGHT);
   mask.renderable = true;
   mask.cacheAsBitmap = true;
   miniMapContainer.addChild(mask);
-  miniMapContainer.mask = mask;  
+  miniMapContainer.mask = mask;
 
   // Graphics for drawing shapes on
   let g = new window.PIXI.Graphics();
-  miniMapContainer.addChild(g);  
+  miniMapContainer.addChild(g);
   window.world.system.miniMapGraphics = g;
 }
 
 /**
- * Called when the user clicks on the screen 
+ * Called when the user clicks on the screen
  */
 export function click(event) {
   let x = event.data.global.x;
   let y = event.data.global.y;
-  if ((x < c.MINIMAP_WIDTH) && (y> c.SCREEN_HEIGHT-c.MINIMAP_HEIGHT)) {
-    fly.clickOnMinimap(x,y);
+  if ((x < c.MINIMAP_WIDTH) && (y > c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT)) {
+    fly.clickOnMinimap(x, y);
   }
 }
 
@@ -475,16 +484,16 @@ export function runBuildings() {
       }
     } // for building
     // If planet is out of resources stop the mine animations
-    if ( (planet.resources.raw.titanium === 0) 
+    if ((planet.resources.raw.titanium === 0)
       && (planet.resources.raw.gold === 0)
       && (planet.resources.raw.uranium === 0)) {
-        const planetSprite = getPlanetSprite(planet);
-        for (const buildingSprite of planetSprite.children) {
-          // all animated sprites stop (this may not be true if new building types are added)
-          if (buildingSprite.animationSpeed) {
-            buildingSprite.animationSpeed = 0;
-          }
+      const planetSprite = getPlanetSprite(planet);
+      for (const buildingSprite of planetSprite.children) {
+        // all animated sprites stop (this may not be true if new building types are added)
+        if (buildingSprite.animationSpeed) {
+          buildingSprite.animationSpeed = 0;
         }
+      }
     }
   } // for planet
 }
@@ -523,14 +532,14 @@ export function addAlienXp(ship) {
 }
 
 export function addBlueprint(nextLevel) {
-  utils.showToast('New plan: '+nextLevel.obj.name);
+  utils.showToast('New plan: ' + nextLevel.obj.name);
   let blueprints = window.world.blueprints;
   if (nextLevel.obj.objType === c.OBJ_EQUIP) {
     blueprints.equip.push(nextLevel.obj);
   } else if (nextLevel.obj.objType === c.OBJ_SHIP) {
     blueprints.ship.push(nextLevel.obj);
   } else {
-    console.warn("Could not find blueprint of type "+nextLevel.obj.objType+" nextLevel=",nextLevel);
+    console.warn("Could not find blueprint of type " + nextLevel.obj.objType + " nextLevel=", nextLevel);
   }
 }
 
@@ -554,8 +563,8 @@ export function canAfford(planet, ship, resources) {
     uranium += ship.resources.uranium;
   }
   return (titanium >= resources.titanium)
-      && (gold >= resources.gold)
-      && (uranium >= resources.uranium);
+    && (gold >= resources.gold)
+    && (uranium >= resources.uranium);
 }
 
 /**
@@ -575,7 +584,7 @@ export function payResourceCost(planet, ship, resources) {
 export function payResource(planet, ship, resourceType, amount) {
   let paid = -amount; // amount owing (overwritten if some payment comes from the planet)
   if (planet) {
-    paid = planet.resources.stored[resourceType] - amount; 
+    paid = planet.resources.stored[resourceType] - amount;
     if (paid >= 0) {
       planet.resources.stored[resourceType] -= amount;
       return;
@@ -584,14 +593,14 @@ export function payResource(planet, ship, resourceType, amount) {
       planet.resources.stored[resourceType] = 0;
     }
   }
-  if (ship) { 
+  if (ship) {
     ship.resources[resourceType] = ship.resources[resourceType] + paid;
     if (ship.resources[resourceType] < 0) {
-      console.warn("Ship is in debt "+ship.resources[resourceType]+" "+resourceType);
+      console.warn("Ship is in debt " + ship.resources[resourceType] + " " + resourceType);
     }
   } else if (paid < 0) {
     planet.resources.stored[resourceType] = planet.resources.stored[resourceType] + paid;
-    console.warn("Planet is in debt "+planet.resources.stored[resourceType]+" "+resourceType);
+    console.warn("Planet is in debt " + planet.resources.stored[resourceType] + " " + resourceType);
   }
 }
 
