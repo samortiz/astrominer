@@ -70,16 +70,20 @@ export function InfoFly() {
 
       <div className='section'>
         <table>
+          <tbody>
           <tr>
             <td className='bluescreen-container'>
               <div className='bluescreen-background'>
                 <img src='images/blue_screen.png' className='stretch'/>
               </div>
               <div className='bluescreen-text'>
-                <table cellpadding='4'>
+                <table cellPadding='4'>
+                  <thead>
                   <tr>
-                    <th colspan='100%'>Resources</th>
+                    <th colSpan='100%'>Resources</th>
                   </tr>
+                  </thead>
+                  <tbody>
                   <tr>
                     <td>Titatium</td>
                     <td>{Math.floor(ship.resources.titanium)}</td>
@@ -92,10 +96,12 @@ export function InfoFly() {
                     <td>Uranium</td>
                     <td>{Math.floor(ship.resources.uranium)}</td>
                   </tr>
+                  </tbody>
                 </table>
               </div>
             </td>
           </tr>
+          </tbody>
         </table>
       </div>
 

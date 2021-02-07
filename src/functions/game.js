@@ -21,10 +21,10 @@ export function createEmptyWorld() {
       ship: [],
       equip: [],
       xp: {
-        [c.ROCK_PLANET_FILE]: 0,
-        [c.RED_PLANET_FILE]: 0,
-        [c.GREEN_PLANET_FILE]: 0,
-        [c.PURPLE_PLANET_FILE]: 0,
+        [c.PLANET_ROCK_FILE]: 0,
+        [c.PLANET_RED_FILE]: 0,
+        [c.PLANET_GREEN_FILE]: 0,
+        [c.PLANET_PURPLE_FILE]: 0,
         [c.SHIP_ALIEN_TURRET.name]: 0,
         [c.SHIP_ALIEN.name]: 0,
         [c.SHIP_ALIEN_LARGE.name]: 0,
@@ -64,7 +64,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  //window.world.shipStartX = +1550;
+  window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
@@ -278,7 +278,7 @@ export function getPlanetSprite(planet) {
   planetSprite.anchor.set(0.5, 0.5);
   let spriteScale = planet.radius * 2 / planetSprite.width;
   // Planets with atmosphere are a little smaller than the full image size
-  if ((planet.spriteFile === c.PURPLE_PLANET_FILE) || (planet.spriteFile === c.GREEN_PLANET_FILE)) {
+  if ((planet.spriteFile === c.PLANET_PURPLE_FILE) || (planet.spriteFile === c.PLANET_GREEN_FILE)) {
     spriteScale = spriteScale * 1.08;
   }
   planetSprite.scale.set(spriteScale, spriteScale);

@@ -1,4 +1,5 @@
 import {ai, c, game, manage, utils} from './';
+import {getShipSprite} from "./game";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -128,14 +129,21 @@ export function setupNearby() {
 }
 
 /**
- * Recalculates all the locations of planets and aliens
+ * Redraw all planets and aliens
  */
 export function repositionScreen() {
-  setupNearby();
+  const ship = window.world.ship;
   // Reposition all the planets
   for (let planet of window.world.planets) {
-    planetInView(window.world.ship, planet);
+    planetInView(ship, planet);
   }
+  for (const ship of window.world.ships) {
+    if (ship.spriteId) {
+      getShipSprite(ship).visible = false;
+      ship.spriteId = null;
+    }
+  }
+  setupNearby();
   // Reposition all the aliens
   ai.moveAliens();
   drawMiniMap();

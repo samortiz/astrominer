@@ -1,6 +1,5 @@
-import {fly, utils} from './';
+import {fly, game, utils} from './';
 import lodash from 'lodash';
-import {getPlanetSprite, getShipSprite} from "./game";
 
 // IndexedDB constants
 const WORLD_STORE = 'world';
@@ -76,20 +75,8 @@ export function loadWorld(key) {
 
       // Reset/Redraw all the sprites
       window.world.ship.spriteId = null;
-      const shipSprite = getShipSprite(window.world.ship);
+      const shipSprite = game.getShipSprite(window.world.ship);
       shipSprite.visible = true;
-      for (const alien of window.world.ships) {
-        if (alien.spriteId) {
-          alien.spriteId = null;
-          getShipSprite(alien).visible = true;
-        }
-      }
-      for (const planet of window.world.planets) {
-        if (planet.spriteId) {
-          planet.spriteId = null;
-          getPlanetSprite(planet);
-        }
-      }
       fly.repositionScreen();
       utils.showToast('Loaded game');
     };

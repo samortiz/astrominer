@@ -1,0 +1,10 @@
+Images 
+ raw : source storing various images
+ spritesheet => main spritesheet
+ crash => explosion animation
+ public => all other images heading for /public/images 
+
+ run deploy.sh to copy files as appropriate
+
+ Use 'TexturePacker --gui' to create spritesheets
+
