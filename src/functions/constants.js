@@ -226,7 +226,7 @@ export const EQUIP_SPRINKLER_BLASTER = {
   bulletFile: BULLET_FILE,
   cost: {titanium: 20, gold: 10, uranium: 80}
 };
-// Dmg 150/c Range:490
+// Dmg 175/c Range:490
 export const EQUIP_STREAM_BLASTER = {
   name: "Stream Blaster",
   objType: OBJ_EQUIP,
@@ -240,42 +240,42 @@ export const EQUIP_STREAM_BLASTER = {
   bulletFile: BULLET_FILE,
   cost: {titanium: 30, gold: 30, uranium: 60}
 };
-// Dmg 20/c Range:240
+// Dmg 25/c Range:240
 export const EQUIP_ALIEN_BLASTER = {
   name: "Alien Blaster",
   objType: OBJ_EQUIP,
   type: EQUIP_TYPE_PRIMARY_WEAPON,
   coolTime: 20,
   cool: 0,
-  damage: 4,
+  damage: 5,
   speed: 2,
   lifetime: 120,
   jitter: 0.12,
   bulletFile: BULLET_BLUE_FILE,
   cost: {titanium: 10, gold: 30, uranium: 50}
 };
-// Dmg 160/c Range:480
+// Dmg 120/c Range:480
 export const EQUIP_ALIEN_BLASTER_FAST = {
   name: "Alien Fast Blaster",
   objType: OBJ_EQUIP,
   type: EQUIP_TYPE_PRIMARY_WEAPON,
   coolTime: 10,
   cool: 0,
-  damage: 16,
+  damage: 12,
   speed: 4,
   lifetime: 120,
   jitter: 0.1,
   bulletFile: BULLET_BLUE_FILE,
   cost: {titanium: 10, gold: 30, uranium: 50}
 };
-// Dmg 125/c Range:600
+// Dmg 150/c Range:600
 export const EQUIP_ALIEN_BLASTER_LIGHTNING = {
   name: "Alien Lighting Blaster",
   objType: OBJ_EQUIP,
   type: EQUIP_TYPE_PRIMARY_WEAPON,
-  coolTime: 8,
+  coolTime: 10,
   cool: 0,
-  damage: 10,
+  damage: 15,
   speed: 12,
   lifetime: 50,
   jitter: 0.08,
@@ -296,14 +296,14 @@ export const EQUIP_STAPLE_GUN = {
   bulletFile: BULLET_WHITE_FILE,
   cost: {titanium: 10, gold: 30, uranium: 50}
 };
-// Dmg 166/c Range:900
+// Dmg 183/c Range:900
 export const EQUIP_STAPLE_GUN_HEAVY = {
   name: "Heavy Staple Gun",
   objType: OBJ_EQUIP,
   type: EQUIP_TYPE_PRIMARY_WEAPON,
   coolTime: 3,
   cool: 0,
-  damage: 5,
+  damage: 5.5,
   speed: 3,
   lifetime: 300,
   jitter: 0.15,

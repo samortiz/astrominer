@@ -6,17 +6,14 @@ Minor Bugs
  - Resupply doesn't always fill ship
 
 TODO
-- Add brushed metal background
 - Add Repair button to planet for fast ship repair
 - Repair should use resources based on ship cost (too much titanium needed in game)
-- Factory buy equip by type with tabs
 - Factory progress bar
 - Redo layout on Storage screen
 - Scroll long lists
 - Salvage / Destroy unwanted equipment and ships
 
 Ideas :
-- AI don't crash into other aliens
 - Enemy : mothership that spawns small ships when in range
 - Equip : drones, Blink Lander (brake)
 - continuous fire wo keypress

@@ -73,8 +73,8 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  // world.ship.armorMax = 115000;
-  // world.ship.armor = 115000;
+  // world.ship.armorMax = 5000;
+  // world.ship.armor = 5000;
   // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
   // world.ship.resourcesMax = 10000000;
   // world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_ALIEN_BLASTER_FAST)];
