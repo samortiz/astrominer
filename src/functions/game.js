@@ -64,7 +64,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  window.world.shipStartX = +1550;
+  // window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
@@ -73,18 +73,18 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  world.ship.armorMax = 5000;
-  world.ship.armor = 5000;
-  world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
-  world.ship.resourcesMax = 10000000;
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_ALIEN_BLASTER_FAST)];
-  world.ship.equipMax = world.ship.equip.length;
-  world.blueprints.equip = [...c.ALL_EQUIP];
-  world.blueprints.ship = [...c.ALL_SHIPS];
+  // world.ship.armorMax = 115000;
+  // world.ship.armor = 115000;
+  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  // world.ship.resourcesMax = 10000000;
+  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_ALIEN_BLASTER_FAST)];
+  // world.ship.equipMax = world.ship.equip.length;
+  // world.blueprints.equip = [...c.ALL_EQUIP];
+  // world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
-  createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
-  createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);
+  // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
+  // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);
 
   // DEBUG Planet
   // let testPlanet = createPlanet(c.ROCK_PLANET_FILE, "home", 100, 200, {
@@ -523,6 +523,9 @@ function addMiningXp(amount, planet) {
 export function addAlienXp(ship) {
   let blueprints = window.world.blueprints;
   const xp = blueprints.xp[ship.name] += 1;
+  if (!xp) {
+    return;
+  }
   let nextLevel = blueprints.xpLevels[ship.name][0];
   if (nextLevel && (nextLevel.xp <= xp)) {
     addBlueprint(nextLevel);

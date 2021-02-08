@@ -389,7 +389,7 @@ export const SHIP_EXPLORER = {
     uranium: 0,
   },
   equipMax: 3,
-  equip: [EQUIP_BRAKE],
+  equip: [EQUIP_BRAKE, EQUIP_BLASTER],
   armorMax: 50,
   armor: 50,
   crashSpeed: 2,
@@ -578,6 +578,29 @@ export const SHIP_ALIEN_LARGE = {
   aiType: ALIEN_AI_CREEPER,
 };
 
+export const SHIP_ALIEN_STAPLE_TURRET = {
+  name: "Alien Staple Turret",
+  objType: OBJ_SHIP,
+  propulsion: 0.00,
+  turnSpeed: 0.001,
+  resourcesMax: 100,
+  resources: {
+    titanium: 0,
+    gold: 0,
+    uranium: 0,
+  },
+  equipMax: 3,
+  equip: [EQUIP_BRAKE, EQUIP_STAPLE_GUN_HEAVY],
+  armorMax: 200,
+  armor: 200,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 0.8,
+  imageFile: ALIEN_SHIP_BLUE_SMALL_FILE,
+  cost: {titanium: 150, gold: 150, uranium: 200},
+  aiType: ALIEN_AI_TURRET,
+};
+
 export const SHIP_ALIEN_FIRE = {
   name: "Alien Fire",
   objType: OBJ_SHIP,
@@ -590,7 +613,7 @@ export const SHIP_ALIEN_FIRE = {
     uranium: 0,
   },
   equipMax: 5,
-  equip: [EQUIP_BRAKE, EQUIP_STAPLE_GUN],
+  equip: [EQUIP_BRAKE, EQUIP_STAPLE_GUN, EQUIP_SHIELD_LONG],
   armorMax: 250,
   armor: 250,
   crashSpeed: 2,
@@ -696,7 +719,7 @@ export const SHIP_MISSILE = {
 };
 
 export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_SKELETON, SHIP_HEAVY, SHIP_FIGHTER,
-  SHIP_ALIEN, SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_FIRE, SHIP_ALIEN_STEALTH];
+  SHIP_ALIEN, SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_STAPLE_TURRET, SHIP_ALIEN_FIRE, SHIP_ALIEN_STEALTH];
 
 // This equipment needs to go after the ships (ugh)
 export const EQUIP_MINE_DEPLOYER = {
@@ -804,7 +827,11 @@ export const UNIVERSE_RINGS = [
     minDistToOtherPlanet: 200,
     minPlanetRadius: 200, maxPlanetRadius: 200,
     planetFiles: [],
-    aliens: [{count: 50, file: SHIP_ALIEN_STEALTH}, {count: 50, file: SHIP_ALIEN_FIRE},],
+    aliens: [
+      {count: 50, file: SHIP_ALIEN_STEALTH},
+      {count: 50, file: SHIP_ALIEN_FIRE},
+      {count: 30, file: SHIP_ALIEN_STAPLE_TURRET},
+    ],
   },
   {
     planetCount: 200,
@@ -812,10 +839,11 @@ export const UNIVERSE_RINGS = [
     minDistToOtherPlanet: 150,
     minPlanetRadius: 250, maxPlanetRadius: 500,
     planetFiles: [PLANET_RED_FILE, PLANET_PURPLE_FILE, PLANET_GREEN_FILE],
-    aliens: [{count: 200, file: SHIP_ALIEN_TURRET}, {count: 200, file: SHIP_ALIEN}, {
-      count: 700,
-      file: SHIP_ALIEN_LARGE
-    }, {count: 300, file: SHIP_ALIEN_STEALTH},],
+    aliens: [
+      {count: 200, file: SHIP_ALIEN_STAPLE_TURRET},
+      {count: 200, file: SHIP_ALIEN},
+      {count: 700, file: SHIP_ALIEN_LARGE},
+      {count: 300, file: SHIP_ALIEN_STEALTH},],
   },
   {
     planetCount: 600,
@@ -823,10 +851,11 @@ export const UNIVERSE_RINGS = [
     minDistToOtherPlanet: 150,
     minPlanetRadius: 150, maxPlanetRadius: 250,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE, PLANET_GREEN_FILE],
-    aliens: [{count: 1000, file: SHIP_ALIEN_TURRET}, {count: 1000, file: SHIP_ALIEN}, {
-      count: 300,
-      file: SHIP_ALIEN_LARGE
-    },],
+    aliens: [
+      {count: 1000, file: SHIP_ALIEN_TURRET},
+      {count: 1000, file: SHIP_ALIEN},
+      {count: 300, file: SHIP_ALIEN_LARGE},
+    ],
   },
   {
     planetCount: 2000,
