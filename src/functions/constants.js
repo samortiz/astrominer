@@ -21,8 +21,8 @@ export const SCREEN_WIDTH = 1000;
 export const SCREEN_HEIGHT = 1000;
 export const HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2;
 export const HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
-export const NEARBY_WIDTH = SCREEN_WIDTH * 2;
-export const NEARBY_HEIGHT = SCREEN_HEIGHT * 2;
+export const NEARBY_WIDTH = SCREEN_WIDTH * 3;
+export const NEARBY_HEIGHT = SCREEN_HEIGHT * 3;
 // size of minimap on screen
 export const MINIMAP_WIDTH = 120;
 export const MINIMAP_HEIGHT = 120;
@@ -132,6 +132,8 @@ export const OBJ_SHIP = "Ship";
 
 export const ALIEN_AI_TURRET = "ALIEN_AI_TURRET";
 export const ALIEN_AI_CREEPER = "ALIEN_AI_CREEPER";
+export const ALIEN_AI_MOTHERSHIP = "ALIEN_AI_MOTHERSHIP";
+export const ALIEN_AI_KAMIKAZI = "ALIEN_AI_KAMIKAZI";
 export const EQUIP_AI_MINE = "EQUIP_AI_MINE";
 export const EQUIP_AI_TURRET = "EQUIP_AI_TURRET";
 export const EQUIP_AI_MISSILE = "EQUIP_AI_MISSILE";
@@ -365,6 +367,37 @@ export const EQUIP_SHIELD_ULTRA = {
   cost: {titanium: 0, gold: 0, uranium: 100}
 };
 
+export const SHIP_RED_MISSILE = {
+  name: "Alien Missile",
+  objType: OBJ_SHIP,
+  propulsion: 0.1, // best between 0.02 - 0.1
+  turnSpeed: 0.3, // // best between 0.3 - 0.07
+  resourcesMax: 0,
+  resources: {
+    titanium: 0,
+    gold: 0,
+    uranium: 0,
+  },
+  equipMax: 0,
+  equip: [],
+  armorMax: 200,
+  armor: 200,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 0.8,
+  imageFile: ALIEN_SHIP_RED_SMALL_FILE,
+  cost: {titanium: 5, gold: 5, uranium: 10},
+  viewRange: SCREEN_WIDTH * 3,
+  aiType: ALIEN_AI_KAMIKAZI,
+};
+
+export const EQUIP_ALIEN_MISSILE_LAUNCHER = {
+  name: "Alien Missile Launcher", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 100, cool: 100,
+  createShip: {type: SHIP_RED_MISSILE, dir: DIR_AHEAD_OF_SHIP},
+  cost: {titanium: 50, gold: 50, uranium: 100}
+};
+
+
 // Droids
 export const EQUIP_R2D2 = {
   name: "R2D2 Repair Droid", objType: OBJ_EQUIP, type: EQUIP_TYPE_REPAIR_DROID, repairSpeed: 0.03,
@@ -585,7 +618,7 @@ export const SHIP_ALIEN_STAPLE_TURRET = {
   turnSpeed: 0.001,
   resourcesMax: 100,
   resources: {
-    titanium: 0,
+     titanium: 0,
     gold: 0,
     uranium: 0,
   },
@@ -595,7 +628,7 @@ export const SHIP_ALIEN_STAPLE_TURRET = {
   armor: 200,
   crashSpeed: 2,
   crashAngle: 10,
-  imageScale: 0.8,
+  imageScale: 1.3,
   imageFile: ALIEN_SHIP_BLUE_SMALL_FILE,
   cost: {titanium: 150, gold: 150, uranium: 200},
   aiType: ALIEN_AI_TURRET,
@@ -645,6 +678,29 @@ export const SHIP_ALIEN_STEALTH = {
   imageFile: ALIEN_SHIP_BLACK_FILE,
   cost: {titanium: 100, gold: 200, uranium: 150},
   aiType: ALIEN_AI_CREEPER,
+};
+
+export const SHIP_ALIEN_MOTHERSHIP = {
+  name: "Alien Mothership",
+  objType: OBJ_SHIP,
+  propulsion: 0.00,
+  turnSpeed: 0.001,
+  resourcesMax: 10000,
+  resources: {
+    titanium: 1000,
+    gold: 1000,
+    uranium: 5000,
+  },
+  equipMax: 3,
+  equip: [EQUIP_BRAKE, EQUIP_ALIEN_MISSILE_LAUNCHER, EQUIP_SHIELD_ULTRA, EQUIP_ALIEN_BLASTER_LIGHTNING],
+  armorMax: 1000,
+  armor: 1000,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1.3,
+  imageFile: ALIEN_SHIP_RED_LARGE_FILE,
+  cost: {titanium: 1200, gold: 1000, uranium: 750},
+  aiType: ALIEN_AI_MOTHERSHIP,
 };
 
 export const SHIP_MINE = {
@@ -823,14 +879,14 @@ export const UNIVERSE_RINGS = [
   },
   {
     planetCount: 0,
-    minDist: 1600, maxDist: 2500,
+    minDist: 1700, maxDist: 2500,
     minDistToOtherPlanet: 200,
     minPlanetRadius: 200, maxPlanetRadius: 200,
     planetFiles: [],
     aliens: [
-      {count: 50, file: SHIP_ALIEN_STEALTH},
-      {count: 50, file: SHIP_ALIEN_FIRE},
-      {count: 30, file: SHIP_ALIEN_STAPLE_TURRET},
+      {count: 0, file: SHIP_ALIEN_STEALTH},
+      {count: 0, file: SHIP_ALIEN_FIRE},
+      {count: 0, file: SHIP_ALIEN_STAPLE_TURRET},
     ],
   },
   {
@@ -840,10 +896,10 @@ export const UNIVERSE_RINGS = [
     minPlanetRadius: 250, maxPlanetRadius: 500,
     planetFiles: [PLANET_RED_FILE, PLANET_PURPLE_FILE, PLANET_GREEN_FILE],
     aliens: [
-      {count: 200, file: SHIP_ALIEN_STAPLE_TURRET},
-      {count: 200, file: SHIP_ALIEN},
-      {count: 700, file: SHIP_ALIEN_LARGE},
-      {count: 300, file: SHIP_ALIEN_STEALTH},],
+      {count: 0, file: SHIP_ALIEN_STAPLE_TURRET},
+      {count: 0, file: SHIP_ALIEN},
+      {count: 0, file: SHIP_ALIEN_LARGE},
+      {count: 0, file: SHIP_ALIEN_STEALTH},],
   },
   {
     planetCount: 600,

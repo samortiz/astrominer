@@ -119,7 +119,7 @@ export function setupNearby() {
   } // for planet
 
   // for every ship
-  nearby.ships = [];
+  nearby.ships = [window.world.ship];
   for (const ship of window.world.ships) {
     if ((ship.x + ship.radius >= minX) && (ship.x - ship.radius <= maxX) &&
       (ship.y + ship.radius >= minY) && (ship.y - ship.radius <= maxY)) {
@@ -564,25 +564,26 @@ export function fireSecondaryWeapon(ship) {
         return;
       }
       game.payResourceCost(null, ship, weapon.createShip.type.cost);
-      const mine = game.createShip(weapon.createShip.type, c.PLAYER);
-      const mineSprite = game.getShipSprite(mine);
-      const mineDistFromShip = ship.spriteWidth / 2 + mine.spriteWidth / 2 + 20;
+      const child = game.createShip(weapon.createShip.type, ship.owner);
+      const childSprite = game.getShipSprite(child);
+      const shipRadius = ship.spriteWidth || (ship.radius * 2);
+      const childDistFromShip = (shipRadius / 2) + (child.spriteWidth / 2) + 20;
       const dir = weapon.createShip.dir === c.DIR_AHEAD_OF_SHIP ? utils.normalizeRadian(ship.rotation - Math.PI) : ship.rotation;
-      const {xAmt, yAmt} = utils.dirComponents(dir, mineDistFromShip);
-      mine.x = ship.x - xAmt;
-      mine.y = ship.y - yAmt;
-      if (mine.propulsion) {
-        mine.vx = ship.vx;
-        mine.vy = ship.vy;
+      const {xAmt, yAmt} = utils.dirComponents(dir, childDistFromShip);
+      child.x = ship.x - xAmt;
+      child.y = ship.y - yAmt;
+      if (child.propulsion) {
+        child.vx = ship.vx;
+        child.vy = ship.vy;
       }
-      mine.rotation = utils.normalizeRadian(dir - Math.PI);
-      mineSprite.visible = true;
-      mineSprite.x = (mine.x - ship.x) + c.HALF_SCREEN_WIDTH;
-      mineSprite.y = (mine.y - ship.y) + c.HALF_SCREEN_HEIGHT;
-      window.world.ships.push(mine);
-      // Since it never moves we only need one check to see if it collides with anything
-      ai.checkForCollisionWithPlanet(mine);
-      ai.checkForCollisionWithShip(mine);
+      child.rotation = utils.normalizeRadian(dir - Math.PI);
+      childSprite.x = (child.x - window.world.ship.x) + c.HALF_SCREEN_WIDTH;
+      childSprite.y = (child.y - window.world.ship.y) + c.HALF_SCREEN_HEIGHT;
+      childSprite.visible = true;
+      window.world.ships.push(child);
+      // Since it may not move we need to check if it collides with anything
+      ai.checkForCollisionWithPlanet(child);
+      ai.checkForCollisionWithShip(child);
     }
     if (weapon.shield) {
       enableShield(ship, weapon.shield);

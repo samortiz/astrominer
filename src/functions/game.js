@@ -64,7 +64,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  // window.world.shipStartX = +1550;
+  window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
@@ -73,14 +73,14 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  // world.ship.armorMax = 5000;
-  // world.ship.armor = 5000;
-  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
-  // world.ship.resourcesMax = 10000000;
-  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_ALIEN_BLASTER_FAST)];
-  // world.ship.equipMax = world.ship.equip.length;
-  // world.blueprints.equip = [...c.ALL_EQUIP];
-  // world.blueprints.ship = [...c.ALL_SHIPS];
+  world.ship.armorMax = 15000;
+  world.ship.armor = 15000;
+  world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  world.ship.resourcesMax = 100000;
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_BLINK_THRUSTER), lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_ALIEN_BLASTER_FAST)];
+  world.ship.equipMax = world.ship.equip.length;
+  world.blueprints.equip = [...c.ALL_EQUIP];
+  world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
   // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
@@ -390,10 +390,14 @@ export function getShieldSprite(ship, shield) {
 export function createShip(shipType, owner) {
   let ship = lodash.cloneDeep(shipType);
   ship.id = window.world.nextId++;
-  for (let equip of ship.equip) {
-    equip.id = window.world.nextId++;
-  }
   ship.selectedSecondaryWeaponIndex = -1;
+  for (let i=0; i<ship.equip.length; i++) {
+    const equip = ship.equip[i];
+    equip.id = window.world.nextId++;
+    if (ship.selectedSecondaryWeaponIndex < 0 && equip.type === c.EQUIP_TYPE_SECONDARY_WEAPON) {
+      ship.selectedSecondaryWeaponIndex = i;
+    }
+  }
   ship.owner = owner;
   ship.vx = 0; // velocityX
   ship.vy = 0; // velocityY
@@ -403,6 +407,7 @@ export function createShip(shipType, owner) {
   ship.alive = true; // set to false if it blows up
   ship.spriteWidth = null; //We won't know until we load the sprite
   ship.rotation = 0;
+  window.world.system.nearby.ships.push(ship);
   return ship;
 }
 
@@ -416,6 +421,12 @@ export function createAlien(shipType, x, y) {
 }
 
 export function createAliens() {
+  // Create motherships
+  createAlien(c.SHIP_ALIEN_MOTHERSHIP, 1700, 200);
+  createAlien(c.SHIP_ALIEN_MOTHERSHIP, 0, 1700);
+  createAlien(c.SHIP_ALIEN_MOTHERSHIP, -1700, 0);
+  createAlien(c.SHIP_ALIEN_MOTHERSHIP, 0, -1700);
+
   for (let ring of c.UNIVERSE_RINGS) {
     for (const alienInfo of ring.aliens) {
       for (let i = 0; i < alienInfo.count; i++) {

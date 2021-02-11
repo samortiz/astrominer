@@ -11,11 +11,15 @@ export function moveAliens() {
     if (alien.aiType === c.ALIEN_AI_TURRET) {
       turretAi(alien);
     } else if (alien.aiType === c.ALIEN_AI_CREEPER) {
-      hasMoved = creeperAi(alien);
+      hasMoved = creeperAi(alien, false);
+    } else if (alien.aiType === c.ALIEN_AI_KAMIKAZI) {
+      hasMoved = creeperAi(alien, true);
     } else if (alien.aiType === c.EQUIP_AI_TURRET) {
       hasMoved = playerTurretAi(alien);
     } else if (alien.aiType === c.EQUIP_AI_MISSILE) {
-      hasMoved = playerMissileAi(alien);
+      hasMoved = missileAi(alien);
+    } else if (alien.aiType === c.ALIEN_AI_MOTHERSHIP) {
+      mothershipAi(alien);
     }
     if (hasMoved) {
       checkForCollisionWithPlanet(alien);
@@ -70,6 +74,23 @@ export function turretAi(alien) {
   }
 }
 
+export function mothershipAi(alien) {
+  let ship = window.world.ship;
+  if (!ship.alive) {
+    return;
+  }
+  const distanceToPlayer = utils.distanceBetween(alien.x, alien.y, ship.x, ship.y);
+  if (distanceToPlayer < fly.primaryWeaponRange(alien)) {
+    shootAt(alien, ship.x, ship.y, 0.3);
+  }
+  if (distanceToPlayer < c.SCREEN_WIDTH*3) {
+    fly.fireSecondaryWeapon(alien);
+  }
+  if (alien.armor < alien.armorMax) {
+    enableShieldIfNeeded(alien);
+  }
+}
+
 export function playerTurretAi(turret) {
   const {target, dist} = getNearestAlienTarget(turret.x, turret.y);
   if (target && (dist <= fly.primaryWeaponRange(turret))) {
@@ -78,8 +99,13 @@ export function playerTurretAi(turret) {
   return false; // never moves
 }
 
-export function playerMissileAi(missile) {
-  const {target, dist} = getNearestAlienTarget(missile.x, missile.y);
+/**
+ * Simple AI for missiles - find nearest target and move toward it attempting to crash
+ */
+export function missileAi(missile) {
+  const {target, dist} = missile.owner === c.PLAYER
+    ? getNearestAlienTarget(missile.x, missile.y)
+    : getNearestPlayerTarget(missile.x, missile.y);
   // Missiles don't track targets really far away
   if (target && dist < c.SCREEN_WIDTH) {
     let dirToTarget = utils.directionTo(missile.x, missile.y, target.x, target.y);
@@ -98,22 +124,25 @@ export function playerMissileAi(missile) {
  * AI for aliens that move toward the player and shoots
  * @return true if alien moved false otherwise
  */
-export function creeperAi(alien) {
+export function creeperAi(alien, crashIntoPlayer=false) {
   let ship = window.world.ship;
   if (!ship.alive) {
     return;
   }
+  const viewRange = alien.viewRange || c.SCREEN_WIDTH;
   let moved = false;
-  // Close enough to player to move
-  const distanceToPlayer = utils.distanceBetween(alien.x, alien.y, ship.x, ship.y);
-  if (distanceToPlayer < c.SCREEN_WIDTH) {
-    let dirToPlayer = utils.directionTo(alien.x, alien.y, ship.x, ship.y);
-    let {xAmt, yAmt} = utils.dirComponents(dirToPlayer, 25 * alien.propulsion);
+  const {target:playerTarget, dist:distToPlayer} = getNearestPlayerTarget(alien.x, alien.y)
+  if (!playerTarget) {
+    return;
+  }
+  if (distToPlayer < viewRange) {
+    let dirToTarget = utils.directionTo(alien.x, alien.y, playerTarget.x, playerTarget.y);
+    let {xAmt, yAmt} = utils.dirComponents(dirToTarget, 25 * alien.propulsion);
     // Check if we are too close to a planet (need to move around the planet)
     for (let planet of window.world.system.nearby.planets) {
       if (utils.distanceBetween(alien.x + xAmt, alien.y + yAmt, planet.x, planet.y) < (planet.radius + alien.radius + 10)) {
         const dirToPlanet = utils.directionTo(alien.x, alien.y, planet.x, planet.y);
-        let dirDiff = dirToPlanet - dirToPlayer;
+        let dirDiff = dirToPlanet - dirToTarget;
         let rightLeft = (dirDiff >= 0) ? -1 : 1;
         if (Math.abs(dirDiff) > Math.PI) {
           rightLeft = rightLeft * -1;
@@ -123,13 +152,13 @@ export function creeperAi(alien) {
       }
     } // for planet
     // Too close to player, don't move closer
-    if (distanceToPlayer < (ship.spriteWidth + alien.radius + 20)) {
+    if (!crashIntoPlayer && distToPlayer < (ship.spriteWidth + alien.radius + 20)) {
       xAmt = 0;
       yAmt = 0;
     }
     // Don't crash into other aliens
-    const {target, dist} = getNearestAlienTarget(alien.x + xAmt, alien.y + yAmt, alien.id);
-    if (target && (dist < (alien.radius + target.radius + 10))) {
+    const {target: alienTarget, dist: alienDist} = getNearestAlienTarget(alien.x + xAmt, alien.y + yAmt, alien.id);
+    if (alienTarget && (alienDist < (alien.radius + alienTarget.radius + 10))) {
       xAmt = 0;
       yAmt = 0;
     }
@@ -138,10 +167,10 @@ export function creeperAi(alien) {
     }
     alien.x += xAmt;
     alien.y += yAmt;
-    alien.rotation = dirToPlayer;
+    alien.rotation = dirToTarget;
     moved = true;
   }
-  if (distanceToPlayer < fly.primaryWeaponRange(alien)) {
+  if (distToPlayer < fly.primaryWeaponRange(alien)) {
     shootAt(alien, ship.x, ship.y, 0.15);
   }
   return moved;
@@ -166,6 +195,27 @@ export function getNearestAlienTarget(x, y, shipId = 'none') {
   } // for
   return {target: target, dist: minDist};
 }
+
+/**
+ * Finds the nearest player target to the x,y location
+ * returns {target:X, dist:Y }  x and y will be null if no living targets are found
+ */
+export function getNearestPlayerTarget(x, y) {
+  const ship = window.world.ship;
+  let target = ship;
+  let minDist = utils.distanceBetween(x, y, ship.x, ship.y);;
+  for (let ship of window.world.system.nearby.ships) {
+    if (ship.alive && ship.owner === c.PLAYER) {
+      let dist = utils.distanceBetween(x, y, ship.x, ship.y);
+      if (!target || (dist < minDist)) {
+        target = ship;
+        minDist = dist;
+      }
+    }
+  } // for
+  return {target: target, dist: minDist};
+}
+
 
 export function checkForCollisionWithPlanet(alien) {
   for (let planet of window.world.system.nearby.planets) {
