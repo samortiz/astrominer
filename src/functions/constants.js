@@ -884,9 +884,9 @@ export const UNIVERSE_RINGS = [
     minPlanetRadius: 200, maxPlanetRadius: 200,
     planetFiles: [],
     aliens: [
-      {count: 0, file: SHIP_ALIEN_STEALTH},
-      {count: 0, file: SHIP_ALIEN_FIRE},
-      {count: 0, file: SHIP_ALIEN_STAPLE_TURRET},
+      {count: 50, file: SHIP_ALIEN_STEALTH},
+      {count: 50, file: SHIP_ALIEN_FIRE},
+      {count: 30, file: SHIP_ALIEN_STAPLE_TURRET},
     ],
   },
   {
@@ -896,10 +896,11 @@ export const UNIVERSE_RINGS = [
     minPlanetRadius: 250, maxPlanetRadius: 500,
     planetFiles: [PLANET_RED_FILE, PLANET_PURPLE_FILE, PLANET_GREEN_FILE],
     aliens: [
-      {count: 0, file: SHIP_ALIEN_STAPLE_TURRET},
-      {count: 0, file: SHIP_ALIEN},
-      {count: 0, file: SHIP_ALIEN_LARGE},
-      {count: 0, file: SHIP_ALIEN_STEALTH},],
+      {count: 200, file: SHIP_ALIEN_STAPLE_TURRET},
+      {count: 200, file: SHIP_ALIEN},
+      {count: 700, file: SHIP_ALIEN_LARGE},
+      {count: 300, file: SHIP_ALIEN_STEALTH},
+    ],
   },
   {
     planetCount: 600,

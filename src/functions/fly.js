@@ -119,7 +119,7 @@ export function setupNearby() {
   } // for planet
 
   // for every ship
-  nearby.ships = [window.world.ship];
+  nearby.ships = [window.world.ship]; // ship is always nearby
   for (const ship of window.world.ships) {
     if ((ship.x + ship.radius >= minX) && (ship.x - ship.radius <= maxX) &&
       (ship.y + ship.radius >= minY) && (ship.y - ship.radius <= maxY)) {
@@ -153,9 +153,9 @@ export function repositionScreen() {
  * Cools all ship weapons, run in mainLoop
  */
 export function coolAllWeapons() {
-  coolWeapons(window.world.ship);
-  for (let alien of window.world.system.nearby.ships) {
-    coolWeapons(alien);
+  // Ship is in nearby
+  for (let ship of window.world.system.nearby.ships) {
+    coolWeapons(ship);
   }
 }
 
@@ -314,6 +314,9 @@ export function detectCollisionWithPlanet(ship, shipSprite, planet) {
 
 // Returns true if there is a collision and false otherwise
 export function detectCollisionWithAlien(ship, shipSprite, alien) {
+  if (ship === alien) {
+    return false;
+  }
   const shield = getActiveShield(ship);
   if (shield) {
     // shield collision is round
@@ -713,7 +716,7 @@ function checkForBulletCollision(bullet) {
   }
   // Collision with alien ship
   for (let alien of window.world.system.nearby.ships) {
-    if (alien.alive && alien.radius) {
+    if ((alien !== ship) && alien.alive && alien.radius) {
       const shield = getActiveShield(alien);
       if ((shield && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) < shield.radius) || // hit alien shield
         (utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius)) { // hit alien ship
@@ -755,9 +758,12 @@ export function damageShip(ship, damage, afterExplosion) {
  * collision between player ship and alien (sometimes alien and alien)
  */
 export function shipsCollide(ship, alien) {
+  if (ship === alien) {
+    return; // can't collide with yourself
+  }
   let shipDamage = ship.armor;
   let alienDamage = alien.armor;
-  damageShip(alien, shipDamage, null);
+  damageShip(alien, shipDamage, (window.world.ship === alien) ? resetGame : null);
   damageShip(ship, alienDamage, (window.world.ship === ship) ? resetGame : null);
   // If you died hitting an alien, stop moving
   if (!ship.alive) {

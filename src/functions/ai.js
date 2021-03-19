@@ -4,7 +4,7 @@ import {getShipSprite} from "./game";
 export function moveAliens() {
   let ship = window.world.ship;
   for (let alien of window.world.system.nearby.ships) {
-    if (!alien.alive) {
+    if (!alien.alive || ship === alien) {
       continue;
     }
     let hasMoved = false;

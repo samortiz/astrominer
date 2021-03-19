@@ -12,7 +12,7 @@ export function FactoryButton({template}) {
     planet.equip.filter(e=> e.name === template.name).length;
 
   // We pretend the current ship is in storage in the planet
-  if (template.name === ship.name) {
+  if (ship.alive && template.name === ship.name) {
     existingInventory += 1;
   }
 

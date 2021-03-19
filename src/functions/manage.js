@@ -142,7 +142,7 @@ export function buildingFits(planet, ship, rotation, buildingWidth) {
  * Move a resource ship <-> planet 
  */
 export function transferResource(source, target, resourceType, requestedAmtStr, maxCapacity) {
-  console.log('transfering '+requestedAmtStr+' of '+resourceType);
+  console.log('transferring '+requestedAmtStr+' of '+resourceType);
   let requestedAmt = Number(requestedAmtStr);
   if (isNaN(requestedAmt)) {
     requestedAmt = 0;

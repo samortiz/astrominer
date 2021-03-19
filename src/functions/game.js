@@ -63,31 +63,30 @@ export function setupWorld() {
   createPlanets();
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
-  window.world.shipStartX = c.PLAYER_START_X;
-  window.world.shipStartX = +1550;
+   window.world.shipStartX = c.PLAYER_START_X;
+  //window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
-  //world.ship = createShip(c.SHIP_HEAVY, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
   shipSprite.visible = true;
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  world.ship.armorMax = 15000;
-  world.ship.armor = 15000;
-  world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
-  world.ship.resourcesMax = 100000;
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_BLINK_THRUSTER), lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_ALIEN_BLASTER_FAST)];
-  world.ship.equipMax = world.ship.equip.length;
-  world.blueprints.equip = [...c.ALL_EQUIP];
-  world.blueprints.ship = [...c.ALL_SHIPS];
+  // world.ship.armorMax = 15000;
+  // world.ship.armor = 15000;
+  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  // world.ship.resourcesMax = 100000;
+  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
+  // world.ship.equipMax = world.ship.equip.length;
+  // world.blueprints.equip = [...c.ALL_EQUIP];
+  // world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
   // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
   // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);
 
   // DEBUG Planet
-  // let testPlanet = createPlanet(c.ROCK_PLANET_FILE, "home", 100, 200, {
+  // let testPlanet = createPlanet(c.PLANET_ROCK_FILE, "home", 100, 200, {
   //   titanium: 20500,
   //   gold: 51000,
   //   uranium: 5000,
@@ -186,6 +185,9 @@ function nearestAlienDistance(x, y) {
   let minDist = 99999999999;
   let nearestAlien = null;
   for (let alien of window.world.system.nearby.ships) {
+    if (alien === window.world.ship) {
+      continue;
+    }
     // This assumes the calling code alien is the same size
     let dist = utils.distanceBetween(x, y, alien.x, alien.y) - (alien.radius * 2);
     if (!nearestAlien || (dist < minDist)) {

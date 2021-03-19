@@ -58,10 +58,10 @@ export function ManageStorage() {
             <div className='item-attr'>
               <b>Landing</b> Speed:{Math.floor(selectedShip.crashSpeed)} Angle:{Math.floor(selectedShip.crashAngle * 10)}
             </div>
-            <div className='item-attr'><b>Armor</b>
-              {Math.floor(selectedShip.armor)} of {Math.floor(selectedShip.armorMax)}
+            <div className='item-attr'><b>Armor</b> &nbsp;
+              {Math.floor(selectedShip.armor)} of {Math.floor(selectedShip.armorMax)}&nbsp;
               <button onClick={() => manage.repairShip(planet, selectedShip)}
-                      disabled={selectedShip.armorMax <= selectedShip.armor}>Repair
+                      disabled={selectedShip.armorMax <= selectedShip.armor}> Repair
               </button>
               &nbsp; Cost {Math.floor(selectedShip.armorMax - selectedShip.armor)} titanium
             </div>
