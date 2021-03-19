@@ -39,8 +39,8 @@ export function InfoFly() {
           <td>
             {Math.floor(ship.armor)} / {ship.armorMax}
           </td>
-          <td></td>
-          <td></td>
+          <td> </td>
+          <td> </td>
         </tr>
         </tbody>
       </table>
@@ -74,7 +74,7 @@ export function InfoFly() {
           <tr>
             <td className='bluescreen-container'>
               <div className='bluescreen-background'>
-                <img src='images/blue_screen.png' className='stretch'/>
+                <img src='images/blue_screen.png' className='stretch' alt='bluescreen'/>
               </div>
               <div className='bluescreen-text'>
                 <table cellPadding='4'>

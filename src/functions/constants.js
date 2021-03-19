@@ -14,7 +14,6 @@ export const GAME_STATE = {
 
 // Saved games
 export const LOCALSTORAGE_GAME_NAMES_KEY = 'saved-game-names';
-export const DB_GAME_PREFIX = 'game-';
 
 // Screen Layout
 export const SCREEN_WIDTH = 1000;
@@ -465,7 +464,7 @@ export const SHIP_FAST = {
     gold: 0,
     uranium: 0,
   },
-  equipMax: 4,
+  equipMax: 5,
   equip: [EQUIP_BRAKE],
   armorMax: 50,
   armor: 50,
@@ -509,7 +508,7 @@ export const SHIP_HEAVY = {
     gold: 0,
     uranium: 0,
   },
-  equipMax: 6,
+  equipMax: 7,
   equip: [EQUIP_BRAKE],
   armorMax: 400,
   armor: 400,
@@ -531,7 +530,7 @@ export const SHIP_FIGHTER = {
     gold: 0,
     uranium: 0,
   },
-  equipMax: 7,
+  equipMax: 8,
   equip: [EQUIP_BRAKE],
   armorMax: 300,
   armor: 300,
@@ -599,7 +598,7 @@ export const SHIP_ALIEN_LARGE = {
     gold: 0,
     uranium: 0,
   },
-  equipMax: 6,
+  equipMax: 7,
   equip: [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER_FAST],
   armorMax: 300,
   armor: 300,
@@ -645,7 +644,7 @@ export const SHIP_ALIEN_FIRE = {
     gold: 0,
     uranium: 0,
   },
-  equipMax: 5,
+  equipMax: 7,
   equip: [EQUIP_BRAKE, EQUIP_STAPLE_GUN, EQUIP_SHIELD_LONG],
   armorMax: 250,
   armor: 250,
@@ -668,7 +667,7 @@ export const SHIP_ALIEN_STEALTH = {
     gold: 0,
     uranium: 0,
   },
-  equipMax: 5,
+  equipMax: 6,
   equip: [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER_FAST],
   armorMax: 150,
   armor: 150,
@@ -691,7 +690,7 @@ export const SHIP_ALIEN_MOTHERSHIP = {
     gold: 1000,
     uranium: 5000,
   },
-  equipMax: 3,
+  equipMax: 10,
   equip: [EQUIP_BRAKE, EQUIP_ALIEN_MISSILE_LAUNCHER, EQUIP_SHIELD_ULTRA, EQUIP_ALIEN_BLASTER_LIGHTNING],
   armorMax: 1000,
   armor: 1000,
@@ -738,7 +737,7 @@ export const SHIP_TURRET = {
     gold: 0,
     uranium: 0,
   },
-  equipMax: 0,
+  equipMax: 1,
   equip: [EQUIP_FAST_BLASTER],
   armorMax: 100,
   armor: 100,
@@ -833,16 +832,16 @@ export const XP_LEVELS = {
   [SHIP_ALIEN_TURRET.name]: [
     {xp: 1, obj: EQUIP_FAST_BLASTER},
     {xp: 5, obj: EQUIP_ALIEN_BLASTER},
-    {xp: 10, obj: EQUIP_SHIELD},
+    {xp: 10, obj: EQUIP_ALIEN_BLASTER_FAST},
   ],
   [SHIP_ALIEN.name]: [
-    {xp: 1, obj: EQUIP_MINE_DEPLOYER},
-    {xp: 5, obj: EQUIP_ALIEN_BLASTER_FAST},
-    {xp: 10, obj: EQUIP_STREAM_BLASTER},
+    {xp: 1, obj: EQUIP_SHIELD},
+    {xp: 5, obj: EQUIP_MINE_DEPLOYER},
+    {xp: 10, obj: EQUIP_SHIELD_LONG},
     {xp: 20, obj: SHIP_ALIEN},
   ],
   [SHIP_ALIEN_LARGE.name]: [
-    {xp: 3, obj: EQUIP_SHIELD_LONG},
+    {xp: 3, obj: EQUIP_STREAM_BLASTER},
     {xp: 7, obj: EQUIP_TURRET_DEPLOYER},
     {xp: 10, obj: EQUIP_ENHANCED_STORAGE},
     {xp: 15, obj: SHIP_ALIEN_LARGE},
