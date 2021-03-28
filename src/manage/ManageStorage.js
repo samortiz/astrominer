@@ -63,7 +63,7 @@ export function ManageStorage() {
               <button onClick={() => manage.repairShip(planet, selectedShip)}
                       disabled={selectedShip.armorMax <= selectedShip.armor}> Repair
               </button>
-              &nbsp; Cost {Math.floor(selectedShip.armorMax - selectedShip.armor)} titanium
+              &nbsp; Cost {Math.floor(manage.costToRepair(selectedShip).titanium)} titanium
             </div>
             <div className='item-attr'><b>Resources Max</b>{Math.floor(selectedShip.resourcesMax)}</div>
             <div className='item-attr'><b>Equip</b> (Max {selectedShip.equipMax})

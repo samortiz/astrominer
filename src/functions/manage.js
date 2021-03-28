@@ -300,7 +300,8 @@ export function buildEquip(equipTemplate) {
 }
 
 export function costToRepair(ship) {
-  return {titanium:(ship.armorMax - ship.armor), gold:0, uranium:0};
+  const damageToRepair = ship.armorMax - ship.armor;
+  return {titanium:(damageToRepair / 5), gold:0, uranium:0};
 }
 
 export function repairShip(planet, ship) {

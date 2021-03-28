@@ -3,7 +3,7 @@ import { c, manage, game} from '../../functions';
 import './FactoryButton.css';
 import {Col, Row} from "react-bootstrap";
 
-export function FactoryButton({template}) {
+export function FactoryButtonRow({template}) {
   const world = window.world;
   const planet = world.selectedPlanet;
   const ship = world.ship;
@@ -29,12 +29,12 @@ export function FactoryButton({template}) {
       <Col xs='1'>
         {existingInventory}
       </Col>
-      <Col xs='5'>
+      <Col xs='2'>
       <button className="factory-button"
         disabled={!manage.hasFactory(planet) || !game.canAfford(planet, ship, template.cost)}
         onClick={() => build(template)}>{template.name}</button>
       </Col>
-      <Col xs='6'>
+      <Col xs='9'>
         <span className='cost'>{template.cost.titanium}T {template.cost.gold}G {template.cost.uranium}U</span>
       </Col>
     </Row>);

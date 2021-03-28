@@ -193,7 +193,7 @@ export function resetWeaponsCool(ship) {
 export function runDroids(ship) {
   for (let droid of ship.equip) {
     if ((droid.type === c.EQUIP_TYPE_REPAIR_DROID) && (ship.armor < ship.armorMax)) {
-      let cost = {titanium: droid.repairSpeed, gold: 0, uranium: 0};
+      let cost = {titanium: 0, gold: 0, uranium: 0};
       if (game.canAfford(null, ship, cost)) {
         ship.armor += droid.repairSpeed;
         game.payResourceCost(null, ship, cost);

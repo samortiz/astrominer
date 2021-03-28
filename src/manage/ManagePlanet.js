@@ -14,7 +14,7 @@ export function ManagePlanet() {
   let shipOnPlanet = ((planet === window.world.lastPlanetLanded) && ship.alive);
   return (
     <div className='planet-info'>
-      <div className='section'><b>Planet Name</b> {world.selectedPlanet.name}</div>
+      <div className='section'><b>Planet Name: </b> {world.selectedPlanet.name}</div>
       <div className='build-button'>
         <button
           disabled={!game.canAfford(planet, (shipOnPlanet ? ship : null), c.MINE_COST)}
@@ -30,14 +30,26 @@ export function ManagePlanet() {
         Cost: T:{c.FACTORY_COST.titanium} G:{c.FACTORY_COST.gold} U:{c.FACTORY_COST.uranium}
       </div>
 
-      <div className='section'>
-        <b>Resources</b> &nbsp; <button onClick={() => manage.resupplyShip(ship, planet)}>Resupply</button>
+      <div style={{display:ship.alive?'block':'none'}} className='build-button'>
+        <div className='section'><b>Ship</b></div>
+        <button onClick={() => manage.resupplyShip(ship, planet)}>
+            Resupply
+        </button>
+        <button style={{marginLeft:'10px'}}
+                onClick={() => manage.repairShip(planet, ship)}
+                disabled={ship.armorMax <= ship.armor}>
+          Repair
+        </button>
       </div>
-      <div>Titatium {Math.floor(planet.resources.raw.titanium)}</div>
-      <div>Gold {Math.floor(planet.resources.raw.gold)}</div>
-      <div>Uranium {Math.floor(planet.resources.raw.uranium)}</div>
 
-      {shipOnPlanet && <table>
+      <div className='section'>
+        <b>Resources</b>
+      </div>
+      <div className="row-item">Titanium {Math.floor(planet.resources.raw.titanium)}</div>
+      <div className="row-item">Gold {Math.floor(planet.resources.raw.gold)}</div>
+      <div className="row-item">Uranium {Math.floor(planet.resources.raw.uranium)}</div>
+
+      {shipOnPlanet && <table  className="row-item">
         <thead>
         <tr>
           <th>Resource</th>

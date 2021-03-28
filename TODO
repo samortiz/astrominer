@@ -3,7 +3,6 @@ Bugs
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
  - Disable Resupply button when no ship is selected
- - Resupply doesn't always fill ship
 
 TODO
 - Add Repair button to planet for fast ship repair
