@@ -65,12 +65,12 @@ export function shootAt(shooter, x, y, jitter) {
 }
 
 export function turretAi(alien) {
-  let ship = window.world.ship;
-  if (!ship.alive) {
+  const {target, dist} = getNearestOpponentTarget(alien);
+  if (!target || !target.alive) {
     return;
   }
-  if (utils.distanceBetween(alien.x, alien.y, ship.x, ship.y) < fly.primaryWeaponRange(alien)) {
-    shootAt(alien, ship.x, ship.y, 0.7);
+  if (dist < fly.primaryWeaponRange(alien)) {
+    shootAt(alien, target.x, target.y, 0.7);
   }
 }
 
@@ -91,8 +91,18 @@ export function mothershipAi(alien) {
   }
 }
 
+/**
+ * Finds the nearest ship on the other team
+ * @param ship ship to determine x,y and player
+ */
+export function getNearestOpponentTarget(ship) {
+  return (ship.owner === c.PLAYER)
+    ? getNearestAlienTarget(ship.x, ship.y)
+    : getNearestPlayerTarget(ship.x, ship.y);
+}
+
 export function playerTurretAi(turret) {
-  const {target, dist} = getNearestAlienTarget(turret.x, turret.y);
+  const {target, dist} = getNearestOpponentTarget(turret);
   if (target && (dist <= fly.primaryWeaponRange(turret))) {
     shootAt(turret, target.x, target.y, 0.25);
   }
@@ -103,9 +113,7 @@ export function playerTurretAi(turret) {
  * Simple AI for missiles - find nearest target and move toward it attempting to crash
  */
 export function missileAi(missile) {
-  const {target, dist} = missile.owner === c.PLAYER
-    ? getNearestAlienTarget(missile.x, missile.y)
-    : getNearestPlayerTarget(missile.x, missile.y);
+  const {target, dist} = getNearestOpponentTarget(missile);
   // Missiles don't track targets really far away
   if (target && dist < c.SCREEN_WIDTH) {
     let dirToTarget = utils.directionTo(missile.x, missile.y, target.x, target.y);
@@ -131,7 +139,7 @@ export function creeperAi(alien, crashIntoPlayer=false) {
   }
   const viewRange = alien.viewRange || c.SCREEN_WIDTH;
   let moved = false;
-  const {target:playerTarget, dist:distToPlayer} = getNearestPlayerTarget(alien.x, alien.y)
+  const {target:playerTarget, dist:distToPlayer} = getNearestOpponentTarget(alien);
   if (!playerTarget) {
     return;
   }
@@ -171,7 +179,7 @@ export function creeperAi(alien, crashIntoPlayer=false) {
     moved = true;
   }
   if (distToPlayer < fly.primaryWeaponRange(alien)) {
-    shootAt(alien, ship.x, ship.y, 0.15);
+    shootAt(alien, playerTarget.x, playerTarget.y, 0.15);
   }
   return moved;
 }
@@ -232,6 +240,9 @@ export function checkForCollisionWithShip(ship) {
       let dist = utils.distanceBetween(ship.x, ship.y, otherShip.x, otherShip.y);
       if (dist <= (ship.radius + otherShip.radius)) {
         fly.shipsCollide(ship, otherShip);
+        if (ship.name === c.SHIP_FRIENDSHIP_MISSILE.name && otherShip.owner !== ship.owner) {
+          otherShip.owner = ship.owner;
+        }
       }
     }
   } // for

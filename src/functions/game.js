@@ -63,8 +63,8 @@ export function setupWorld() {
   createPlanets();
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
-   window.world.shipStartX = c.PLAYER_START_X;
-  //window.world.shipStartX = +1550;
+  window.world.shipStartX = c.PLAYER_START_X;
+  // window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);

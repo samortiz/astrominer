@@ -763,13 +763,36 @@ export const SHIP_MISSILE = {
   },
   equipMax: 0,
   equip: [],
-  armorMax: 150,
-  armor: 150,
+  armorMax: 200,
+  armor: 200,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 1,
   imageFile: SHIP_BALL_FILE,
-  cost: {titanium: 5, gold: 5, uranium: 10},
+  cost: {titanium: 0, gold: 0, uranium: 10},
+  aiType: EQUIP_AI_MISSILE,
+};
+
+export const SHIP_FRIENDSHIP_MISSILE = {
+  name: "Friendship Missile",
+  objType: OBJ_SHIP,
+  propulsion: 0.09, // best between 0.02 - 0.1
+  turnSpeed: 0.25, // // best between 0.3 - 0.07
+  resourcesMax: 0,
+  resources: {
+    titanium: 0,
+    gold: 0,
+    uranium: 0,
+  },
+  equipMax: 0,
+  equip: [],
+  armorMax: 30,
+  armor: 30,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 0.5,
+  imageFile: ALIEN_SHIP_RED_FILE,
+  cost: {titanium: 0, gold: 10, uranium: 0},
   aiType: EQUIP_AI_MISSILE,
 };
 
@@ -790,8 +813,14 @@ export const EQUIP_TURRET_DEPLOYER = {
 export const EQUIP_MISSILE_LAUNCHER = {
   name: "Missile Launcher", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 75, cool: 0,
   createShip: {type: SHIP_MISSILE, dir: DIR_AHEAD_OF_SHIP},
-  cost: {titanium: 50, gold: 50, uranium: 100}
+  cost: {titanium: 50, gold: 50, uranium: 150}
 };
+export const EQUIP_FRIENDSHIP_GUN = {
+  name: "Friendship Gun", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 100, cool: 0,
+  createShip: {type: SHIP_FRIENDSHIP_MISSILE, dir: DIR_AHEAD_OF_SHIP},
+  cost: {titanium: 100, gold: 300, uranium: 100}
+};
+
 
 export const EQUIP_UPGRADES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_ARMOR, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST,
   EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE];
@@ -815,12 +844,13 @@ export const XP_LEVELS = {
     {xp: 50, obj: EQUIP_BLINK_BRAKE},
     {xp: 100, obj: EQUIP_THRUSTER},
     {xp: 500, obj: SHIP_FAST},
+    {xp: 1000, obj: EQUIP_BLINK_THRUSTER},
   ],
   [PLANET_GREEN_FILE]: [
     {xp: 10, obj: SHIP_SKELETON},
     {xp: 50, obj: EQUIP_R2D2},
-    {xp: 100, obj: EQUIP_BLINK_THRUSTER},
-    {xp: 1000, obj: SHIP_HEAVY},
+    {xp: 500, obj: SHIP_HEAVY},
+    {xp: 1000, obj: EQUIP_FRIENDSHIP_GUN},
   ],
   [PLANET_PURPLE_FILE]: [
     {xp: 10, obj: EQUIP_TURN_BOOST},
@@ -909,7 +939,7 @@ export const UNIVERSE_RINGS = [
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE, PLANET_GREEN_FILE],
     aliens: [
       {count: 1000, file: SHIP_ALIEN_TURRET},
-      {count: 1000, file: SHIP_ALIEN},
+      {count: 500, file: SHIP_ALIEN},
       {count: 300, file: SHIP_ALIEN_LARGE},
     ],
   },
@@ -919,7 +949,7 @@ export const UNIVERSE_RINGS = [
     minDistToOtherPlanet: 200,
     minPlanetRadius: 130, maxPlanetRadius: 200,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE],
-    aliens: [{count: 1500, file: SHIP_ALIEN_TURRET}, {count: 100, file: SHIP_ALIEN}],
+    aliens: [{count: 1000, file: SHIP_ALIEN_TURRET}, {count: 100, file: SHIP_ALIEN}],
   },
   {
     planetCount: 500,
