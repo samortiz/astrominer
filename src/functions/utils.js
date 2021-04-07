@@ -94,16 +94,18 @@ export function getPointFrom(startX, startY, dir, distance) {
 }
 
 /**
- * @return a collection of points [[x,y],[x,y]] on a rectangular sprite that can be used for collision detection
- * @param x,y global x,y position of sprite (on main map, not in viewport)
+ * return a collection of points [[x,y],[x,y]] on a rectangular sprite that can be used for collision detection
+ * param x,y global x,y position of sprite (on main map, not in viewport)
+ * NOTE: This will scale based on the scaleFactor set by the window size
  */
 export function getVertexData(x,y, sprite) {
   sprite.calculateVertices();
+  const vertices = sprite.vertexData.map(p => p / window.world.system.screenScale);
   let collisionPoints = []; // [[x,y],[x,y]]
-  collisionPoints.push(toGlobal(x, y, sprite.vertexData[0], sprite.vertexData[1])); // top left
-  collisionPoints.push(toGlobal(x, y, sprite.vertexData[2], sprite.vertexData[3])); // top right
-  collisionPoints.push(toGlobal(x, y, sprite.vertexData[4], sprite.vertexData[5])); // bottom right
-  collisionPoints.push(toGlobal(x, y, sprite.vertexData[6], sprite.vertexData[7])); // bottom left
+  collisionPoints.push(toGlobal(x, y, vertices[0], vertices[1])); // top left
+  collisionPoints.push(toGlobal(x, y, vertices[2], vertices[3])); // top right
+  collisionPoints.push(toGlobal(x, y, vertices[4], vertices[5])); // bottom right
+  collisionPoints.push(toGlobal(x, y, vertices[6], vertices[7])); // bottom left
   // Add a few points between to help with border collisions (these have already been converted to global)
   collisionPoints.push(midPoint(collisionPoints[0], collisionPoints[1]));
   collisionPoints.push(midPoint(collisionPoints[1], collisionPoints[2]));
@@ -118,6 +120,39 @@ export function getVertexData(x,y, sprite) {
  */
 export function toGlobal(globalX,globalY, spriteX,spriteY) {
   return [globalX + (spriteX - c.HALF_SCREEN_WIDTH), globalY+ (spriteY - c.HALF_SCREEN_HEIGHT)];
+}
+
+
+/**
+ * return true if the pX,pY (global positions) is inside the sprite at x,y
+ * param x,y global x,y position of sprite (on main map, not in viewport)
+ */
+export function pointInSprite(x,y, sprite, pX, pY) {
+  sprite.calculateVertices();
+  // scale the vertices for the screen scaling
+  const vertices = sprite.vertexData.map(p => p / window.world.system.screenScale);
+  const topLeft = (toGlobal(x, y, vertices[0], vertices[1])); // top left
+  const topRight = (toGlobal(x, y, vertices[2], vertices[3])); // top right
+  const bottomLeft = (toGlobal(x, y, vertices[6], vertices[7])); // bottom right
+  // Complicated math stuff
+  const AB = toVector(topLeft, topRight);
+  const AD = toVector(topLeft, bottomLeft);
+  const AM = toVector(topLeft, [pX, pY]);
+  const dotAMAB = dot(AM, AB);
+  const dotABAB = dot(AB, AB);
+  const dotAMAD = dot(AM, AD);
+  const dotADAD = dot(AD, AD);
+  return 0 <= dotAMAB && dotAMAB <= dotABAB && 0 <= dotAMAD && dotAMAD <= dotADAD;
+}
+
+// p1 and p2 are [x,y]
+function toVector(p1, p2) {
+  return [(p2[0] - p1[0]), (p2[1] - p1[1])];
+}
+
+// u and v are [x,y]
+function dot(u, v) {
+  return (u[0] * v[0]) + (u[1] * v[1]);
 }
 
 /**

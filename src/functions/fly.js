@@ -1,5 +1,4 @@
 import {ai, c, game, manage, utils} from './';
-import {getShipSprite} from "./game";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -139,7 +138,7 @@ export function repositionScreen() {
   }
   for (const ship of window.world.ships) {
     if (ship.spriteId) {
-      getShipSprite(ship).visible = false;
+      game.getShipSprite(ship).visible = false;
       ship.spriteId = null;
     }
   }
@@ -698,7 +697,6 @@ function checkForBulletCollision(bullet) {
   // Collision with planet
   for (let planet of window.world.system.nearby.planets) {
     if (utils.distanceBetween(planet.x, planet.y, bullet.x, bullet.y) < planet.radius) {
-      // TODO: Check for building damage
       killBullet(bullet);
     }
   }
@@ -709,7 +707,7 @@ function checkForBulletCollision(bullet) {
       bulletHitShip(bullet, ship, resetGame);
     } else {
       const shipSprite = game.getShipSprite(ship);
-      if (shipSprite.containsPoint({x: bullet.sprite.x, y: bullet.sprite.y})) {
+      if (utils.pointInSprite(ship.x, ship.y, shipSprite, bullet.x, bullet.y)) {
         bulletHitShip(bullet, ship, resetGame);
       }
     }

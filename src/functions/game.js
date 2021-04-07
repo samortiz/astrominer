@@ -50,6 +50,8 @@ export function createEmptyWorld() {
       shipSpriteCache: {}, // {"alien_small.png" : Map(id:sprite, id:sprite)... }
       shieldSpriteCache: new Map(), // These sprites are each added to a ship and not reused
       spriteContainers: {background: null, planets: null, bullets: null, ships: null, minimap: null},
+      screenHeight: c.SCREEN_HEIGHT, // changed based on window size
+      screenScale: 1, // scale due to window sizing
       miniMapGraphics: null, // used as a canvas for drawing the miniMap
       initializing: true, // set to false when the game fully running (after first draw)
     },
@@ -323,6 +325,7 @@ export function getShipSprite(ship) {
     if (!foundSprite.visible) {
       foundSprite.visible = false;
       foundSprite.rotation = ship.rotation;
+      foundSprite.scale.set(ship.imageScale, ship.imageScale);
       ship.spriteWidth = foundSprite.width;
       ship.spriteHeight = foundSprite.height;
       ship.radius = foundSprite.width / 2; // used for circular aliens

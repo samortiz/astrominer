@@ -702,8 +702,8 @@ export const SHIP_ALIEN_MOTHERSHIP = {
   aiType: ALIEN_AI_MOTHERSHIP,
 };
 
-export const SHIP_MINE = {
-  name: "Mine",
+export const SHIP_DECOY = {
+  name: "Decoy",
   objType: OBJ_SHIP,
   propulsion: 0.0,
   turnSpeed: 0.0,
@@ -715,15 +715,14 @@ export const SHIP_MINE = {
   },
   equipMax: 0,
   equip: [],
-  armorMax: 100,
-  armor: 100,
+  armorMax: 300,
+  armor: 300,
   crashSpeed: 2,
   crashAngle: 10,
-  imageScale: 1.2,
-  imageFile: ALIEN_SHIP_BLUE_FILE,
+  imageScale: 0.55,
+  imageFile: SHIP_EXPLORER_FILE,
   cost: {titanium: 5, gold: 0, uranium: 10},
   aiType: EQUIP_AI_MINE,
-  aiData: {mineDistance: 300}
 };
 
 export const SHIP_TURRET = {
@@ -739,15 +738,14 @@ export const SHIP_TURRET = {
   },
   equipMax: 1,
   equip: [EQUIP_FAST_BLASTER],
-  armorMax: 100,
-  armor: 100,
+  armorMax: 200,
+  armor: 200,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.6,
   imageFile: ALIEN_SHIP_BLUE_LARGE_FILE,
   cost: {titanium: 10, gold: 10, uranium: 20},
   aiType: EQUIP_AI_TURRET,
-  aiData: {mineDistance: 300}
 };
 
 export const SHIP_MISSILE = {
@@ -791,7 +789,7 @@ export const SHIP_FRIENDSHIP_MISSILE = {
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.5,
-  imageFile: ALIEN_SHIP_RED_FILE,
+  imageFile: ALIEN_SHIP_BLUE_FILE,
   cost: {titanium: 0, gold: 10, uranium: 0},
   aiType: EQUIP_AI_MISSILE,
 };
@@ -800,9 +798,9 @@ export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_SKELETON, S
   SHIP_ALIEN, SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_STAPLE_TURRET, SHIP_ALIEN_FIRE, SHIP_ALIEN_STEALTH];
 
 // This equipment needs to go after the ships (ugh)
-export const EQUIP_MINE_DEPLOYER = {
-  name: "Mine Deployer", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 25, cool: 0,
-  createShip: {type: SHIP_MINE, dir: DIR_BEHIND_SHIP},
+export const EQUIP_DECOY_DEPLOYER = {
+  name: "Decoy Deployer", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 25, cool: 0,
+  createShip: {type: SHIP_DECOY, dir: DIR_BEHIND_SHIP},
   cost: {titanium: 30, gold: 50, uranium: 100}
 };
 export const EQUIP_TURRET_DEPLOYER = {
@@ -825,7 +823,7 @@ export const EQUIP_FRIENDSHIP_GUN = {
 export const EQUIP_UPGRADES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_ARMOR, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST,
   EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE];
 export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN, EQUIP_STAPLE_GUN_HEAVY, EQUIP_ALIEN_BLASTER_FAST, EQUIP_ALIEN_BLASTER_LIGHTNING];
-export const EQUIP_SECONDARY_WEAPONS = [EQUIP_MINE_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA];
+export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA];
 export const EQUIP_DROIDS = [EQUIP_R2D2, EQUIP_GUNNERY_DROID];
 export const ALL_EQUIP = [...EQUIP_UPGRADES, ...EQUIP_PRIMARY_WEAPONS, ...EQUIP_SECONDARY_WEAPONS, ...EQUIP_DROIDS];
 
@@ -850,7 +848,6 @@ export const XP_LEVELS = {
     {xp: 10, obj: SHIP_SKELETON},
     {xp: 50, obj: EQUIP_R2D2},
     {xp: 500, obj: SHIP_HEAVY},
-    {xp: 1000, obj: EQUIP_FRIENDSHIP_GUN},
   ],
   [PLANET_PURPLE_FILE]: [
     {xp: 10, obj: EQUIP_TURN_BOOST},
@@ -866,28 +863,33 @@ export const XP_LEVELS = {
   ],
   [SHIP_ALIEN.name]: [
     {xp: 1, obj: EQUIP_SHIELD},
-    {xp: 5, obj: EQUIP_MINE_DEPLOYER},
+    {xp: 5, obj: EQUIP_DECOY_DEPLOYER},
     {xp: 10, obj: EQUIP_SHIELD_LONG},
     {xp: 20, obj: SHIP_ALIEN},
   ],
   [SHIP_ALIEN_LARGE.name]: [
-    {xp: 3, obj: EQUIP_STREAM_BLASTER},
-    {xp: 7, obj: EQUIP_TURRET_DEPLOYER},
-    {xp: 10, obj: EQUIP_ENHANCED_STORAGE},
-    {xp: 15, obj: SHIP_ALIEN_LARGE},
+    {xp: 1, obj: EQUIP_STREAM_BLASTER},
+    {xp: 5, obj: EQUIP_TURRET_DEPLOYER},
+    {xp: 20, obj: SHIP_ALIEN_LARGE},
   ],
   [SHIP_ALIEN_STEALTH.name]: [
     {xp: 1, obj: EQUIP_SPRINKLER_BLASTER},
     {xp: 5, obj: EQUIP_MISSILE_LAUNCHER},
-    {xp: 10, obj: EQUIP_ALIEN_BLASTER_LIGHTNING},
+  ],
+  [SHIP_ALIEN_STAPLE_TURRET.name]: [
+    {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
+    {xp: 4, obj: EQUIP_FRIENDSHIP_GUN},
+    {xp: 7, obj: EQUIP_ENHANCED_STORAGE},
   ],
   [SHIP_ALIEN_FIRE.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN},
     {xp: 4, obj: EQUIP_ENHANCED_ARMOR},
     {xp: 7, obj: EQUIP_SHIELD_ULTRA},
-    {xp: 10, obj: EQUIP_STAPLE_GUN_HEAVY},
     {xp: 15, obj: SHIP_ALIEN_FIRE},
   ],
+  [SHIP_ALIEN_MOTHERSHIP.name]: [
+    {xp: 1, obj: EQUIP_ALIEN_BLASTER_LIGHTNING},
+  ]
 }
 
 export const PLANET_DENSITY = new Map();
@@ -925,7 +927,7 @@ export const UNIVERSE_RINGS = [
     minPlanetRadius: 250, maxPlanetRadius: 500,
     planetFiles: [PLANET_RED_FILE, PLANET_PURPLE_FILE, PLANET_GREEN_FILE],
     aliens: [
-      {count: 200, file: SHIP_ALIEN_STAPLE_TURRET},
+      {count: 100, file: SHIP_ALIEN_STAPLE_TURRET},
       {count: 200, file: SHIP_ALIEN},
       {count: 700, file: SHIP_ALIEN_LARGE},
       {count: 300, file: SHIP_ALIEN_STEALTH},
@@ -935,19 +937,19 @@ export const UNIVERSE_RINGS = [
     planetCount: 600,
     minDist: 10000, maxDist: 15000,
     minDistToOtherPlanet: 150,
-    minPlanetRadius: 150, maxPlanetRadius: 250,
+    minPlanetRadius: 170, maxPlanetRadius: 250,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE, PLANET_GREEN_FILE],
     aliens: [
       {count: 1000, file: SHIP_ALIEN_TURRET},
       {count: 500, file: SHIP_ALIEN},
-      {count: 300, file: SHIP_ALIEN_LARGE},
+      {count: 250, file: SHIP_ALIEN_LARGE},
     ],
   },
   {
     planetCount: 2000,
     minDist: 15000, maxDist: 25000,
     minDistToOtherPlanet: 200,
-    minPlanetRadius: 130, maxPlanetRadius: 200,
+    minPlanetRadius: 150, maxPlanetRadius: 200,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE],
     aliens: [{count: 1000, file: SHIP_ALIEN_TURRET}, {count: 100, file: SHIP_ALIEN}],
   },
@@ -957,13 +959,13 @@ export const UNIVERSE_RINGS = [
     minDistToOtherPlanet: 300,
     minPlanetRadius: 150, maxPlanetRadius: 180,
     planetFiles: [PLANET_ROCK_FILE],
-    aliens: [],
+    aliens: [{count: 500, file: SHIP_ALIEN_TURRET}],
   },
   {
     planetCount: 800,
     minDist: 28000, maxDist: UNIVERSE_RADIUS,
     minDistToOtherPlanet: 500,
-    minPlanetRadius: 50, maxPlanetRadius: 120,
+    minPlanetRadius: 80, maxPlanetRadius: 150,
     planetFiles: [PLANET_ROCK_FILE],
     aliens: [],
   },

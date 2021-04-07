@@ -20,10 +20,10 @@ export default class App extends React.Component {
       <table className='root-app' width='100%'>
         <tbody>
         <tr>
-          <td width='10%'>
+          <td>
             <div className='viewport' ref={this.pixiRef}/>
           </td>
-          <td className='info-panel' width='100%' height={c.SCREEN_HEIGHT + 'px'}>
+          <td className='info-panel' width='100%' height={(window.world.system.screenHeight || c.SCREEN_HEIGHT) + 'px'}>
             <InfoPanel/>
           </td>
         </tr>
@@ -47,6 +47,7 @@ export default class App extends React.Component {
   setupGame = () => {
     game.setupWorld();
     this.setupKeyboardListeners();
+    this.setupWindowResizeListener();
     game.changeGameState(c.GAME_STATE.FLY);
     window.world.system.app.renderer.plugins.interaction.on('pointerdown', (event) => {
       game.click(event);
@@ -63,7 +64,8 @@ export default class App extends React.Component {
       ai.moveAliens();
       window.world.system.gameLoop(delta);
     }
-    this.forceUpdate()
+    // Redraw react HTML
+    this.forceUpdate();
   }
 
   setupKeyboardListeners = () => {
@@ -81,4 +83,19 @@ export default class App extends React.Component {
     window.world.system.keys.x = utils.keyboardListener("x"); // secondary weapon
   }
 
+  setupWindowResizeListener() {
+    window.addEventListener('resize', resizeScreenToWindow);
+    resizeScreenToWindow();
+  }
 }
+
+function resizeScreenToWindow() {
+  const app = window.world.system.app;
+  const h = Math.max(window.innerHeight - 4, 550);
+  const scale = h / 1000;
+  window.world.system.app.stage.scale.set(scale);
+  app.renderer.resize(h, h);
+  window.world.system.screenHeight = h;
+  window.world.system.screenScale = scale;
+}
+

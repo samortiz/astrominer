@@ -1,4 +1,7 @@
 Bugs
+ - scale font size smaller with smaller screens
+ - shield and primary weapon bullets didn't show after loading (maybe different size ships?)
+ - Factory columns overlap with narrow screen width (white text on buttons)
 
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
