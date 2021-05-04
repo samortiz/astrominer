@@ -1,4 +1,6 @@
 Bugs
+ - minimap click doesn't navigate
+ - set min width and height for window
  - scale font size smaller with smaller screens
  - shield and primary weapon bullets didn't show after loading (maybe different size ships?)
  - Factory columns overlap with narrow screen width (white text on buttons)
@@ -6,10 +8,11 @@ Bugs
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
  - Disable Resupply button when no ship is selected
+ - display health on planet screen
 
 TODO
-- Add Repair button to planet for fast ship repair
-- Repair should use resources based on ship cost (too much titanium needed in game)
+- shield droid : auto-deploys shield on first hit
+- Fat gun : large damage, very slow fire
 - Factory progress bar
 - Redo layout on Storage screen
 - Scroll long lists

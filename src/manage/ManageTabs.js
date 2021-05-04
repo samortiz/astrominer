@@ -10,7 +10,7 @@ import {Tab, Tabs} from "react-bootstrap";
 export function ManageTabs() {
 
   return (
-    <Tabs defaultActiveKey='planet' id='manage-tabs' mountOnEnter unmountOnExit>
+    <Tabs defaultActiveKey='planet' id='manage-tabs' mountOnEnter unmountOnExit className="flex-nowrap">
       <Tab eventKey='planet' title='Planet'>
         <ManagePlanet/>
       </Tab>

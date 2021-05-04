@@ -3,24 +3,24 @@
 }
 
 .tab {
-  border-top:1px solid black;
+  border-top: 1px solid black;
   border-left: 1px solid black;
   border-right: 1px solid black;
-  padding-left:5px;
-  padding-right:5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .active-tab {
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .non-active-tab {
-  border-bottom:1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .tab-body {
 }
 
 .tab-hidden {
-  display:none;
+  display: none;
 }

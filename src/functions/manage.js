@@ -142,7 +142,6 @@ export function buildingFits(planet, ship, rotation, buildingWidth) {
  * Move a resource ship <-> planet 
  */
 export function transferResource(source, target, resourceType, requestedAmtStr, maxCapacity) {
-  console.log('transferring '+requestedAmtStr+' of '+resourceType);
   let requestedAmt = Number(requestedAmtStr);
   if (isNaN(requestedAmt)) {
     requestedAmt = 0;
@@ -222,7 +221,7 @@ export function buildFactory() {
 export function buildShip(shipTemplate) {
   let world = window.world;
   let planet = world.selectedPlanet;
-  let newShip = game.createShip(shipTemplate);
+  let newShip = game.createShip(shipTemplate, c.PLAYER);
   planet.ships.push(newShip);
 }
 

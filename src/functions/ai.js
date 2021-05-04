@@ -8,14 +8,14 @@ export function moveAliens() {
       continue;
     }
     let hasMoved = false;
-    if (alien.aiType === c.ALIEN_AI_TURRET) {
-      turretAi(alien);
-    } else if (alien.aiType === c.ALIEN_AI_CREEPER) {
+    if (alien.aiType === c.ALIEN_AI_CREEPER) {
       hasMoved = creeperAi(alien, false);
     } else if (alien.aiType === c.ALIEN_AI_KAMIKAZI) {
       hasMoved = creeperAi(alien, true);
     } else if (alien.aiType === c.EQUIP_AI_TURRET) {
-      hasMoved = playerTurretAi(alien);
+      hasMoved = turretAi(alien, 0.7);
+    } else if (alien.aiType === c.ALIEN_AI_TURRET) {
+      hasMoved = turretAi(alien, 0.25);
     } else if (alien.aiType === c.EQUIP_AI_MISSILE) {
       hasMoved = missileAi(alien);
     } else if (alien.aiType === c.ALIEN_AI_MOTHERSHIP) {
@@ -64,14 +64,15 @@ export function shootAt(shooter, x, y, jitter) {
   fly.firePrimaryWeapon(shooter, jitter);
 }
 
-export function turretAi(alien) {
-  const {target, dist} = getNearestOpponentTarget(alien);
+export function turretAi(turretShip, jitter) {
+  const {target, dist} = getNearestOpponentTarget(turretShip);
   if (!target || !target.alive) {
-    return;
+    return false;
   }
-  if (dist < fly.primaryWeaponRange(alien)) {
-    shootAt(alien, target.x, target.y, 0.7);
+  if (dist < fly.primaryWeaponRange(turretShip)) {
+    shootAt(turretShip, target.x, target.y, jitter);
   }
+  return false;
 }
 
 export function mothershipAi(alien) {
@@ -99,14 +100,6 @@ export function getNearestOpponentTarget(ship) {
   return (ship.owner === c.PLAYER)
     ? getNearestAlienTarget(ship.x, ship.y)
     : getNearestPlayerTarget(ship.x, ship.y);
-}
-
-export function playerTurretAi(turret) {
-  const {target, dist} = getNearestOpponentTarget(turret);
-  if (target && (dist <= fly.primaryWeaponRange(turret))) {
-    shootAt(turret, target.x, target.y, 0.25);
-  }
-  return false; // never moves
 }
 
 /**

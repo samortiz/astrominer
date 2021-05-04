@@ -15,7 +15,7 @@ export function FactoryTabs() {
 
   return (
     <div className='factory-info'>
-      <Tabs defaultActiveKey='ships' id='factory-tabs'>
+      <Tabs defaultActiveKey='ships' id='factory-tabs' className="flex-nowrap">
         <Tab eventKey='ships' title="Ships">
           <FactoryTab type='ship' templateList={window.world.blueprints.ship} />
         </Tab>

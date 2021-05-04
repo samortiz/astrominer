@@ -847,7 +847,7 @@ export const XP_LEVELS = {
   [PLANET_GREEN_FILE]: [
     {xp: 10, obj: SHIP_SKELETON},
     {xp: 50, obj: EQUIP_R2D2},
-    {xp: 500, obj: SHIP_HEAVY},
+    {xp: 500, obj1: SHIP_HEAVY},
   ],
   [PLANET_PURPLE_FILE]: [
     {xp: 10, obj: EQUIP_TURN_BOOST},
@@ -873,16 +873,16 @@ export const XP_LEVELS = {
     {xp: 20, obj: SHIP_ALIEN_LARGE},
   ],
   [SHIP_ALIEN_STEALTH.name]: [
-    {xp: 1, obj: EQUIP_SPRINKLER_BLASTER},
-    {xp: 5, obj: EQUIP_MISSILE_LAUNCHER},
+    {xp: 1, obj: EQUIP_MISSILE_LAUNCHER},
+    {xp: 5, obj: EQUIP_SPRINKLER_BLASTER},
   ],
   [SHIP_ALIEN_STAPLE_TURRET.name]: [
-    {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
+    {xp: 1, obj: EQUIP_STAPLE_GUN},
     {xp: 4, obj: EQUIP_FRIENDSHIP_GUN},
     {xp: 7, obj: EQUIP_ENHANCED_STORAGE},
   ],
   [SHIP_ALIEN_FIRE.name]: [
-    {xp: 1, obj: EQUIP_STAPLE_GUN},
+    {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
     {xp: 4, obj: EQUIP_ENHANCED_ARMOR},
     {xp: 7, obj: EQUIP_SHIELD_ULTRA},
     {xp: 15, obj: SHIP_ALIEN_FIRE},
