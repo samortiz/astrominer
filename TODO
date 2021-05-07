@@ -1,22 +1,18 @@
 Bugs
- - shield and primary weapon bullets didn't show after loading (possibly cached graphics need clearing)
 
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
- - Disable Resupply button when no ship is selected
- - display health on planet screen
 
 TODO
+- Melee gun : multiple bullets, high damage at short range
+- Fat gun : large damage, slow fire
+- Sniper gun : large damage, long range, very slow fire
+- Shield droid : auto-deploys shield on first hit
+- Auto-lander : Ship-upgrade... cannot crash
 - Factory progress bar
 - Redo layout on Storage screen
 - Scroll long lists
 - Salvage / Destroy unwanted equipment and ships
-
-- Shield droid : auto-deploys shield on first hit
-- Melee gun : multiple bullets, high damage at short range
-- Fat gun : large damage, slow fire
-- Sniper gun : large damage, long range, very slow fire
-- Auto-lander : Ship-upgrade... cannot crash
 
 Ideas :
 - Drone, or wing-man?

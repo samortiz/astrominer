@@ -70,8 +70,11 @@ export function loadWorld(key) {
       // Clear the old containers of whatever they had
       window.world.system.spriteContainers.planets.removeChildren();
       window.world.system.planetSpriteCache = {};
-      window.world.system.shipSpriteCache = {};
       window.world.system.spriteContainers.ships.removeChildren();
+      window.world.system.shipSpriteCache = {};
+      window.world.system.shieldSpriteCache = new Map();
+      window.world.system.bullets = []; // remove all active bullets from the screen
+      window.world.system.spriteContainers.bullets.removeChildren();
 
       // Reset/Redraw all the sprites
       window.world.ship.spriteId = null;

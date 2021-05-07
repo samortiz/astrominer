@@ -49,7 +49,7 @@ export function createEmptyWorld() {
       planetSpriteCache: {}, // {"green_planet.png" : Map(id:sprite, id:sprite)... }
       shipSpriteCache: {}, // {"alien_small.png" : Map(id:sprite, id:sprite)... }
       shieldSpriteCache: new Map(), // These sprites are each added to a ship and not reused
-      spriteContainers: {background: null, planets: null, bullets: null, ships: null, minimap: null},
+      spriteContainers: {background: null, planets: null, bullets: null, ships: null, minimap: null, explosions:null},
       screenHeight: c.SCREEN_HEIGHT, // changed based on window size
       screenScale: 1, // scale due to window sizing
       miniMapGraphics: null, // used as a canvas for drawing the miniMap
@@ -122,6 +122,9 @@ export function setupSpriteContainers() {
 
   spriteContainers.minimap = new window.PIXI.Container();
   mainStage.addChild(spriteContainers.minimap);
+
+  spriteContainers.explosions = new window.PIXI.Container();
+  mainStage.addChild(spriteContainers.explosions);
 }
 
 export function createBackground() {
@@ -629,7 +632,7 @@ export function payResource(planet, ship, resourceType, amount) {
 export function setupExplosionSheet() {
   window.world.system.explosionSheet = window.PIXI.Loader.shared.resources[c.CRASH_JSON].spritesheet;
   // Preload an explosion sprite animation (these will be cached and reused in world.system.explosions)
-  window.world.system.explosions.push(createExplosionSprite());
+  createExplosionSprite();
 }
 
 export function createExplosionSprite() {
@@ -643,6 +646,6 @@ export function createExplosionSprite() {
   sprite.loop = true;
   sprite.visible = false;
   window.world.system.explosions.push(sprite);
-  window.world.system.spriteContainers.bullets.addChild(sprite);
+  window.world.system.spriteContainers.explosions.addChild(sprite);
   return sprite;
 }

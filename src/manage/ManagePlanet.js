@@ -31,7 +31,7 @@ export function ManagePlanet() {
       </div>
 
       <div style={{display:ship.alive?'block':'none'}} className='build-button'>
-        <div className='section'><b>Ship</b></div>
+        <div className='section'><b>Ship</b> ({Math.round(ship.armor) +' / '+ ship.armorMax}) </div>
         <button onClick={() => manage.resupplyShip(ship, planet)}>
             Resupply
         </button>
