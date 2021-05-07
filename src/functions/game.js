@@ -80,8 +80,8 @@ export function setupWorld() {
   // world.ship.resourcesMax = 100000;
   // world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
   // world.ship.equipMax = world.ship.equip.length;
-  // world.blueprints.equip = [...c.ALL_EQUIP];
-  // world.blueprints.ship = [...c.ALL_SHIPS];
+  world.blueprints.equip = [...c.ALL_EQUIP];
+  world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
   // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
@@ -467,8 +467,11 @@ export function setupMiniMap() {
 export function click(event) {
   let x = event.data.global.x;
   let y = event.data.global.y;
-  if ((x < c.MINIMAP_WIDTH) && (y > c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT)) {
-    fly.clickOnMinimap(x, y);
+  const screenScale = window.world.system.screenScale;
+  let scaledX = x / screenScale;
+  let scaledY = y / screenScale;
+  if ((scaledX < c.MINIMAP_WIDTH) && (scaledY > (c.SCREEN_HEIGHT - c.MINIMAP_HEIGHT))) {
+    fly.clickOnMinimap(scaledX, scaledY);
   }
 }
 

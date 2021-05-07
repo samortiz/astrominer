@@ -23,13 +23,13 @@ export const HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2;
 export const NEARBY_WIDTH = SCREEN_WIDTH * 3;
 export const NEARBY_HEIGHT = SCREEN_HEIGHT * 3;
 // size of minimap on screen
-export const MINIMAP_WIDTH = 120;
-export const MINIMAP_HEIGHT = 120;
+export const MINIMAP_WIDTH = 250;
+export const MINIMAP_HEIGHT = 250;
 export const HALF_MINIMAP_WIDTH = MINIMAP_WIDTH / 2;
 export const HALF_MINIMAP_HEIGHT = MINIMAP_HEIGHT / 2;
 // how far the minimap can view
-export const MINIMAP_VIEW_WIDTH = 4000;
-export const MINIMAP_VIEW_HEIGHT = 4000;
+export const MINIMAP_VIEW_WIDTH = 8000;
+export const MINIMAP_VIEW_HEIGHT = 8000;
 export const HALF_MINIMAP_VIEW_WIDTH = MINIMAP_VIEW_WIDTH / 2;
 export const HALF_MINIMAP_VIEW_HEIGHT = MINIMAP_VIEW_HEIGHT / 2;
 // convert minimap pixels to real pixels

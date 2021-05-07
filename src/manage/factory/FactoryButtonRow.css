@@ -1,5 +1,6 @@
 .factory-button {
   white-space: nowrap;
+  margin: 3px 5px;
 }
 
 .cost {

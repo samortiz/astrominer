@@ -1,7 +1,6 @@
 import React from 'react';
 import { c, manage, game} from '../../functions';
-import './FactoryButton.css';
-import {Col, Row} from "react-bootstrap";
+import './FactoryButtonRow.css';
 
 export function FactoryButtonRow({template}) {
   const world = window.world;
@@ -25,18 +24,18 @@ export function FactoryButtonRow({template}) {
   }
 
   return (
-    <Row className="pt-2">
-      <Col xs='1'>
+    <tr>
+      <td>
         {existingInventory}
-      </Col>
-      <Col xs='2'>
+      </td>
+      <td>
       <button className="factory-button"
         disabled={!manage.hasFactory(planet) || !game.canAfford(planet, ship, template.cost)}
         onClick={() => build(template)}>{template.name}</button>
-      </Col>
-      <Col xs='9'>
+      </td>
+      <td>
         <span className='cost'>{template.cost.titanium}T {template.cost.gold}G {template.cost.uranium}U</span>
-      </Col>
-    </Row>);
+      </td>
+    </tr>);
 };
 

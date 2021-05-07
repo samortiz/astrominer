@@ -1,9 +1,5 @@
 Bugs
- - minimap click doesn't navigate
- - set min width and height for window
- - scale font size smaller with smaller screens
- - shield and primary weapon bullets didn't show after loading (maybe different size ships?)
- - Factory columns overlap with narrow screen width (white text on buttons)
+ - shield and primary weapon bullets didn't show after loading (possibly cached graphics need clearing)
 
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
@@ -11,20 +7,22 @@ Minor Bugs
  - display health on planet screen
 
 TODO
-- shield droid : auto-deploys shield on first hit
-- Fat gun : large damage, very slow fire
 - Factory progress bar
 - Redo layout on Storage screen
 - Scroll long lists
 - Salvage / Destroy unwanted equipment and ships
 
+- Shield droid : auto-deploys shield on first hit
+- Melee gun : multiple bullets, high damage at short range
+- Fat gun : large damage, slow fire
+- Sniper gun : large damage, long range, very slow fire
+- Auto-lander : Ship-upgrade... cannot crash
+
 Ideas :
-- Enemy : mothership that spawns small ships when in range
-- Equip : drones, Blink Lander (brake)
+- Drone, or wing-man?
 - continuous fire wo keypress
 - zoom minimap
 - Self Destruct on FlyInfo
-- Switching view to planet sets view on planet (without changing ship position?)
 - Planet change name
 - Storage edit ship name
 

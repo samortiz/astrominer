@@ -44,6 +44,12 @@ a.nav-item:hover {
   color: #eef;
 }
 
+.nav-tabs a.nav-link {
+  border-right:1px solid black;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
 /* Active tab */
 .nav-tabs a.nav-link.active {
   background-color: #aaa;
