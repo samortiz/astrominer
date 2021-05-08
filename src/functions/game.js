@@ -82,7 +82,7 @@ export function setupWorld() {
   // world.ship.equipMax = world.ship.equip.length;
   // world.blueprints.equip = [...c.ALL_EQUIP];
   // world.blueprints.ship = [...c.ALL_SHIPS];
- 
+
   // DEBUG test alien
   // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
   // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);

@@ -28,8 +28,8 @@ export const MINIMAP_HEIGHT = 250;
 export const HALF_MINIMAP_WIDTH = MINIMAP_WIDTH / 2;
 export const HALF_MINIMAP_HEIGHT = MINIMAP_HEIGHT / 2;
 // how far the minimap can view
-export const MINIMAP_VIEW_WIDTH = 18000;
-export const MINIMAP_VIEW_HEIGHT = 18000;
+export const MINIMAP_VIEW_WIDTH = 8000;
+export const MINIMAP_VIEW_HEIGHT = 8000;
 export const HALF_MINIMAP_VIEW_WIDTH = MINIMAP_VIEW_WIDTH / 2;
 export const HALF_MINIMAP_VIEW_HEIGHT = MINIMAP_VIEW_HEIGHT / 2;
 // convert minimap pixels to real pixels
@@ -959,8 +959,8 @@ export const UNIVERSE_RINGS = [
     aliens: [
       {count: 100, file: SHIP_ALIEN_STAPLE_TURRET},
       {count: 200, file: SHIP_ALIEN},
-      {count: 700, file: SHIP_ALIEN_LARGE},
-      {count: 300, file: SHIP_ALIEN_STEALTH},
+      {count: 750, file: SHIP_ALIEN_LARGE},
+      {count: 400, file: SHIP_ALIEN_STEALTH},
     ],
   },
   {
@@ -972,7 +972,7 @@ export const UNIVERSE_RINGS = [
     aliens: [
       {count: 1000, file: SHIP_ALIEN_TURRET},
       {count: 500, file: SHIP_ALIEN},
-      {count: 250, file: SHIP_ALIEN_LARGE},
+      {count: 200, file: SHIP_ALIEN_LARGE},
     ],
   },
   {
