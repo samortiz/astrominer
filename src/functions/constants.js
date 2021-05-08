@@ -28,8 +28,8 @@ export const MINIMAP_HEIGHT = 250;
 export const HALF_MINIMAP_WIDTH = MINIMAP_WIDTH / 2;
 export const HALF_MINIMAP_HEIGHT = MINIMAP_HEIGHT / 2;
 // how far the minimap can view
-export const MINIMAP_VIEW_WIDTH = 8000;
-export const MINIMAP_VIEW_HEIGHT = 8000;
+export const MINIMAP_VIEW_WIDTH = 18000;
+export const MINIMAP_VIEW_HEIGHT = 18000;
 export const HALF_MINIMAP_VIEW_WIDTH = MINIMAP_VIEW_WIDTH / 2;
 export const HALF_MINIMAP_VIEW_HEIGHT = MINIMAP_VIEW_HEIGHT / 2;
 // convert minimap pixels to real pixels
@@ -81,7 +81,7 @@ export const STAR_BACKGROUND_FILE = "images/stars.png";
 export const CRASH_JSON = "images/crash.json";
 export const CRASH = "crash"; // animation name in json
 
-export const UNIVERSE_RADIUS = 33000;
+export const UNIVERSE_RADIUS = 35000;
 export const PLAYER = "player";
 export const ALIEN = "alien";
 export const PLAYER_STARTING_RESOURCES = {titanium: 30, gold: 20, uranium: 0};
@@ -240,6 +240,34 @@ export const EQUIP_STREAM_BLASTER = {
   jitter: 0.04,
   bulletFile: BULLET_FILE,
   cost: {titanium: 30, gold: 30, uranium: 60}
+};
+// Dmg: 250/c Range:120
+export const EQUIP_MELEE_GUN = {
+  name: "Melee Gun",
+  objType: OBJ_EQUIP,
+  type: EQUIP_TYPE_PRIMARY_WEAPON,
+  coolTime: 3,
+  cool: 0,
+  damage: 10,
+  speed: 4,
+  lifetime: 30,
+  jitter: 0.25,
+  bulletFile: BULLET_FILE,
+  cost: {titanium: 50, gold: 50, uranium: 50}
+};
+// Dmg: 66/c Range:720
+export const EQUIP_SNIPER_RIFLE = {
+  name: "Sniper Rifle",
+  objType: OBJ_EQUIP,
+  type: EQUIP_TYPE_PRIMARY_WEAPON,
+  coolTime: 120,
+  cool: 0,
+  damage: 80,
+  speed: 8,
+  lifetime: 90,
+  jitter: 0.0,
+  bulletFile: BULLET_FILE,
+  cost: {titanium: 50, gold: 50, uranium: 50}
 };
 // Dmg 25/c Range:240
 export const EQUIP_ALIEN_BLASTER = {
@@ -822,7 +850,7 @@ export const EQUIP_FRIENDSHIP_GUN = {
 
 export const EQUIP_UPGRADES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_ARMOR, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST,
   EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE];
-export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN, EQUIP_STAPLE_GUN_HEAVY, EQUIP_ALIEN_BLASTER_FAST, EQUIP_ALIEN_BLASTER_LIGHTNING];
+export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_MELEE_GUN, EQUIP_SNIPER_RIFLE, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN, EQUIP_STAPLE_GUN_HEAVY, EQUIP_ALIEN_BLASTER_FAST, EQUIP_ALIEN_BLASTER_LIGHTNING];
 export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA];
 export const EQUIP_DROIDS = [EQUIP_R2D2, EQUIP_GUNNERY_DROID];
 export const ALL_EQUIP = [...EQUIP_UPGRADES, ...EQUIP_PRIMARY_WEAPONS, ...EQUIP_SECONDARY_WEAPONS, ...EQUIP_DROIDS];
@@ -870,11 +898,13 @@ export const XP_LEVELS = {
   [SHIP_ALIEN_LARGE.name]: [
     {xp: 1, obj: EQUIP_STREAM_BLASTER},
     {xp: 5, obj: EQUIP_TURRET_DEPLOYER},
+    {xp: 10, obj: EQUIP_SNIPER_RIFLE},
     {xp: 20, obj: SHIP_ALIEN_LARGE},
   ],
   [SHIP_ALIEN_STEALTH.name]: [
     {xp: 1, obj: EQUIP_MISSILE_LAUNCHER},
-    {xp: 5, obj: EQUIP_SPRINKLER_BLASTER},
+    {xp: 4, obj: EQUIP_SPRINKLER_BLASTER},
+    {xp: 7, obj: EQUIP_MELEE_GUN},
   ],
   [SHIP_ALIEN_STAPLE_TURRET.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN},
@@ -911,8 +941,8 @@ export const UNIVERSE_RINGS = [
   {
     planetCount: 0,
     minDist: 1700, maxDist: 2500,
-    minDistToOtherPlanet: 200,
-    minPlanetRadius: 200, maxPlanetRadius: 200,
+    minDistToOtherPlanet: 10,
+    minPlanetRadius: 10, maxPlanetRadius: 10,
     planetFiles: [],
     aliens: [
       {count: 50, file: SHIP_ALIEN_STEALTH},
@@ -924,7 +954,7 @@ export const UNIVERSE_RINGS = [
     planetCount: 200,
     minDist: 2500, maxDist: 10000,
     minDistToOtherPlanet: 150,
-    minPlanetRadius: 250, maxPlanetRadius: 500,
+    minPlanetRadius: 280, maxPlanetRadius: 500,
     planetFiles: [PLANET_RED_FILE, PLANET_PURPLE_FILE, PLANET_GREEN_FILE],
     aliens: [
       {count: 100, file: SHIP_ALIEN_STAPLE_TURRET},
@@ -934,10 +964,10 @@ export const UNIVERSE_RINGS = [
     ],
   },
   {
-    planetCount: 600,
+    planetCount: 520,
     minDist: 10000, maxDist: 15000,
     minDistToOtherPlanet: 150,
-    minPlanetRadius: 170, maxPlanetRadius: 250,
+    minPlanetRadius: 180, maxPlanetRadius: 300,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE, PLANET_GREEN_FILE],
     aliens: [
       {count: 1000, file: SHIP_ALIEN_TURRET},
@@ -951,11 +981,14 @@ export const UNIVERSE_RINGS = [
     minDistToOtherPlanet: 200,
     minPlanetRadius: 150, maxPlanetRadius: 200,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE],
-    aliens: [{count: 1000, file: SHIP_ALIEN_TURRET}, {count: 100, file: SHIP_ALIEN}],
+    aliens: [
+      {count: 1000, file: SHIP_ALIEN_TURRET},
+      {count: 150, file: SHIP_ALIEN}
+    ],
   },
   {
-    planetCount: 500,
-    minDist: 25000, maxDist: 28000,
+    planetCount: 1000,
+    minDist: 25000, maxDist: 30000,
     minDistToOtherPlanet: 300,
     minPlanetRadius: 150, maxPlanetRadius: 180,
     planetFiles: [PLANET_ROCK_FILE],
@@ -963,7 +996,7 @@ export const UNIVERSE_RINGS = [
   },
   {
     planetCount: 800,
-    minDist: 28000, maxDist: UNIVERSE_RADIUS,
+    minDist: 30000, maxDist: UNIVERSE_RADIUS,
     minDistToOtherPlanet: 500,
     minPlanetRadius: 80, maxPlanetRadius: 150,
     planetFiles: [PLANET_ROCK_FILE],
