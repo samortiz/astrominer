@@ -67,21 +67,21 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  // window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
-  world.ship = createShip(c.SHIP_FAST, c.PLAYER);
+  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
   shipSprite.visible = true;
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  world.ship.armorMax = 5000;
-  world.ship.armor = 5000;
-   world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  // window.world.shipStartX = +1550;
+  // world.ship.armorMax = 5000;
+  // world.ship.armor = 5000;
+  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
   // world.ship.resourcesMax = 100000;
-  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SNIPER_RIFLE),
-    lodash.cloneDeep(c.EQUIP_SHIELD_DROID), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA),
-    lodash.cloneDeep(c.EQUIP_AUTOLANDER), lodash.cloneDeep(c.EQUIP_MISSILE_LAUNCHER)];
+  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_MELEE_GUN),
+  //   lodash.cloneDeep(c.EQUIP_SHIELD_DROID), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA),
+  //   lodash.cloneDeep(c.EQUIP_AUTOLANDER), lodash.cloneDeep(c.EQUIP_MISSILE_LAUNCHER)];
   // world.ship.equipMax = world.ship.equip.length;
   // world.blueprints.equip = [...c.ALL_EQUIP];
   // world.blueprints.ship = [...c.ALL_SHIPS];
