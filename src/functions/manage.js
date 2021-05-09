@@ -152,12 +152,23 @@ export function transferResource(source, target, resourceType, requestedAmtStr, 
     amt = source[resourceType];
   }
   // Cap to max capacity of target
-  let spaceLeft =  maxCapacity - (target.titanium + target.gold + target.uranium);
-  if (spaceLeft < amt) {
-    amt = spaceLeft;
+  if (maxCapacity !== null) {
+    let spaceLeft = maxCapacity - (target.titanium + target.gold + target.uranium);
+    if (spaceLeft < amt) {
+      amt = spaceLeft;
+    }
   }
   target[resourceType] += amt;
   source[resourceType] -= amt;
+}
+
+/**
+ * Move all resources to the planet
+ */
+export function unloadShip(ship, planet) {
+  transferResource(ship.resources, planet.resources.stored, 'titanium', ship.resources.titanium, null);
+  transferResource(ship.resources, planet.resources.stored, 'gold', ship.resources.gold, null);
+  transferResource(ship.resources, planet.resources.stored, 'uranium', ship.resources.uranium, null);
 }
 
 /**
@@ -303,7 +314,7 @@ export function costToRepair(ship) {
   return {titanium:(damageToRepair / 5), gold:0, uranium:0};
 }
 
-export function repairShip(planet, ship) {
+export function repairShip(ship, planet) {
   let cost = costToRepair(ship);
   let addArmor = ship.armorMax - ship.armor; // armor needed
   if (!game.canAfford(planet, ship, cost)) {

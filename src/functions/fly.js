@@ -200,6 +200,7 @@ export function runDroids(ship) {
     } else if (droid.type === c.EQUIP_TYPE_GUNNERY_DROID) {
       shootAtNearestAlien(ship, droid.weapon);
     }
+    // NOTE: Shield droid runs in checkForBulletCollision
   } // for
 }
 
@@ -266,11 +267,37 @@ export function planetInView(ship, planet) {
 
 /**
  * @return the first active shield the ship is equipped with
+ * NOTE: This returns equip.shield (NOT the full equip object)
  */
 export function getActiveShield(ship) {
   for (const equip of ship.equip) {
     if (equip.shield && equip.shield.active) {
       return equip.shield;
+    }
+  }
+  return null;
+}
+
+/**
+ * @returns The first shield that is not currently used and cooled enough to re-use
+ * NOTE: This returns the whole equip (not just the shield)
+ */
+export function getAvailableShieldEquip(ship) {
+  for (const equip of ship.equip) {
+    if (equip.shield && !equip.shield.active && equip.cool === 0) {
+      return equip;
+    }
+  }
+  return null;
+}
+
+/**
+ * @returns true if the ship is equipped with a shield droid
+ */
+export function hasShieldDroid(ship) {
+  for (const equip of ship.equip) {
+    if (equip.type === c.EQUIP_TYPE_SHIELD_DROID) {
+      return equip;
     }
   }
   return null;
@@ -344,12 +371,13 @@ function landShip(ship, planet) {
   let dirDiff = Math.abs(ship.rotation - planetDir);
   let speed = Math.abs(ship.vx) + Math.abs(ship.vy);
   // 0 and PI*2 are right beside each other, so large values are very close to small values
-  let success = ((dirDiff < ship.crashAngle) || (dirDiff > (Math.PI * 2 - ship.crashAngle)))
-    && (speed < ship.crashSpeed)
+  let success = ((dirDiff < ship.crashAngle) || (dirDiff > (Math.PI * 2 - ship.crashAngle))) &&
+                (speed < ship.crashSpeed);
+  const hasAutolander = !!getEquip(ship, c.EQUIP_TYPE_AUTOLANDER);
   // Stop moving
   ship.vx = 0;
   ship.vy = 0;
-  if (!success) {
+  if (!success && !hasAutolander) {
     // The landing was rough - do damage
     let speedDiff = Math.max(speed - ship.crashSpeed, 0); // 0 if negative
     let dirDiffAdj = Math.max(dirDiff - ship.crashAngle, 0); // 0 if negative
@@ -588,6 +616,10 @@ export function fireSecondaryWeapon(ship) {
       ai.checkForCollisionWithShip(child);
     }
     if (weapon.shield) {
+      // If another shield is already in use - we won't reset the cool
+      if (getActiveShield(ship) !== null) {
+        return;
+      }
       enableShield(ship, weapon.shield);
     }
     weapon.cool = weapon.coolTime; // this is decremented in coolWeapons
@@ -599,6 +631,10 @@ export function fireSecondaryWeapon(ship) {
  * This will add a shield sprite to the ship and set it to visible
  */
 export function enableShield(ship, shield) {
+  if (getActiveShield(ship) !== null) {
+    console.log('not enabling shield, as there is already one enabled')
+    return;
+  }
   const shieldSprite = game.getShieldSprite(ship, shield);
   shieldSprite.visible = true;
   shield.active = true;
@@ -702,14 +738,21 @@ function checkForBulletCollision(bullet) {
   }
   // Collision with ship
   if (ship.alive) {
-    const shield = getActiveShield(ship);
+    const shipSprite = game.getShipSprite(ship);
+    const bulletWillHitShip = utils.pointInSprite(ship.x, ship.y, shipSprite, bullet.x, bullet.y);
+    let shield = getActiveShield(ship);
+    if (!shield && hasShieldDroid(ship)) {
+      const shieldEquip = getAvailableShieldEquip(ship);
+      if (shieldEquip && bulletWillHitShip) {
+        shieldEquip.cool = shieldEquip.coolTime;
+        enableShield(ship, shieldEquip.shield);
+        shield = shieldEquip.shield;
+      }
+    }
     if (shield && utils.distanceBetween(ship.x, ship.y, bullet.x, bullet.y) < shield.radius) {
       bulletHitShip(bullet, ship, resetGame);
-    } else {
-      const shipSprite = game.getShipSprite(ship);
-      if (utils.pointInSprite(ship.x, ship.y, shipSprite, bullet.x, bullet.y)) {
-        bulletHitShip(bullet, ship, resetGame);
-      }
+    } else if (bulletWillHitShip) {
+      bulletHitShip(bullet, ship, resetGame);
     }
   }
   // Collision with alien ship

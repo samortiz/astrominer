@@ -1,5 +1,6 @@
 import {c, fly, manage, utils} from './';
 import lodash from 'lodash';
+import {getShield} from "./ai";
 
 /**
  * Creates an empty world object, with only basic properties.
@@ -68,17 +69,19 @@ export function setupWorld() {
   window.world.shipStartX = c.PLAYER_START_X;
   // window.world.shipStartX = +1550;
   window.world.shipStartY = c.PLAYER_START_Y;
-  world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
+  world.ship = createShip(c.SHIP_FAST, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
   shipSprite.visible = true;
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  // world.ship.armorMax = 15000;
-  // world.ship.armor = 15000;
-  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  world.ship.armorMax = 5000;
+  world.ship.armor = 5000;
+   world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
   // world.ship.resourcesMax = 100000;
-  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_TURRET_DEPLOYER), lodash.cloneDeep(c.EQUIP_STREAM_BLASTER)];
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_SNIPER_RIFLE),
+    lodash.cloneDeep(c.EQUIP_SHIELD_DROID), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA),
+    lodash.cloneDeep(c.EQUIP_AUTOLANDER), lodash.cloneDeep(c.EQUIP_MISSILE_LAUNCHER)];
   // world.ship.equipMax = world.ship.equip.length;
   // world.blueprints.equip = [...c.ALL_EQUIP];
   // world.blueprints.ship = [...c.ALL_SHIPS];
@@ -120,11 +123,11 @@ export function setupSpriteContainers() {
   spriteContainers.ships = new window.PIXI.Container();
   mainStage.addChild(spriteContainers.ships);
 
-  spriteContainers.minimap = new window.PIXI.Container();
-  mainStage.addChild(spriteContainers.minimap);
-
   spriteContainers.explosions = new window.PIXI.Container();
   mainStage.addChild(spriteContainers.explosions);
+
+  spriteContainers.minimap = new window.PIXI.Container();
+  mainStage.addChild(spriteContainers.minimap);
 }
 
 export function createBackground() {
@@ -371,17 +374,8 @@ export function getSpriteOrigWithHeight(sprite) {
   return {width, height};
 }
 
-export function getShieldSprite(ship, shield) {
-  const cacheId = ship.id + '~' + shield.spriteFile;
-  // Lookup the sprite in the cache by ID
-  let shieldSprite = window.world.system.shieldSpriteCache.get(cacheId);
-  if (shieldSprite) {
-    return shieldSprite;
-  }
-  // Add a new shield image to the ship
+export function setShieldRadius(ship, shield, shieldSprite) {
   const shipSprite = getShipSprite(ship);
-  let spriteSheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
-  shieldSprite = new window.PIXI.Sprite(spriteSheet.textures[shield.spriteFile]);
   shieldSprite.anchor.set(0.5, 0.5);  // pivot on center
   const {width, height} = getSpriteOrigWithHeight(shipSprite);
   // Radius within the scaled ship sprite
@@ -389,6 +383,21 @@ export function getShieldSprite(ship, shield) {
   shieldSprite.width = shieldWidth;
   shieldSprite.height = shieldWidth;
   shield.radius = (shieldWidth * ship.imageScale) / 2; // size without ship scaling
+}
+
+export function getShieldSprite(ship, shield) {
+  const cacheId = ship.id + '~' + shield.spriteFile;
+  // Lookup the sprite in the cache by ID
+  let shieldSprite = window.world.system.shieldSpriteCache.get(cacheId);
+  if (shieldSprite) {
+    setShieldRadius(ship, shield, shieldSprite);
+    return shieldSprite;
+  }
+  // Add a new shield image to the ship
+  const shipSprite = getShipSprite(ship);
+  let spriteSheet = window.PIXI.loader.resources[c.SPRITESHEET_JSON];
+  shieldSprite = new window.PIXI.Sprite(spriteSheet.textures[shield.spriteFile]);
+  setShieldRadius(ship, shield, shieldSprite);
   shipSprite.addChild(shieldSprite);
   window.world.system.shieldSpriteCache.set(cacheId, shieldSprite);
   return shieldSprite;

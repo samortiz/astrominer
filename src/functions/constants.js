@@ -119,9 +119,11 @@ export const EQUIP_TYPE_THRUSTER = "Thruster";
 export const EQUIP_TYPE_ARMOR = "Armor";
 export const EQUIP_TYPE_REPAIR_DROID = "Repair Droid";
 export const EQUIP_TYPE_GUNNERY_DROID = "Gunnery Droid";
+export const EQUIP_TYPE_SHIELD_DROID = "Shield Droid";
 export const EQUIP_TYPE_SPEED = "Speed";
 export const EQUIP_TYPE_TURN = "Turn";
 export const EQUIP_TYPE_STORAGE = "Storage";
+export const EQUIP_TYPE_AUTOLANDER = "Autolander";
 
 export const THRUST_MOMENTUM = "Thrust Momentum";
 export const THRUST_BLINK = "Thrust Blink";
@@ -183,6 +185,11 @@ export const EQUIP_BLINK_THRUSTER = {
   name: "Blink Thruster", objType: OBJ_EQUIP, type: EQUIP_TYPE_THRUSTER, thrustSpeed: 2.5, thrustType: THRUST_BLINK,
   cost: {titanium: 60, gold: 50, uranium: 10}
 };
+export const EQUIP_AUTOLANDER = {
+  name: "Auto Lander", objType: OBJ_EQUIP, type: EQUIP_TYPE_AUTOLANDER,
+  cost: {titanium: 60, gold: 50, uranium: 10}
+};
+
 
 // Primary Weapons
 // Dmg:40/c Range:250
@@ -434,7 +441,9 @@ export const EQUIP_GUNNERY_DROID = {
   name: "Gunnery Droid", objType: OBJ_EQUIP, type: EQUIP_TYPE_GUNNERY_DROID,
   weapon: EQUIP_FAST_BLASTER, cost: {titanium: 100, gold: 200, uranium: 300}
 };
-
+export const EQUIP_SHIELD_DROID = {
+  name: "Shield Droid", objType: OBJ_EQUIP, type: EQUIP_TYPE_SHIELD_DROID
+};
 
 // Ships
 export const SHIP_EXPLORER = {
@@ -789,8 +798,8 @@ export const SHIP_MISSILE = {
   },
   equipMax: 0,
   equip: [],
-  armorMax: 200,
-  armor: 200,
+  armorMax: 300,
+  armor: 300,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 1,
@@ -852,7 +861,7 @@ export const EQUIP_UPGRADES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_THRUSTER, E
   EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE];
 export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_MELEE_GUN, EQUIP_SNIPER_RIFLE, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN, EQUIP_STAPLE_GUN_HEAVY, EQUIP_ALIEN_BLASTER_FAST, EQUIP_ALIEN_BLASTER_LIGHTNING];
 export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA];
-export const EQUIP_DROIDS = [EQUIP_R2D2, EQUIP_GUNNERY_DROID];
+export const EQUIP_DROIDS = [EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_SHIELD_DROID];
 export const ALL_EQUIP = [...EQUIP_UPGRADES, ...EQUIP_PRIMARY_WEAPONS, ...EQUIP_SECONDARY_WEAPONS, ...EQUIP_DROIDS];
 
 export const XP_LEVELS = {
@@ -876,6 +885,7 @@ export const XP_LEVELS = {
     {xp: 10, obj: SHIP_SKELETON},
     {xp: 50, obj: EQUIP_R2D2},
     {xp: 500, obj1: SHIP_HEAVY},
+    {xp: 1000, obj: EQUIP_AUTOLANDER},
   ],
   [PLANET_PURPLE_FILE]: [
     {xp: 10, obj: EQUIP_TURN_BOOST},
@@ -901,15 +911,16 @@ export const XP_LEVELS = {
     {xp: 10, obj: EQUIP_SNIPER_RIFLE},
     {xp: 20, obj: SHIP_ALIEN_LARGE},
   ],
-  [SHIP_ALIEN_STEALTH.name]: [
-    {xp: 1, obj: EQUIP_MISSILE_LAUNCHER},
-    {xp: 4, obj: EQUIP_SPRINKLER_BLASTER},
-    {xp: 7, obj: EQUIP_MELEE_GUN},
-  ],
   [SHIP_ALIEN_STAPLE_TURRET.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN},
-    {xp: 4, obj: EQUIP_FRIENDSHIP_GUN},
+    {xp: 3, obj: EQUIP_MELEE_GUN},
     {xp: 7, obj: EQUIP_ENHANCED_STORAGE},
+    {xp: 10, obj: EQUIP_SHIELD_DROID},
+  ],
+  [SHIP_ALIEN_STEALTH.name]: [
+    {xp: 1, obj: EQUIP_MISSILE_LAUNCHER},
+    {xp: 5, obj: EQUIP_SPRINKLER_BLASTER},
+    {xp: 10, obj: EQUIP_FRIENDSHIP_GUN},
   ],
   [SHIP_ALIEN_FIRE.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
@@ -946,7 +957,7 @@ export const UNIVERSE_RINGS = [
     planetFiles: [],
     aliens: [
       {count: 50, file: SHIP_ALIEN_STEALTH},
-      {count: 50, file: SHIP_ALIEN_FIRE},
+      {count: 60, file: SHIP_ALIEN_FIRE},
       {count: 30, file: SHIP_ALIEN_STAPLE_TURRET},
     ],
   },
@@ -957,9 +968,19 @@ export const UNIVERSE_RINGS = [
     minPlanetRadius: 280, maxPlanetRadius: 500,
     planetFiles: [PLANET_RED_FILE, PLANET_PURPLE_FILE, PLANET_GREEN_FILE],
     aliens: [
+      {count: 400, file: SHIP_ALIEN_STAPLE_TURRET},
+      {count: 600, file: SHIP_ALIEN_LARGE},
+      {count: 300, file: SHIP_ALIEN_STEALTH},
+    ],
+  },
+  {
+    planetCount: 0,
+    minDist: 8000, maxDist: 12000,
+    minDistToOtherPlanet: 10,
+    minPlanetRadius: 10, maxPlanetRadius: 10,
+    planetFiles: [PLANET_RED_FILE],
+    aliens: [
       {count: 100, file: SHIP_ALIEN_STAPLE_TURRET},
-      {count: 200, file: SHIP_ALIEN},
-      {count: 750, file: SHIP_ALIEN_LARGE},
       {count: 400, file: SHIP_ALIEN_STEALTH},
     ],
   },
@@ -970,9 +991,9 @@ export const UNIVERSE_RINGS = [
     minPlanetRadius: 180, maxPlanetRadius: 300,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE, PLANET_GREEN_FILE],
     aliens: [
-      {count: 1000, file: SHIP_ALIEN_TURRET},
-      {count: 500, file: SHIP_ALIEN},
-      {count: 200, file: SHIP_ALIEN_LARGE},
+      {count: 300, file: SHIP_ALIEN_TURRET},
+      {count: 700, file: SHIP_ALIEN},
+      {count: 300, file: SHIP_ALIEN_LARGE},
     ],
   },
   {
@@ -982,8 +1003,8 @@ export const UNIVERSE_RINGS = [
     minPlanetRadius: 150, maxPlanetRadius: 200,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE],
     aliens: [
-      {count: 1000, file: SHIP_ALIEN_TURRET},
-      {count: 150, file: SHIP_ALIEN}
+      {count: 1200, file: SHIP_ALIEN_TURRET},
+      {count: 350, file: SHIP_ALIEN}
     ],
   },
   {

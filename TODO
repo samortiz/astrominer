@@ -4,14 +4,12 @@ Minor Bugs
  - planet hugging aliens (maybe created too near planet)
 
 TODO
-- Shield droid : auto-deploys shield on first hit
-- Auto-lander : Ship-upgrade... cannot crash
 - Text description on items
 - Intro Dialog / Story
 - Factory progress bar
 - Redo layout on Storage screen
-- Scroll long lists
 - Salvage / Destroy unwanted equipment and ships
+- Unload button on planet screen
 
 Ideas :
 - Drone, or wing-man?
@@ -20,6 +18,7 @@ Ideas :
 - Self Destruct on FlyInfo
 - Planet change name
 - Storage edit ship name
+- on-screen buttons
 
 Maybe someday Ideas:
 - Aliens destroy buildings
