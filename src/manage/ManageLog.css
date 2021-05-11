@@ -1,3 +1,11 @@
+.log-table {
+  padding-left: 10px;
+}
+
 .log-table td {
   padding: 2px 2px 2px 10px;
+}
+
+.tick-count {
+  padding-top:20px;
 }

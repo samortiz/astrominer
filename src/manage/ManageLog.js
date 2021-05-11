@@ -5,6 +5,14 @@ import './ManageLog.css';
 export function ManageLog() {
   const xp = window.world.blueprints.xp;
 
+  const gameTickCount = window.world.gameTickCount;
+  let timeSpentMin = Math.floor((gameTickCount / 360))/10;
+  let timeSpentHr = 0;
+  if (timeSpentMin > 60) {
+    timeSpentHr = Math.floor(timeSpentMin / 60);
+    timeSpentMin = Math.floor(timeSpentMin - (timeSpentHr * 60));
+  }
+
   const translations = {
     [c.PLANET_ROCK_FILE]: 'Rock Planet',
     [c.PLANET_RED_FILE]: 'Red Planet',
@@ -31,6 +39,9 @@ export function ManageLog() {
               })}
             </tbody>
           </table>
+          <div className="tick-count">
+            Total time spent : {timeSpentHr ? timeSpentHr + ' hour'+(timeSpentHr > 1 ? 's ': ' ') : ''} {timeSpentMin} min
+          </div>
         </div>
       </div>
     </div>

@@ -1,14 +1,13 @@
 Bugs
  - saving game with no ship causes dead ship to appear when loading
- - scrollbar on storage screen (long list of items)
 
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
+ - fire aliens have duplicate shield images sometimes
 
 TODO
 - Text description on items
 - Intro Dialog / Story
-- Log : Game time?, experience by planet + alien
 - Factory progress bar
 - Redo layout on Storage screen (maybe carousel?)
 - Salvage / Destroy unwanted equipment and ships

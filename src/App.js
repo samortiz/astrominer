@@ -60,6 +60,7 @@ export default class App extends React.Component {
   // Main loop runs 60 times per sec
   mainLoop = (delta) => {
     if (window.world.system.gameLoop) {
+      window.world.gameTickCount += 1;
       game.runBuildings();
       fly.moveBullets();
       fly.coolAllWeapons();

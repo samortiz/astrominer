@@ -226,7 +226,7 @@ export const EQUIP_SPRINKLER_BLASTER = {
   objType: OBJ_EQUIP,
   type: EQUIP_TYPE_PRIMARY_WEAPON,
   coolTime: 2,
-  cool: 2,
+  cool: 1,
   damage: 6,
   speed: 2.5,
   lifetime: 150,
@@ -248,7 +248,7 @@ export const EQUIP_STREAM_BLASTER = {
   bulletFile: BULLET_FILE,
   cost: {titanium: 30, gold: 30, uranium: 80}
 };
-// Dmg: 250/c Range:120
+// Dmg: 333/c Range:120
 export const EQUIP_MELEE_GUN = {
   name: "Melee Gun",
   objType: OBJ_EQUIP,
@@ -256,22 +256,22 @@ export const EQUIP_MELEE_GUN = {
   coolTime: 3,
   cool: 0,
   damage: 10,
-  speed: 4,
+  speed: 3,
   lifetime: 30,
   jitter: 0.25,
   bulletFile: BULLET_FILE,
   cost: {titanium: 50, gold: 50, uranium: 80}
 };
-// Dmg: 83/c Range:720
+// Dmg: 120/c Range:800
 export const EQUIP_SNIPER_RIFLE = {
   name: "Sniper Rifle",
   objType: OBJ_EQUIP,
   type: EQUIP_TYPE_PRIMARY_WEAPON,
-  coolTime: 120,
+  coolTime: 100,
   cool: 0,
-  damage: 100,
+  damage: 120,
   speed: 8,
-  lifetime: 90,
+  lifetime: 100,
   jitter: 0.0,
   bulletFile: BULLET_FILE,
   cost: {titanium: 20, gold: 20, uranium: 160}
@@ -304,14 +304,14 @@ export const EQUIP_ALIEN_BLASTER_FAST = {
   bulletFile: BULLET_BLUE_FILE,
   cost: {titanium: 10, gold: 30, uranium: 60}
 };
-// Dmg 150/c Range:600
+// Dmg 200/c Range:600
 export const EQUIP_ALIEN_BLASTER_LIGHTNING = {
   name: "Alien Lighting Blaster",
   objType: OBJ_EQUIP,
   type: EQUIP_TYPE_PRIMARY_WEAPON,
   coolTime: 10,
   cool: 0,
-  damage: 15,
+  damage: 20,
   speed: 12,
   lifetime: 50,
   jitter: 0.08,
@@ -430,7 +430,6 @@ export const EQUIP_ALIEN_MISSILE_LAUNCHER = {
   createShip: {type: SHIP_RED_MISSILE, dir: DIR_AHEAD_OF_SHIP},
   cost: {titanium: 50, gold: 50, uranium: 100}
 };
-
 
 // Droids
 export const EQUIP_R2D2 = {
@@ -776,8 +775,8 @@ export const SHIP_TURRET = {
   },
   equipMax: 1,
   equip: [EQUIP_FAST_BLASTER],
-  armorMax: 200,
-  armor: 200,
+  armorMax: 300,
+  armor: 300,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.6,
@@ -799,8 +798,8 @@ export const SHIP_MISSILE = {
   },
   equipMax: 0,
   equip: [],
-  armorMax: 300,
-  armor: 300,
+  armorMax: 250,
+  armor: 250,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 1,
@@ -822,8 +821,8 @@ export const SHIP_FRIENDSHIP_MISSILE = {
   },
   equipMax: 0,
   equip: [],
-  armorMax: 30,
-  armor: 30,
+  armorMax: 40,
+  armor: 40,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.5,
