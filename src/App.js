@@ -24,7 +24,9 @@ export default class App extends React.Component {
             <div className='viewport' ref={this.pixiRef}/>
           </td>
           <td className='info-panel' width='100%' height={(window.world.system.screenHeight || c.SCREEN_HEIGHT) + 'px'}>
-            <InfoPanel/>
+            <div className='scroll-box'>
+              <InfoPanel/>
+            </div>
           </td>
         </tr>
         </tbody>
@@ -91,7 +93,7 @@ export default class App extends React.Component {
 
 function resizeScreenToWindow() {
   const app = window.world.system.app;
-  const h = Math.max(window.innerHeight - 4, 550);
+  const h = Math.max(window.innerHeight - 10, 550);
   const scale = h / 1000;
   window.world.system.app.stage.scale.set(scale);
   app.renderer.resize(h, h);

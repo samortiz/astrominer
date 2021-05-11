@@ -11,6 +11,16 @@
   color: #ccc;
 }
 
+.root-app td {
+  vertical-align: top;
+  border-spacing: 0;
+}
+
+.scroll-box {
+  height: 100%;
+  overflow-y:auto;
+}
+
 input {
   background-color: #C5C5C5;
   color: black;

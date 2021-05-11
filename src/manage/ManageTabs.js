@@ -6,6 +6,7 @@ import { ManageStorage } from './ManageStorage';
 import {ManageSystem} from "./ManageSystem";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Tab, Tabs} from "react-bootstrap";
+import {ManageLog} from "./ManageLog";
 
 export function ManageTabs() {
 
@@ -21,6 +22,10 @@ export function ManageTabs() {
 
       <Tab eventKey='storage' title='Storage'>
         <ManageStorage/>
+      </Tab>
+
+      <Tab eventKey='log' title='Log'>
+        <ManageLog/>
       </Tab>
 
       <Tab eventKey='system' title='System'>

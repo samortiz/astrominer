@@ -1,4 +1,6 @@
 Bugs
+ - saving game with no ship causes dead ship to appear when loading
+ - scrollbar on storage screen (long list of items)
 
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
@@ -6,10 +8,10 @@ Minor Bugs
 TODO
 - Text description on items
 - Intro Dialog / Story
+- Log : Game time?, experience by planet + alien
 - Factory progress bar
-- Redo layout on Storage screen
+- Redo layout on Storage screen (maybe carousel?)
 - Salvage / Destroy unwanted equipment and ships
-- Unload button on planet screen
 
 Ideas :
 - Drone, or wing-man?
@@ -23,4 +25,5 @@ Ideas :
 Maybe someday Ideas:
 - Aliens destroy buildings
 - Aliens build buildings
+- AI to auto-transport goods (supply chain)
 

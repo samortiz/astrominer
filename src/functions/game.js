@@ -1,6 +1,5 @@
 import {c, fly, manage, utils} from './';
 import lodash from 'lodash';
-import {getShield} from "./ai";
 
 /**
  * Creates an empty world object, with only basic properties.
@@ -30,7 +29,9 @@ export function createEmptyWorld() {
         [c.SHIP_ALIEN.name]: 0,
         [c.SHIP_ALIEN_LARGE.name]: 0,
         [c.SHIP_ALIEN_STEALTH.name]: 0,
-        [c.SHIP_ALIEN_FIRE.name]: 0
+        [c.SHIP_ALIEN_STAPLE_TURRET.name]: 0,
+        [c.SHIP_ALIEN_FIRE.name]: 0,
+        [c.SHIP_ALIEN_MOTHERSHIP.name]: 0,
       },
       xpLevels: lodash.cloneDeep(c.XP_LEVELS),
     },
@@ -67,6 +68,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
+  window.world.shipStartX = -2500;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
@@ -74,14 +76,13 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  // window.world.shipStartX = +1550;
-  // world.ship.armorMax = 5000;
-  // world.ship.armor = 5000;
-  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
-  // world.ship.resourcesMax = 100000;
-  // world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_MELEE_GUN),
-  //   lodash.cloneDeep(c.EQUIP_SHIELD_DROID), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA),
-  //   lodash.cloneDeep(c.EQUIP_AUTOLANDER), lodash.cloneDeep(c.EQUIP_MISSILE_LAUNCHER)];
+  world.ship.armorMax = 55000;
+  world.ship.armor = 55000;
+  world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  world.ship.resourcesMax = 100000;
+  world.ship.equip = [c.EQUIP_BLINK_BRAKE, lodash.cloneDeep(c.EQUIP_MELEE_GUN),
+    lodash.cloneDeep(c.EQUIP_SHIELD_DROID), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA), lodash.cloneDeep(c.EQUIP_SHIELD_ULTRA),
+    lodash.cloneDeep(c.EQUIP_AUTOLANDER), lodash.cloneDeep(c.EQUIP_MISSILE_LAUNCHER)];
   // world.ship.equipMax = world.ship.equip.length;
   // world.blueprints.equip = [...c.ALL_EQUIP];
   // world.blueprints.ship = [...c.ALL_SHIPS];
@@ -91,14 +92,14 @@ export function setupWorld() {
   // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);
 
   // DEBUG Planet
-  // let testPlanet = createPlanet(c.PLANET_ROCK_FILE, "home", 100, 200, {
-  //   titanium: 20500,
-  //   gold: 51000,
-  //   uranium: 5000,
-  // });
-  // testPlanet.x = c.PLAYER_START_X - 150;
-  // testPlanet.y = c.PLAYER_START_Y;
-  // testPlanet.resources.stored = {titanium: 10000, gold: 10000, uranium: 10000};
+  let testPlanet = createPlanet(c.PLANET_ROCK_FILE, "home", 100, 200, {
+    titanium: 20500,
+    gold: 51000,
+    uranium: 5000,
+  });
+  testPlanet.x = c.PLAYER_START_X - 150;
+  testPlanet.y = c.PLAYER_START_Y;
+  testPlanet.resources.stored = {titanium: 10000, gold: 10000, uranium: 10000};
 
   createAliens();
   setupMiniMap();
@@ -553,15 +554,20 @@ function addMiningXp(amount, planet) {
 
 export function addAlienXp(ship) {
   let blueprints = window.world.blueprints;
-  const xp = blueprints.xp[ship.name] += 1;
+  let xp = blueprints.xp[ship.name];
   if (!xp) {
-    return;
+    xp = 1;
+  }  else {
+    xp += 1;
   }
-  let nextLevel = blueprints.xpLevels[ship.name][0];
-  if (nextLevel && (nextLevel.xp <= xp)) {
-    addBlueprint(nextLevel);
-    // Remove the item
-    blueprints.xpLevels[ship.name].shift();
+  blueprints.xp[ship.name] = xp;
+  if (blueprints.xpLevels[ship.name]) {
+    let nextLevel = blueprints.xpLevels[ship.name][0];
+    if (nextLevel && (nextLevel.xp <= xp)) {
+      addBlueprint(nextLevel);
+      // Remove the item
+      blueprints.xpLevels[ship.name].shift();
+    }
   }
 }
 

@@ -232,7 +232,7 @@ export const EQUIP_SPRINKLER_BLASTER = {
   lifetime: 150,
   jitter: 1,
   bulletFile: BULLET_FILE,
-  cost: {titanium: 20, gold: 10, uranium: 80}
+  cost: {titanium: 10, gold: 10, uranium: 80}
 };
 // Dmg 175/c Range:490
 export const EQUIP_STREAM_BLASTER = {
@@ -246,7 +246,7 @@ export const EQUIP_STREAM_BLASTER = {
   lifetime: 70,
   jitter: 0.04,
   bulletFile: BULLET_FILE,
-  cost: {titanium: 30, gold: 30, uranium: 60}
+  cost: {titanium: 30, gold: 30, uranium: 80}
 };
 // Dmg: 250/c Range:120
 export const EQUIP_MELEE_GUN = {
@@ -260,21 +260,21 @@ export const EQUIP_MELEE_GUN = {
   lifetime: 30,
   jitter: 0.25,
   bulletFile: BULLET_FILE,
-  cost: {titanium: 50, gold: 50, uranium: 50}
+  cost: {titanium: 50, gold: 50, uranium: 80}
 };
-// Dmg: 66/c Range:720
+// Dmg: 83/c Range:720
 export const EQUIP_SNIPER_RIFLE = {
   name: "Sniper Rifle",
   objType: OBJ_EQUIP,
   type: EQUIP_TYPE_PRIMARY_WEAPON,
   coolTime: 120,
   cool: 0,
-  damage: 80,
+  damage: 100,
   speed: 8,
   lifetime: 90,
   jitter: 0.0,
   bulletFile: BULLET_FILE,
-  cost: {titanium: 50, gold: 50, uranium: 50}
+  cost: {titanium: 20, gold: 20, uranium: 160}
 };
 // Dmg 25/c Range:240
 export const EQUIP_ALIEN_BLASTER = {
@@ -288,7 +288,7 @@ export const EQUIP_ALIEN_BLASTER = {
   lifetime: 120,
   jitter: 0.12,
   bulletFile: BULLET_BLUE_FILE,
-  cost: {titanium: 10, gold: 30, uranium: 50}
+  cost: {titanium: 0, gold: 0, uranium: 10}
 };
 // Dmg 120/c Range:480
 export const EQUIP_ALIEN_BLASTER_FAST = {
@@ -302,7 +302,7 @@ export const EQUIP_ALIEN_BLASTER_FAST = {
   lifetime: 120,
   jitter: 0.1,
   bulletFile: BULLET_BLUE_FILE,
-  cost: {titanium: 10, gold: 30, uranium: 50}
+  cost: {titanium: 10, gold: 30, uranium: 60}
 };
 // Dmg 150/c Range:600
 export const EQUIP_ALIEN_BLASTER_LIGHTNING = {
@@ -316,7 +316,7 @@ export const EQUIP_ALIEN_BLASTER_LIGHTNING = {
   lifetime: 50,
   jitter: 0.08,
   bulletFile: BULLET_BLUE_FILE,
-  cost: {titanium: 10, gold: 30, uranium: 50}
+  cost: {titanium: 10, gold: 40, uranium: 100}
 };
 // Dmg 100/c Range:750
 export const EQUIP_STAPLE_GUN = {
@@ -330,7 +330,7 @@ export const EQUIP_STAPLE_GUN = {
   lifetime: 250,
   jitter: 0.2,
   bulletFile: BULLET_WHITE_FILE,
-  cost: {titanium: 10, gold: 30, uranium: 50}
+  cost: {titanium: 10, gold: 30, uranium: 60}
 };
 // Dmg 183/c Range:900
 export const EQUIP_STAPLE_GUN_HEAVY = {
@@ -344,7 +344,7 @@ export const EQUIP_STAPLE_GUN_HEAVY = {
   lifetime: 300,
   jitter: 0.15,
   bulletFile: BULLET_WHITE_FILE,
-  cost: {titanium: 10, gold: 30, uranium: 50}
+  cost: {titanium: 30, gold: 50, uranium: 120}
 };
 
 // Secondary (more at end of file after the ships)
@@ -442,7 +442,8 @@ export const EQUIP_GUNNERY_DROID = {
   weapon: EQUIP_FAST_BLASTER, cost: {titanium: 100, gold: 200, uranium: 300}
 };
 export const EQUIP_SHIELD_DROID = {
-  name: "Shield Droid", objType: OBJ_EQUIP, type: EQUIP_TYPE_SHIELD_DROID
+  name: "Shield Droid", objType: OBJ_EQUIP, type: EQUIP_TYPE_SHIELD_DROID,
+  cost: {titanium: 300, gold: 200, uranium: 100}
 };
 
 // Ships
@@ -553,7 +554,7 @@ export const SHIP_HEAVY = {
   crashAngle: 0.4,
   imageScale: 0.5,
   imageFile: SHIP_HEAVY_FILE,
-  cost: {titanium: 500, gold: 300, uranium: 250},
+  cost: {titanium: 500, gold: 400, uranium: 300},
 };
 
 export const SHIP_FIGHTER = {
@@ -831,8 +832,8 @@ export const SHIP_FRIENDSHIP_MISSILE = {
   aiType: EQUIP_AI_MISSILE,
 };
 
-export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_SKELETON, SHIP_HEAVY, SHIP_FIGHTER,
-  SHIP_ALIEN, SHIP_ALIEN_TURRET, SHIP_ALIEN_LARGE, SHIP_ALIEN_STAPLE_TURRET, SHIP_ALIEN_FIRE, SHIP_ALIEN_STEALTH];
+export const ALL_ALIENS = [SHIP_ALIEN_TURRET, SHIP_ALIEN, SHIP_ALIEN_LARGE, SHIP_ALIEN_STEALTH,  SHIP_ALIEN_STAPLE_TURRET, SHIP_ALIEN_FIRE, SHIP_ALIEN_MOTHERSHIP];
+export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_SKELETON, SHIP_HEAVY, SHIP_FIGHTER, ...ALL_ALIENS];
 
 // This equipment needs to go after the ships (ugh)
 export const EQUIP_DECOY_DEPLOYER = {
@@ -858,7 +859,7 @@ export const EQUIP_FRIENDSHIP_GUN = {
 
 
 export const EQUIP_UPGRADES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_ARMOR, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST,
-  EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE];
+  EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE, EQUIP_AUTOLANDER];
 export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_MELEE_GUN, EQUIP_SNIPER_RIFLE, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN, EQUIP_STAPLE_GUN_HEAVY, EQUIP_ALIEN_BLASTER_FAST, EQUIP_ALIEN_BLASTER_LIGHTNING];
 export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA];
 export const EQUIP_DROIDS = [EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_SHIELD_DROID];
@@ -884,7 +885,7 @@ export const XP_LEVELS = {
   [PLANET_GREEN_FILE]: [
     {xp: 10, obj: SHIP_SKELETON},
     {xp: 50, obj: EQUIP_R2D2},
-    {xp: 500, obj1: SHIP_HEAVY},
+    {xp: 500, obj: SHIP_HEAVY},
     {xp: 1000, obj: EQUIP_AUTOLANDER},
   ],
   [PLANET_PURPLE_FILE]: [
@@ -911,16 +912,16 @@ export const XP_LEVELS = {
     {xp: 10, obj: EQUIP_SNIPER_RIFLE},
     {xp: 20, obj: SHIP_ALIEN_LARGE},
   ],
+  [SHIP_ALIEN_STEALTH.name]: [
+    {xp: 1, obj: EQUIP_MISSILE_LAUNCHER},
+    {xp: 5, obj: EQUIP_SPRINKLER_BLASTER},
+    {xp: 10, obj: EQUIP_FRIENDSHIP_GUN},
+  ],
   [SHIP_ALIEN_STAPLE_TURRET.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN},
     {xp: 3, obj: EQUIP_MELEE_GUN},
     {xp: 7, obj: EQUIP_ENHANCED_STORAGE},
     {xp: 10, obj: EQUIP_SHIELD_DROID},
-  ],
-  [SHIP_ALIEN_STEALTH.name]: [
-    {xp: 1, obj: EQUIP_MISSILE_LAUNCHER},
-    {xp: 5, obj: EQUIP_SPRINKLER_BLASTER},
-    {xp: 10, obj: EQUIP_FRIENDSHIP_GUN},
   ],
   [SHIP_ALIEN_FIRE.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
