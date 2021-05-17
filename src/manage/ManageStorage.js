@@ -18,6 +18,11 @@ export function ManageStorage() {
     setSelectedShip(null);
   }
 
+  function salvageShip(selectedShip) {
+    manage.salvageShip(planet, selectedShip);
+    setSelectedShip(null);
+  }
+
   // Default to selecting the current ship
   if (!selectedShip && shipOnPlanet) {
     setSelectedShip(currentShip);
@@ -50,6 +55,7 @@ export function ManageStorage() {
           <div>
             <div className='item-attr'>
               <button onClick={() => startUsingShip()} disabled={selectedShip === currentShip}>Use Ship</button>
+              <button onClick={() => salvageShip(selectedShip)} style={{marginLeft:'10px'}}>Salvage</button>
             </div>
             <div className='item-attr'><b>Name</b> {selectedShip.name} {selectedShip.id}</div>
             <div className='item-attr'>
@@ -84,6 +90,7 @@ export function ManageStorage() {
                       disabled={!manage.canEquip(selectedShip, equip)}
               >Equip
               </button>
+              <button onClick={() => manage.salvageEquip(planet, equip)} style={{marginLeft:'10px'}}>Salvage</button>
             </div>
           })}
         </span>

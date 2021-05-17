@@ -105,6 +105,7 @@ export const MINE_SPEED_TITANIUM = 0.0166; // 1 every sec
 export const MINE_SPEED_GOLD = 0.0083;  // 1 every 2 sec
 export const MINE_SPEED_URANIUM = 0.0033; // 1 every 5 sec
 export const MINE_COST = {titanium: 20, gold: 10, uranium: 0};
+export const SALVAGE_RATE = 0.5; // amount returned when salvaging equipment or ships
 // Factory
 export const BUILDING_TYPE_FACTORY = "factory";
 export const FACTORY_COST = {titanium: 50, gold: 20, uranium: 10};

@@ -1,6 +1,7 @@
 import { c, utils, fly, game } from './';
 import lodash from 'lodash';
 import {EQUIP_TYPE_BRAKE, EQUIP_TYPE_PRIMARY_WEAPON, EQUIP_TYPE_THRUSTER} from "./constants";
+import {getExplosionSprite} from "./fly";
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -386,6 +387,44 @@ export function moveEquipFromShipToPlanet(ship, planet, equipToMove) {
   lodash.remove(ship.equip, (e) => e.id === equipToMove.id);
   selectFirstSecondaryWeapon(ship);
 }
+
+/**
+ * Destroys unwanted equipment and recovers some material cost
+ * @param planet location resources will be added to
+ * @param equip to destroy
+ */
+export function salvageEquip(planet, equip) {
+  planet.resources.stored['titanium'] += equip.cost.titanium * c.SALVAGE_RATE;
+  planet.resources.stored['gold'] += equip.cost.gold * c.SALVAGE_RATE;
+  planet.resources.stored['uranium'] += equip.cost.uranium * c.SALVAGE_RATE;
+  // Remove the equip from the planet
+  lodash.remove(planet.equip, (e) => e.id === equip.id);
+}
+
+/**
+ * Destroys unwanted ships and recovers some material cost
+ * @param planet location resources will be added to
+ * @param ship to destroy
+ */
+export function salvageShip(planet, ship) {
+  // First salvage all equipment on the ship
+  for (const equip of ship.equip) {
+    salvageEquip(planet, equip);
+  }
+  // Salvage the ship itself
+  planet.resources.stored['titanium'] += ship.cost.titanium * c.SALVAGE_RATE;
+  planet.resources.stored['gold'] += ship.cost.gold * c.SALVAGE_RATE;
+  planet.resources.stored['uranium'] += ship.cost.uranium * c.SALVAGE_RATE;
+  removeShipFromStorage(ship, planet);
+  // If ship is currently being used - stop using it!
+  if (ship === window.world.ship) {
+    const shipSprite = game.getShipSprite(ship);
+    shipSprite.visible = false;
+    ship.alive = false;
+    ship.spriteId = null;
+  }
+}
+
 
 /**
  * Removes the resource from the ship
