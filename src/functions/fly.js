@@ -1,4 +1,5 @@
 import {ai, c, game, manage, utils} from './';
+import {EQUIP_TYPE_SPEED} from "./constants";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -514,7 +515,7 @@ function turnShip(ship, left) {
 
 function propelShip(ship) {
   let propulsion = ship.propulsion;
-  let booster = getEquip(ship, c.EQUIP_TYPE_TURN);
+  let booster = getEquip(ship, c.EQUIP_TYPE_SPEED);
   if (booster) {
     propulsion += booster.boostSpeed;
   }
@@ -737,7 +738,13 @@ function checkForBulletCollision(bullet) {
     }
   }
   // Collision with ship
-  if (ship.alive) {
+  if (ship.alive &&
+      // Initial check to see if the bullet is anywhere near the ship (before we do more expensive collision checks))
+      (bullet.x < ship.x + ship.radius*2) &&
+      (bullet.x > ship.x - ship.radius*2) &&
+      (bullet.y < ship.y + ship.radius*2) &&
+      (bullet.y > ship.y - ship.radius*2)
+      ) {
     const shipSprite = game.getShipSprite(ship);
     const bulletWillHitShip = utils.pointInSprite(ship.x, ship.y, shipSprite, bullet.x, bullet.y);
     let shield = getActiveShield(ship);
@@ -757,7 +764,13 @@ function checkForBulletCollision(bullet) {
   }
   // Collision with alien ship
   for (let alien of window.world.system.nearby.ships) {
-    if ((alien !== ship) && alien.alive && alien.radius) {
+    if ((alien !== ship) && alien.alive && alien.radius &&
+      // Initial check to see if the bullet is anywhere near the alien (before we do more expensive collision checks))
+      (bullet.x < alien.x + alien.radius+10) &&
+      (bullet.x > alien.x - alien.radius+10) &&
+      (bullet.y < alien.y + alien.radius+10) &&
+      (bullet.y > alien.y - alien.radius+10)
+    ) {
       const shield = getActiveShield(alien);
       if ((shield && utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) < shield.radius) || // hit alien shield
         (utils.distanceBetween(alien.x, alien.y, bullet.x, bullet.y) <= alien.radius)) { // hit alien ship

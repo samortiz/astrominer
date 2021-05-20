@@ -6,11 +6,9 @@ Minor Bugs
  - fire aliens have duplicate shield images sometimes
 
 TODO
-- Text description on items
 - Intro Dialog / Story
 - Factory progress bar
 - Redo layout on Storage screen (maybe carousel?)
-- Salvage / Destroy unwanted equipment and ships
 
 Ideas :
 - Drone, or wing-man?
@@ -19,7 +17,7 @@ Ideas :
 - Self Destruct on FlyInfo
 - Planet change name
 - Storage edit ship name
-- on-screen buttons
+- on-screen buttons for mobile support
 
 Maybe someday Ideas:
 - Aliens destroy buildings

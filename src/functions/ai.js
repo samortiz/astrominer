@@ -98,8 +98,18 @@ export function mothershipAi(alien) {
  */
 export function getNearestOpponentTarget(ship) {
   return (ship.owner === c.PLAYER)
-    ? getNearestAlienTarget(ship.x, ship.y)
-    : getNearestPlayerTarget(ship.x, ship.y);
+    ? getNearestAlienTarget(ship.x, ship.y, ship.id)
+    : getNearestPlayerTarget(ship.x, ship.y, ship.id);
+}
+
+/**
+ * Finds the nearest ship on the same team
+ * @param ship ship to determine x,y and player
+ */
+export function getNearestFriendlyTarget(ship) {
+  return (ship.owner === c.PLAYER)
+    ? getNearestPlayerTarget(ship.x, ship.y, ship.id)
+    : getNearestAlienTarget(ship.x, ship.y, ship.id);
 }
 
 /**
@@ -132,11 +142,11 @@ export function creeperAi(alien, crashIntoPlayer=false) {
   }
   const viewRange = alien.viewRange || c.SCREEN_WIDTH;
   let moved = false;
-  const {target:playerTarget, dist:distToPlayer} = getNearestOpponentTarget(alien);
+  const {target:playerTarget, dist:distToOpponent} = getNearestOpponentTarget(alien);
   if (!playerTarget) {
     return;
   }
-  if (distToPlayer < viewRange) {
+  if (distToOpponent < viewRange) {
     let dirToTarget = utils.directionTo(alien.x, alien.y, playerTarget.x, playerTarget.y);
     let {xAmt, yAmt} = utils.dirComponents(dirToTarget, 25 * alien.propulsion);
     // Check if we are too close to a planet (need to move around the planet)
@@ -153,12 +163,12 @@ export function creeperAi(alien, crashIntoPlayer=false) {
       }
     } // for planet
     // Too close to player, don't move closer
-    if (!crashIntoPlayer && distToPlayer < (ship.spriteWidth + alien.radius + 20)) {
+    if (!crashIntoPlayer && distToOpponent < (ship.spriteWidth + alien.radius + 20)) {
       xAmt = 0;
       yAmt = 0;
     }
-    // Don't crash into other aliens
-    const {target: alienTarget, dist: alienDist} = getNearestAlienTarget(alien.x + xAmt, alien.y + yAmt, alien.id);
+    // Don't crash into friends
+    const {target: alienTarget, dist: alienDist} = getNearestFriendlyTarget(alien);
     if (alienTarget && (alienDist < (alien.radius + alienTarget.radius + 10))) {
       xAmt = 0;
       yAmt = 0;
@@ -171,7 +181,7 @@ export function creeperAi(alien, crashIntoPlayer=false) {
     alien.rotation = dirToTarget;
     moved = true;
   }
-  if (distToPlayer < fly.primaryWeaponRange(alien)) {
+  if (distToOpponent < fly.primaryWeaponRange(alien)) {
     shootAt(alien, playerTarget.x, playerTarget.y, 0.15);
   }
   return moved;
@@ -199,14 +209,15 @@ export function getNearestAlienTarget(x, y, shipId = 'none') {
 
 /**
  * Finds the nearest player target to the x,y location
+ * @shipId : any ship except the one matching shipId
  * returns {target:X, dist:Y }  x and y will be null if no living targets are found
  */
-export function getNearestPlayerTarget(x, y) {
+export function getNearestPlayerTarget(x, y, shipId='none') {
   const ship = window.world.ship;
   let target = ship;
-  let minDist = utils.distanceBetween(x, y, ship.x, ship.y);;
+  let minDist = ship.id !== shipId ? utils.distanceBetween(x, y, ship.x, ship.y) : 99999999999;
   for (let ship of window.world.system.nearby.ships) {
-    if (ship.alive && ship.owner === c.PLAYER) {
+    if (ship.alive && ship.owner === c.PLAYER && ship.id !== shipId) {
       let dist = utils.distanceBetween(x, y, ship.x, ship.y);
       if (!target || (dist < minDist)) {
         target = ship;

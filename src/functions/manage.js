@@ -1,7 +1,6 @@
 import { c, utils, fly, game } from './';
 import lodash from 'lodash';
 import {EQUIP_TYPE_BRAKE, EQUIP_TYPE_PRIMARY_WEAPON, EQUIP_TYPE_THRUSTER} from "./constants";
-import {getExplosionSprite} from "./fly";
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -303,11 +302,18 @@ export function hasFactory(planet) {
   return false;
 }
 
-export function buildEquip(equipTemplate) {
-  let planet = window.world.selectedPlanet;
+/**
+ * Create a new piece of equipment from the template
+ */
+export function makeEquip(equipTemplate) {
   let equip = lodash.cloneDeep(equipTemplate);
   equip.id = window.world.nextId++;
-  planet.equip.push(equip);
+  return equip;
+}
+
+export function buildEquip(equipTemplate) {
+  let planet = window.world.selectedPlanet;
+  planet.equip.push(makeEquip(equipTemplate));
 }
 
 export function costToRepair(ship) {
