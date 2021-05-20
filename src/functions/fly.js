@@ -1,5 +1,4 @@
 import {ai, c, game, manage, utils} from './';
-import {EQUIP_TYPE_SPEED} from "./constants";
 
 export function enterFlyState() {
   console.log("Take off");

@@ -4,6 +4,7 @@ Bugs
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
  - fire aliens have duplicate shield images sometimes
+ - can only equip one speed booster (shouldn't really need two)
 
 TODO
 - Intro Dialog / Story
