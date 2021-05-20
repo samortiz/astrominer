@@ -77,30 +77,30 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  world.ship.armorMax = 55000;
-  world.ship.armor = 55000;
-  world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
-  world.ship.resourcesMax = 100000;
-  world.ship.equip = [manage.makeEquip(c.EQUIP_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_SNIPER_RIFLE),
-    manage.makeEquip(c.EQUIP_ALIEN_MISSILE_LAUNCHER),
-    manage.makeEquip(c.EQUIP_SHIELD_DROID), manage.makeEquip(c.EQUIP_SHIELD_ULTRA), manage.makeEquip(c.EQUIP_SHIELD_BLINK)];
-  world.ship.equipMax = world.ship.equip.length;
-  world.blueprints.equip = [...c.ALL_EQUIP];
-  world.blueprints.ship = [...c.ALL_SHIPS];
+  // world.ship.armorMax = 55000;
+  // world.ship.armor = 55000;
+  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  // world.ship.resourcesMax = 100000;
+  // world.ship.equip = [manage.makeEquip(c.EQUIP_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_SNIPER_RIFLE),
+  //   manage.makeEquip(c.EQUIP_ALIEN_MISSILE_LAUNCHER),
+  //   manage.makeEquip(c.EQUIP_SHIELD_DROID), manage.makeEquip(c.EQUIP_SHIELD_ULTRA), manage.makeEquip(c.EQUIP_SHIELD_BLINK)];
+  // world.ship.equipMax = world.ship.equip.length;
+  // world.blueprints.equip = [...c.ALL_EQUIP];
+  // world.blueprints.ship = [...c.ALL_SHIPS];
 
   // DEBUG test alien
   // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
   // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);
 
   // DEBUG Planet
-  let testPlanet = createPlanet(c.PLANET_ROCK_FILE, "home", 100, 200, {
-    titanium: 20500,
-    gold: 51000,
-    uranium: 5000,
-  });
-  testPlanet.x = c.PLAYER_START_X - 150;
-  testPlanet.y = c.PLAYER_START_Y;
-  testPlanet.resources.stored = {titanium: 10000, gold: 10000, uranium: 10000};
+  // let testPlanet = createPlanet(c.PLANET_ROCK_FILE, "home", 100, 200, {
+  //   titanium: 20500,
+  //   gold: 51000,
+  //   uranium: 5000,
+  // });
+  // testPlanet.x = c.PLAYER_START_X - 150;
+  // testPlanet.y = c.PLAYER_START_Y;
+  // testPlanet.resources.stored = {titanium: 10000, gold: 10000, uranium: 10000};
 
   createAliens();
   setupMiniMap();
