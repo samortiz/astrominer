@@ -505,18 +505,20 @@ function moveExplosions() {
 
 function turnShip(ship, left) {
   let turnSpeed = ship.turnSpeed;
-  let turnBooster = getEquip(ship, c.EQUIP_TYPE_TURN);
-  if (turnBooster) {
-    turnSpeed += turnBooster.boostSpeed;
+  for (const equip of ship.equip) {
+    if (equip.type === c.EQUIP_TYPE_TURN && equip.boostSpeed) {
+      turnSpeed += equip.boostSpeed;
+    }
   }
   ship.rotation = utils.normalizeRadian(ship.rotation + turnSpeed * (left ? -1 : 1));
 }
 
 function propelShip(ship) {
   let propulsion = ship.propulsion;
-  let booster = getEquip(ship, c.EQUIP_TYPE_SPEED);
-  if (booster) {
-    propulsion += booster.boostSpeed;
+  for (const equip of ship.equip) {
+    if (equip.type === c.EQUIP_TYPE_SPEED && equip.boostSpeed) {
+      propulsion += equip.boostSpeed;
+    }
   }
   ship.vx += propulsion * Math.cos(ship.rotation);
   ship.vy += propulsion * Math.sin(ship.rotation);
@@ -855,9 +857,11 @@ export function drawMiniMap() {
     if (planetOnMap(view, planet)) {
       let x = l + c.HALF_MINIMAP_WIDTH + ((planet.x - view.x) * c.MINIMAP_SCALE_X);
       let y = t + c.HALF_MINIMAP_HEIGHT + ((planet.y - view.y) * c.MINIMAP_SCALE_Y);
-      const planetColor = window.world.selectedPlanet === planet ? c.MINIMAP_SELECTED_PLANET_COLOR : c.MINIMAP_PLANET_COLOR;
+      const planetColor = window.world.selectedPlanet === planet ? c.MINIMAP_SELECTED_PLANET_COLOR : c.PLANET_COLORS[planet.spriteFile];
       g.lineStyle(2, planetColor);
+      g.beginFill(planetColor);
       g.drawCircle(x, y, planet.radius * c.MINIMAP_SCALE_X);
+      g.endFill();
       // Buildings
       for (let building of planet.buildings) {
         let buildingX = l + c.HALF_MINIMAP_WIDTH + ((building.x - view.x) * c.MINIMAP_SCALE_X) - 1.5;
@@ -868,10 +872,12 @@ export function drawMiniMap() {
     }
   }
   // Ship
-  g.lineStyle(1, c.MINIMAP_SHIP_COLOR);
   const x = l + c.HALF_MINIMAP_WIDTH + ((window.world.ship.x - view.x) * c.MINIMAP_SCALE_X);
   const y = t + c.HALF_MINIMAP_HEIGHT + ((window.world.ship.y - view.y) * c.MINIMAP_SCALE_Y);
+  g.lineStyle(1, c.MINIMAP_SHIP_COLOR);
+  g.beginFill(c.MINIMAP_SHIP_COLOR);
   g.drawCircle(x, y, 2);
+  g.endFill();
 }
 
 /**

@@ -196,6 +196,13 @@ export function resupplyShip(ship, planet) {
   if (ship.resources.uranium < freeAmt) {
     transferResource(planet.resources.stored, ship.resources, 'uranium', freeAmt, ship.resourcesMax);
   }
+  // If we still have space
+  freeAmt = ship.resourcesMax - (ship.resources.titanium + ship.resources.gold + ship.resources.uranium);
+  if (freeAmt > 0) {
+    transferResource(planet.resources.stored, ship.resources, 'titanium', '', ship.resourcesMax);
+    transferResource(planet.resources.stored, ship.resources, 'gold', '', ship.resourcesMax);
+    transferResource(planet.resources.stored, ship.resources, 'uranium', '', ship.resourcesMax);
+  }
 }
 
 export function buildFactory() {

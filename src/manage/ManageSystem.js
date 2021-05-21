@@ -65,7 +65,7 @@ export function ManageSystem() {
   }
 
   return (
-    <div>
+    <div style={{paddingLeft:'10px'}}>
       <div className='system-section'>
         <div className='section'><b>Current Game</b></div>
         <input type='text' defaultValue={world.saveGameName} onFocus={() => world.system.isTyping = true}
@@ -80,6 +80,7 @@ export function ManageSystem() {
           </div>
         ))}
       </div>
+      <div style={{color:"#909090"}}>Version {c.APP_VERSION}</div>
     </div>);
 }
 

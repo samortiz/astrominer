@@ -18,6 +18,8 @@ export function createEmptyWorld() {
     selectedPlanet: {resources: {}},
     lastPlanetLanded: null,
     gameTickCount : 0,
+    nextId: 100, // unique ID for sprites, equip, etc...
+    introDialogShown: false,
     blueprints: {
       ship: [],
       equip: [],
@@ -36,7 +38,6 @@ export function createEmptyWorld() {
       },
       xpLevels: lodash.cloneDeep(c.XP_LEVELS),
     },
-    nextId: 100, // unique ID for sprites, equip, etc...
     // everything in system is transient and not serialized when saving the game
     system: {
       keys: {}, // Global keypress handlers
@@ -94,9 +95,9 @@ export function setupWorld() {
 
   // DEBUG Planet
   // let testPlanet = createPlanet(c.PLANET_ROCK_FILE, "home", 100, 200, {
-  //   titanium: 20500,
-  //   gold: 51000,
-  //   uranium: 5000,
+  //   titanium: 20000,
+  //   gold: 50000,
+  //   uranium: 50000,
   // });
   // testPlanet.x = c.PLAYER_START_X - 150;
   // testPlanet.y = c.PLAYER_START_Y;
@@ -217,22 +218,22 @@ function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, fa
   let dir = utils.randomFloat(0, Math.PI * 2);
   let dist = utils.randomInt(minDist, maxDist);
   let {x, y} = utils.getPointFrom(0, 0, dir, dist);
-  let np = 9999;
+  if (failCount > 200) {
+    // If we tried a lot of times and can't find a spot, we will dump the object into the outer ring
+    console.warn("Had a hard time finding a spot in ring "+minDist+"-"+maxDist+" dumping to outer ring");
+    return getFreeXy(planet, minDistToPlanet, minDistToAlien, c.OUTER_RING_MIN, c.OUTER_RING_MAX, 0);
+  }
   if (minDistToPlanet > 0) {
     let {nearestPlanetDist} = nearestPlanetDistance(planet, x, y);
     if (nearestPlanetDist < minDistToPlanet) {
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
-    np = nearestPlanetDist;
   }
   if (minDistToAlien > 0) {
     let {nearestAlienDist} = nearestAlienDistance(x, y);
     if (nearestAlienDist < minDistToAlien) {
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
-  }
-  if (failCount > 200) {
-    console.warn("Had a hard time finding a spot, it took " + failCount + " tries on ring " + minDist + " np=" + np);
   }
   return {x, y};
 }

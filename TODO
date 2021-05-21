@@ -1,15 +1,14 @@
 Bugs
- - saving game with no ship causes dead ship to appear when loading
 
 Minor Bugs
  - planet hugging aliens (maybe created too near planet)
  - fire aliens have duplicate shield images sometimes
- - can only equip one speed booster (shouldn't really need two)
+ - button images repeatedly loading (when entering fly mode) (cached 304)
 
 TODO
-- Intro Dialog / Story
 - Factory progress bar
 - Redo layout on Storage screen (maybe carousel?)
+- Keyboard help on system or log?
 
 Ideas :
 - Drone, or wing-man?
@@ -21,6 +20,7 @@ Ideas :
 - on-screen buttons for mobile support
 
 Maybe someday Ideas:
+- Different color planets give different resources : what kinds of resources
 - Aliens destroy buildings
 - Aliens build buildings
 - AI to auto-transport goods (supply chain)

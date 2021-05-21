@@ -1,10 +1,16 @@
+// Main Version
+export const APP_VERSION = "0.02a";
 // Colors
 export const BLACK = 0X000000;
-export const YELLOW = 0xCC55CC;
+export const YELLOW = 0xFFCC55;
 export const BLUE = 0x00AAFF;
 export const WHITE = 0xFFFFFF;
 export const DARK_GREY = 0x303030;
 export const LIGHT_GREY = 0x909090;
+export const GREY = 0x808080;
+export const RED = 0x500000;
+export const GREEN = 0x005000;
+export const PURPLE = 0x500050;
 
 export const GAME_STATE = {
   INIT: "init",
@@ -35,13 +41,6 @@ export const HALF_MINIMAP_VIEW_HEIGHT = MINIMAP_VIEW_HEIGHT / 2;
 // convert minimap pixels to real pixels
 export const MINIMAP_SCALE_X = MINIMAP_WIDTH / MINIMAP_VIEW_WIDTH;
 export const MINIMAP_SCALE_Y = MINIMAP_HEIGHT / MINIMAP_VIEW_HEIGHT;
-// MiniMap colors
-export const MINIMAP_BORDER_COLOR = LIGHT_GREY;
-export const MINIMAP_BACKGROUND_COLOR = DARK_GREY;
-export const MINIMAP_PLANET_COLOR = LIGHT_GREY;
-export const MINIMAP_SELECTED_PLANET_COLOR = YELLOW;
-export const MINIMAP_BUILDING_COLOR = BLUE;
-export const MINIMAP_SHIP_COLOR = WHITE;
 
 // Files
 export const SPRITESHEET_JSON = "images/spritesheet.json";
@@ -81,7 +80,10 @@ export const STAR_BACKGROUND_FILE = "images/stars.png";
 export const CRASH_JSON = "images/crash.json";
 export const CRASH = "crash"; // animation name in json
 
-export const UNIVERSE_RADIUS = 35000;
+// Misc
+export const UNIVERSE_RADIUS = 40000;
+export const OUTER_RING_MIN = 50000; // This is where we dump extra planets and aliens that won't fit into the universe
+export const OUTER_RING_MAX = 70000;
 export const PLAYER = "player";
 export const ALIEN = "alien";
 export const PLAYER_STARTING_RESOURCES = {titanium: 30, gold: 20, uranium: 0};
@@ -93,6 +95,20 @@ export const PLAYER_START_X = -(UNIVERSE_RADIUS + 1000); // left of the universe
 export const PLAYER_START_Y = 0;
 export const MIN_ALIEN_DIST_TO_PLANET = 50;
 export const MIN_ALIEN_DIST_TO_ALIEN = 3;
+
+// MiniMap colors
+export const MINIMAP_BORDER_COLOR = LIGHT_GREY;
+export const MINIMAP_BACKGROUND_COLOR = DARK_GREY;
+export const MINIMAP_BUILDING_COLOR = BLUE;
+export const MINIMAP_SHIP_COLOR = WHITE;
+export const MINIMAP_PLANET_COLOR = LIGHT_GREY;
+export const MINIMAP_SELECTED_PLANET_COLOR = YELLOW;
+export const PLANET_COLORS = {
+  [PLANET_ROCK_FILE]: GREY,
+  [PLANET_RED_FILE]: RED,
+  [PLANET_GREEN_FILE]: GREEN,
+  [PLANET_PURPLE_FILE]: PURPLE
+};
 
 // Buildings
 export const BUILDING_PLACEMENT_ROTATION_INCREMENT = 0.05;
@@ -161,7 +177,7 @@ export const EQUIP_SPEED_BOOST = {
   description: "Increase the ship's acceleration. Helps slow ships take off of large planets.",
 };
 export const EQUIP_TURN_BOOST = {
-  name: "Turn Booster", objType: OBJ_EQUIP, type: EQUIP_TYPE_TURN, boostSpeed: 0.05,
+  name: "Turn Booster", objType: OBJ_EQUIP, type: EQUIP_TYPE_TURN, boostSpeed: 0.04,
   cost: {titanium: 0, gold: 10, uranium: 20},
   description: "Increase turning speed.",
 };
@@ -1005,8 +1021,8 @@ export const XP_LEVELS = {
     {xp: 20, obj: SHIP_ALIEN},
   ],
   [SHIP_ALIEN_LARGE.name]: [
-    {xp: 1, obj: EQUIP_STREAM_BLASTER},
-    {xp: 3, obj: EQUIP_TURRET_DEPLOYER},
+    {xp: 1, obj: EQUIP_TURRET_DEPLOYER},
+    {xp: 3, obj: EQUIP_STREAM_BLASTER},
     {xp: 7, obj: EQUIP_SNIPER_RIFLE},
     {xp: 20, obj: EQUIP_STREAM_TURRET_DEPLOYER},
     {xp: 50, obj: SHIP_ALIEN_LARGE},
@@ -1060,20 +1076,20 @@ export const UNIVERSE_RINGS = [
     planetFiles: [],
     aliens: [
       {count: 50, file: SHIP_ALIEN_STEALTH},
-      {count: 60, file: SHIP_ALIEN_FIRE},
+      {count: 75, file: SHIP_ALIEN_FIRE},
       {count: 30, file: SHIP_ALIEN_STAPLE_TURRET},
     ],
   },
   {
-    planetCount: 200,
+    planetCount: 170,
     minDist: 2500, maxDist: 10000,
     minDistToOtherPlanet: 150,
-    minPlanetRadius: 280, maxPlanetRadius: 500,
+    minPlanetRadius: 300, maxPlanetRadius: 600,
     planetFiles: [PLANET_RED_FILE, PLANET_PURPLE_FILE, PLANET_GREEN_FILE],
     aliens: [
       {count: 400, file: SHIP_ALIEN_STAPLE_TURRET},
-      {count: 600, file: SHIP_ALIEN_LARGE},
-      {count: 300, file: SHIP_ALIEN_STEALTH},
+      {count: 500, file: SHIP_ALIEN_LARGE},
+      {count: 500, file: SHIP_ALIEN_STEALTH},
     ],
   },
   {
@@ -1088,39 +1104,39 @@ export const UNIVERSE_RINGS = [
     ],
   },
   {
-    planetCount: 520,
-    minDist: 10000, maxDist: 15000,
+    planetCount: 1000,
+    minDist: 10000, maxDist: 20000,
     minDistToOtherPlanet: 150,
-    minPlanetRadius: 180, maxPlanetRadius: 300,
+    minPlanetRadius: 200, maxPlanetRadius: 360,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE, PLANET_GREEN_FILE],
     aliens: [
-      {count: 300, file: SHIP_ALIEN_TURRET},
-      {count: 700, file: SHIP_ALIEN},
-      {count: 300, file: SHIP_ALIEN_LARGE},
+      {count: 400, file: SHIP_ALIEN_TURRET},
+      {count: 800, file: SHIP_ALIEN},
+      {count: 400, file: SHIP_ALIEN_LARGE},
     ],
   },
   {
     planetCount: 2000,
-    minDist: 15000, maxDist: 25000,
+    minDist: 20000, maxDist: 30000,
     minDistToOtherPlanet: 200,
-    minPlanetRadius: 150, maxPlanetRadius: 200,
+    minPlanetRadius: 170, maxPlanetRadius: 220,
     planetFiles: [PLANET_ROCK_FILE, PLANET_RED_FILE],
     aliens: [
-      {count: 1200, file: SHIP_ALIEN_TURRET},
-      {count: 350, file: SHIP_ALIEN}
+      {count: 1300, file: SHIP_ALIEN_TURRET},
+      {count: 400, file: SHIP_ALIEN}
     ],
   },
   {
     planetCount: 1000,
-    minDist: 25000, maxDist: 30000,
+    minDist: 30000, maxDist: 35000,
     minDistToOtherPlanet: 300,
     minPlanetRadius: 150, maxPlanetRadius: 180,
     planetFiles: [PLANET_ROCK_FILE],
-    aliens: [{count: 500, file: SHIP_ALIEN_TURRET}],
+    aliens: [{count: 600, file: SHIP_ALIEN_TURRET}],
   },
   {
-    planetCount: 800,
-    minDist: 30000, maxDist: UNIVERSE_RADIUS,
+    planetCount: 900,
+    minDist: 35000, maxDist: UNIVERSE_RADIUS,
     minDistToOtherPlanet: 500,
     minPlanetRadius: 80, maxPlanetRadius: 150,
     planetFiles: [PLANET_ROCK_FILE],

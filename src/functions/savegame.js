@@ -75,11 +75,13 @@ export function loadWorld(key) {
       window.world.system.shieldSpriteCache = new Map();
       window.world.system.bullets = []; // remove all active bullets from the screen
       window.world.system.spriteContainers.bullets.removeChildren();
+      window.world.system.explosions = [];
+      window.world.system.spriteContainers.explosions.removeChildren();
 
       // Reset/Redraw all the sprites
       window.world.ship.spriteId = null;
       const shipSprite = game.getShipSprite(window.world.ship);
-      shipSprite.visible = true;
+      shipSprite.visible = shipSprite.alive;
       fly.repositionScreen();
       utils.showToast('Loaded game');
     };
