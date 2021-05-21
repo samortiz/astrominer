@@ -81,7 +81,7 @@ export function loadWorld(key) {
       // Reset/Redraw all the sprites
       window.world.ship.spriteId = null;
       const shipSprite = game.getShipSprite(window.world.ship);
-      shipSprite.visible = shipSprite.alive;
+      shipSprite.visible = window.world.ship.alive;
       fly.repositionScreen();
       utils.showToast('Loaded game');
     };
