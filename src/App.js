@@ -67,8 +67,10 @@ export default class App extends React.Component {
       ai.moveAliens();
       window.world.system.gameLoop(delta);
     }
-    // Redraw react HTML
-    this.forceUpdate();
+    // Force redraw all the react HTML (doesn't need to be updated 60 times / sec)
+    if (window.world.gameTickCount % 30 === 0) {
+      this.forceUpdate();
+    }
   }
 
   setupKeyboardListeners = () => {

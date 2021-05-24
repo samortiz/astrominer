@@ -162,14 +162,15 @@ export function creeperAi(alien, crashIntoPlayer=false) {
         ({xAmt, yAmt} = utils.dirComponents(turnDir, 20 * alien.propulsion));
       }
     } // for planet
-    // Too close to player, don't move closer
+    // Too close to an enemy, don't move as you might crash
     if (!crashIntoPlayer && distToOpponent < (ship.spriteWidth + alien.radius + 20)) {
       xAmt = 0;
       yAmt = 0;
     }
     // Don't crash into friends
-    const {target: alienTarget, dist: alienDist} = getNearestFriendlyTarget(alien);
-    if (alienTarget && (alienDist < (alien.radius + alienTarget.radius + 10))) {
+    const {target: friend} = getNearestFriendlyTarget(alien);
+    if (friend &&
+      (utils.distanceBetween(alien.x + xAmt, alien.y + yAmt, friend.x, friend.y) < (alien.radius + friend.radius + 10))) {
       xAmt = 0;
       yAmt = 0;
     }

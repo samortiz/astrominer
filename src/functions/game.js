@@ -70,7 +70,7 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  //window.world.shipStartX = -2500;
+  // window.world.shipStartX = -2500;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
@@ -78,16 +78,17 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  // world.ship.armorMax = 55000;
-  // world.ship.armor = 55000;
-  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
-  // world.ship.resourcesMax = 100000;
-  // world.ship.equip = [manage.makeEquip(c.EQUIP_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_SNIPER_RIFLE),
-  //   manage.makeEquip(c.EQUIP_ALIEN_MISSILE_LAUNCHER),
-  //   manage.makeEquip(c.EQUIP_SHIELD_DROID), manage.makeEquip(c.EQUIP_SHIELD_ULTRA), manage.makeEquip(c.EQUIP_SHIELD_BLINK)];
+  world.ship.armorMax = 55000;
+  world.ship.armor = 55000;
+  world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  world.ship.resourcesMax = 100000;
+  world.ship.equip = [manage.makeEquip(c.EQUIP_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_MELEE_GUN),
+    manage.makeEquip(c.EQUIP_ALIEN_MISSILE_LAUNCHER),
+    manage.makeEquip(c.EQUIP_SHIELD_DROID), manage.makeEquip(c.EQUIP_SHIELD_BLINK), manage.makeEquip(c.EQUIP_SHIELD_BLINK)];
   // world.ship.equipMax = world.ship.equip.length;
   // world.blueprints.equip = [...c.ALL_EQUIP];
   // world.blueprints.ship = [...c.ALL_SHIPS];
+  // world.introDialogShown = true;
 
   // DEBUG test alien
   // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
@@ -153,6 +154,13 @@ export function createPlanets() {
       let mass = radius * radius * c.PLANET_DENSITY.get(fileName);
       let maxResource = mass * 2 * 0.3;
       let minResource = mass * 0.15;
+      if (radius > 1000) {
+        minResource += 10000;
+        maxResource += 10000;
+      } else if (radius > 500) {
+        minResource += 500;
+        maxResource += 500;
+      }
       // Setup the planet
       let planet = createPlanet(fileName, name, radius, mass, {
         titanium: utils.randomInt(minResource, maxResource),

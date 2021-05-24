@@ -1,5 +1,5 @@
 // Main Version
-export const APP_VERSION = "0.02a";
+export const APP_VERSION = "0.03a";
 // Colors
 export const BLACK = 0X000000;
 export const YELLOW = 0xFFCC55;
@@ -384,15 +384,15 @@ export const EQUIP_SHIELD_LONG = {
     active: false,
     armor: 500,
     armorMax: 500,
-    lifetime: 1000,
-    lifetimeMax: 1000,
+    lifetime: 1100,
+    lifetimeMax: 1100,
     spriteFile: SHIELD_WHITE_FILE,
     radius: 0
   },
   cost: {titanium: 0, gold: 200, uranium: 10}
 };
 export const EQUIP_SHIELD_STRONG = {
-  name: "Strong Shield", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 850,
+  name: "Strong Shield", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 1000,
   shield: {
     active: false,
     armor: 1500,
@@ -408,8 +408,8 @@ export const EQUIP_SHIELD_ULTRA = {
   name: "Ultra Shield", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 1000,
   shield: {
     active: false,
-    armor: 1300,
-    armorMax: 1300,
+    armor: 1200,
+    armorMax: 1200,
     lifetime: 800,
     lifetimeMax: 800,
     spriteFile: SHIELD_BLUE_FILE,
@@ -418,11 +418,11 @@ export const EQUIP_SHIELD_ULTRA = {
   cost: {titanium: 0, gold: 300, uranium: 100}
 };
 export const EQUIP_SHIELD_BLINK = {
-  name: "Blink Shield", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 501,
+  name: "Blink Shield", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 600,
   shield: {
     active: false,
-    armor: 1000,
-    armorMax: 1000,
+    armor: 900,
+    armorMax: 900,
     lifetime: 500,
     lifetimeMax: 500,
     spriteFile: SHIELD_BLUE_FILE,
@@ -875,13 +875,13 @@ export const SHIP_STREAM_TURRET = {
   },
   equipMax: 1,
   equip: [EQUIP_STREAM_BLASTER],
-  armorMax: 500,
-  armor: 500,
+  armorMax: 350,
+  armor: 350,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.4,
   imageFile: ALIEN_SHIP_BLUE_LARGE_FILE,
-  cost: {titanium: 10, gold: 20, uranium: 10},
+  cost: {titanium: 10, gold: 25, uranium: 10},
   aiType: EQUIP_AI_TURRET,
   description: "A well armored turret with a stream blaster",
 };
@@ -905,7 +905,7 @@ export const SHIP_MISSILE = {
   crashAngle: 10,
   imageScale: 1,
   imageFile: SHIP_BALL_FILE,
-  cost: {titanium: 0, gold: 5, uranium: 20},
+  cost: {titanium: 0, gold: 15, uranium: 15},
   aiType: EQUIP_AI_MISSILE,
   description: "An enemy seeking missile.",
 };
@@ -929,7 +929,7 @@ export const SHIP_FRIENDSHIP_MISSILE = {
   crashAngle: 10,
   imageScale: 0.5,
   imageFile: ALIEN_SHIP_BLUE_FILE,
-  cost: {titanium: 0, gold: 10, uranium: 0},
+  cost: {titanium: 0, gold: 5, uranium: 5},
   aiType: EQUIP_AI_MISSILE,
   description: "A missile that turns enemies into friends.",
 };
@@ -974,7 +974,7 @@ export const EQUIP_FRIENDSHIP_GUN = {
 export const EQUIP_UPGRADES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_ARMOR, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST,
   EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE, EQUIP_AUTOLANDER];
 export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_MELEE_GUN, EQUIP_SNIPER_RIFLE, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN, EQUIP_STAPLE_GUN_HEAVY, EQUIP_ALIEN_BLASTER_FAST, EQUIP_ALIEN_BLASTER_LIGHTNING];
-export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_STREAM_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_ALIEN_MISSILE_LAUNCHER, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA, EQUIP_SHIELD_BLINK];
+export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_STREAM_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_ALIEN_MISSILE_LAUNCHER, EQUIP_FRIENDSHIP_GUN, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA, EQUIP_SHIELD_BLINK];
 export const EQUIP_DROIDS = [EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_LIGHTING_DROID, EQUIP_SHIELD_DROID];
 export const ALL_EQUIP = [...EQUIP_UPGRADES, ...EQUIP_PRIMARY_WEAPONS, ...EQUIP_SECONDARY_WEAPONS, ...EQUIP_DROIDS];
 
@@ -994,6 +994,7 @@ export const XP_LEVELS = {
     {xp: 100, obj: EQUIP_THRUSTER},
     {xp: 500, obj: SHIP_FAST},
     {xp: 1000, obj: EQUIP_BLINK_THRUSTER},
+    {xp: 2000, obj: EQUIP_TURN_BOOST},
   ],
   [PLANET_GREEN_FILE]: [
     {xp: 10, obj: SHIP_SKELETON},
@@ -1002,11 +1003,10 @@ export const XP_LEVELS = {
     {xp: 1000, obj: EQUIP_AUTOLANDER},
   ],
   [PLANET_PURPLE_FILE]: [
-    {xp: 10, obj: EQUIP_TURN_BOOST},
     {xp: 300, obj: EQUIP_SHIELD_STRONG},
     {xp: 750, obj: EQUIP_GUNNERY_DROID},
     {xp: 1000, obj: SHIP_FIGHTER},
-    {xp: 2000, obj: EQUIP_SHIELD_BLINK},
+    {xp: 2000, obj: EQUIP_SHIELD_ULTRA},
   ],
   // Killing aliens
   [SHIP_ALIEN_TURRET.name]: [
@@ -1018,7 +1018,7 @@ export const XP_LEVELS = {
     {xp: 1, obj: EQUIP_SHIELD},
     {xp: 5, obj: EQUIP_DECOY_DEPLOYER},
     {xp: 10, obj: EQUIP_SHIELD_LONG},
-    {xp: 20, obj: SHIP_ALIEN},
+    {xp: 30, obj: SHIP_ALIEN},
   ],
   [SHIP_ALIEN_LARGE.name]: [
     {xp: 1, obj: EQUIP_TURRET_DEPLOYER},
@@ -1037,11 +1037,11 @@ export const XP_LEVELS = {
     {xp: 3, obj: EQUIP_MELEE_GUN},
     {xp: 7, obj: EQUIP_ENHANCED_STORAGE},
     {xp: 10, obj: EQUIP_SHIELD_DROID},
+    {xp: 20, obj: EQUIP_ENHANCED_ARMOR},
   ],
   [SHIP_ALIEN_FIRE.name]: [
-    {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
-    {xp: 4, obj: EQUIP_ENHANCED_ARMOR},
-    {xp: 7, obj: EQUIP_SHIELD_ULTRA},
+    {xp: 1, obj: EQUIP_SHIELD_BLINK},
+    {xp: 7, obj: EQUIP_STAPLE_GUN_HEAVY},
     {xp: 15, obj: SHIP_ALIEN_FIRE},
   ],
   [SHIP_ALIEN_MOTHERSHIP.name]: [
@@ -1081,7 +1081,7 @@ export const UNIVERSE_RINGS = [
     ],
   },
   {
-    planetCount: 170,
+    planetCount: 180,
     minDist: 2500, maxDist: 10000,
     minDistToOtherPlanet: 150,
     minPlanetRadius: 300, maxPlanetRadius: 600,
