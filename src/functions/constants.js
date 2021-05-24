@@ -1,5 +1,5 @@
 // Main Version
-export const APP_VERSION = "0.03a";
+export const APP_VERSION = "0.04a";
 // Colors
 export const BLACK = 0X000000;
 export const YELLOW = 0xFFCC55;

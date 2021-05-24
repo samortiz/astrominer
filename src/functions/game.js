@@ -78,13 +78,13 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  world.ship.armorMax = 55000;
-  world.ship.armor = 55000;
-  world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
-  world.ship.resourcesMax = 100000;
-  world.ship.equip = [manage.makeEquip(c.EQUIP_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_MELEE_GUN),
-    manage.makeEquip(c.EQUIP_ALIEN_MISSILE_LAUNCHER),
-    manage.makeEquip(c.EQUIP_SHIELD_DROID), manage.makeEquip(c.EQUIP_SHIELD_BLINK), manage.makeEquip(c.EQUIP_SHIELD_BLINK)];
+  // world.ship.armorMax = 55000;
+  // world.ship.armor = 55000;
+  // world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
+  // world.ship.resourcesMax = 100000;
+  // world.ship.equip = [manage.makeEquip(c.EQUIP_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_MELEE_GUN),
+  //   manage.makeEquip(c.EQUIP_ALIEN_MISSILE_LAUNCHER),
+  //   manage.makeEquip(c.EQUIP_SHIELD_DROID), manage.makeEquip(c.EQUIP_SHIELD_BLINK), manage.makeEquip(c.EQUIP_SHIELD_BLINK)];
   // world.ship.equipMax = world.ship.equip.length;
   // world.blueprints.equip = [...c.ALL_EQUIP];
   // world.blueprints.ship = [...c.ALL_SHIPS];
