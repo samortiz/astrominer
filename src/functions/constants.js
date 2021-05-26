@@ -1,5 +1,5 @@
 // Main Version
-export const APP_VERSION = "0.04a";
+export const APP_VERSION = "0.05a";
 // Colors
 export const BLACK = 0X000000;
 export const YELLOW = 0xFFCC55;
@@ -444,8 +444,8 @@ export const SHIP_RED_MISSILE = {
   },
   equipMax: 0,
   equip: [],
-  armorMax: 150,
-  armor: 150,
+  armorMax: 200,
+  armor: 200,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.8,
@@ -542,7 +542,7 @@ export const SHIP_FAST = {
     gold: 0,
     uranium: 0,
   },
-  equipMax: 6,
+  equipMax: 5,
   equip: [EQUIP_BRAKE],
   armorMax: 50,
   armor: 50,
@@ -551,7 +551,7 @@ export const SHIP_FAST = {
   imageScale: 0.6,
   imageFile: SHIP_FAST_FILE,
   cost: {titanium: 200, gold: 100, uranium: 50},
-  description: "A fast ship with good handling and 6 slots.",
+  description: "A fast ship with good handling and 5 slots.",
 };
 
 export const SHIP_SKELETON = {
@@ -597,7 +597,7 @@ export const SHIP_HEAVY = {
   imageScale: 0.5,
   imageFile: SHIP_HEAVY_FILE,
   cost: {titanium: 500, gold: 400, uranium: 300},
-  description: "A large ship with 500 armor and 300 resources and 8 slots.",
+  description: "A large ship with 500 armor, 300 resources and 8 slots.",
 };
 
 export const SHIP_FIGHTER = {
@@ -620,7 +620,7 @@ export const SHIP_FIGHTER = {
   imageScale: 0.6,
   imageFile: SHIP_FIGHTER_FILE,
   cost: {titanium: 500, gold: 500, uranium: 500},
-  description: "A fast, heavily armored ship with 10 slots.",
+  description: "A fast, ship with 300 armor, 200 resources and 10 slots.",
 };
 
 export const SHIP_WING = {
@@ -731,8 +731,8 @@ export const SHIP_ALIEN_STAPLE_TURRET = {
   },
   equipMax: 3,
   equip: [EQUIP_BRAKE, EQUIP_STAPLE_GUN_HEAVY],
-  armorMax: 200,
-  armor: 200,
+  armorMax: 230,
+  armor: 230,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 1.3,
@@ -755,8 +755,8 @@ export const SHIP_ALIEN_FIRE = {
   },
   equipMax: 8,
   equip: [EQUIP_BRAKE, EQUIP_STAPLE_GUN_HEAVY, EQUIP_SHIELD_LONG],
-  armorMax: 350,
-  armor: 350,
+  armorMax: 450,
+  armor: 450,
   crashSpeed: 2,
   crashAngle: 0.4,
   imageScale: 1.5,
@@ -875,15 +875,15 @@ export const SHIP_STREAM_TURRET = {
   },
   equipMax: 1,
   equip: [EQUIP_STREAM_BLASTER],
-  armorMax: 350,
-  armor: 350,
+  armorMax: 250,
+  armor: 250,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.4,
   imageFile: ALIEN_SHIP_BLUE_LARGE_FILE,
-  cost: {titanium: 10, gold: 25, uranium: 10},
+  cost: {titanium: 10, gold: 30, uranium: 20},
   aiType: EQUIP_AI_TURRET,
-  description: "A well armored turret with a stream blaster",
+  description: "A turret with a stream blaster",
 };
 
 export const SHIP_MISSILE = {
@@ -899,8 +899,8 @@ export const SHIP_MISSILE = {
   },
   equipMax: 0,
   equip: [],
-  armorMax: 200,
-  armor: 200,
+  armorMax: 220,
+  armor: 220,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 1,
@@ -1022,32 +1022,32 @@ export const XP_LEVELS = {
   ],
   [SHIP_ALIEN_LARGE.name]: [
     {xp: 1, obj: EQUIP_TURRET_DEPLOYER},
-    {xp: 3, obj: EQUIP_STREAM_BLASTER},
-    {xp: 7, obj: EQUIP_SNIPER_RIFLE},
-    {xp: 20, obj: EQUIP_STREAM_TURRET_DEPLOYER},
-    {xp: 50, obj: SHIP_ALIEN_LARGE},
+    {xp: 5, obj: EQUIP_STREAM_BLASTER},
+    {xp: 10, obj: EQUIP_ENHANCED_STORAGE},
+    {xp: 15, obj: EQUIP_SNIPER_RIFLE},
+    {xp: 25, obj: SHIP_ALIEN_LARGE},
   ],
   [SHIP_ALIEN_STEALTH.name]: [
-    {xp: 1, obj: EQUIP_MISSILE_LAUNCHER},
-    {xp: 5, obj: EQUIP_SPRINKLER_BLASTER},
-    {xp: 10, obj: EQUIP_FRIENDSHIP_GUN},
+    {xp: 1, obj: EQUIP_SPRINKLER_BLASTER},
+    {xp: 7, obj: EQUIP_MISSILE_LAUNCHER},
+    {xp: 15, obj: EQUIP_FRIENDSHIP_GUN},
   ],
   [SHIP_ALIEN_STAPLE_TURRET.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN},
-    {xp: 3, obj: EQUIP_MELEE_GUN},
-    {xp: 7, obj: EQUIP_ENHANCED_STORAGE},
-    {xp: 10, obj: EQUIP_SHIELD_DROID},
-    {xp: 20, obj: EQUIP_ENHANCED_ARMOR},
+    {xp: 5, obj: EQUIP_MELEE_GUN},
+    {xp: 10, obj: EQUIP_ENHANCED_ARMOR},
+    {xp: 20, obj: EQUIP_SHIELD_DROID},
   ],
   [SHIP_ALIEN_FIRE.name]: [
-    {xp: 1, obj: EQUIP_SHIELD_BLINK},
-    {xp: 7, obj: EQUIP_STAPLE_GUN_HEAVY},
-    {xp: 15, obj: SHIP_ALIEN_FIRE},
+    {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
+    {xp: 5, obj: EQUIP_SHIELD_BLINK},
+    {xp: 10, obj: EQUIP_STREAM_TURRET_DEPLOYER},
+    {xp: 20, obj: SHIP_ALIEN_FIRE},
   ],
   [SHIP_ALIEN_MOTHERSHIP.name]: [
     {xp: 1, obj: EQUIP_ALIEN_BLASTER_LIGHTNING},
-    {xp: 2, obj: EQUIP_LIGHTING_DROID},
-    {xp: 3, obj: EQUIP_ALIEN_MISSILE_LAUNCHER},
+    {xp: 2, obj: EQUIP_ALIEN_MISSILE_LAUNCHER},
+    {xp: 3, obj: EQUIP_LIGHTING_DROID},
     {xp: 4, obj: SHIP_WING},
   ]
 }

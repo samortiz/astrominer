@@ -122,12 +122,12 @@ export function InfoFly() {
         <p> After a long trip through deep space, I have finally made it to the edge of the asteroid field that until now I wasn't certain actually existed.
           We will see if it lives up to the rumors from old men in taverns of asteroids full of titanium, gold and uranium, a place where a man can make
           a fortune mining.  So it really does exist, but where are all the other people who came to make their fortune? This place looks empty.</p>
-        <p>It took years to save up enough to get this Explorer-class spaceship, and I outfitted it with a state-of-the-art self-replicating AI which can build
+        <p>It took years to save up enough to get this Explorer-class spaceship, and I outfitted it with a state-of-the-art AI which can build
           autonomous mines to extract resources. It can also create fully automated factories to produce ships and equipment. The AI can learn new patterns
           for the factories to build by being exposed to various different environments and equipment.  I have heard a lot about the power of this AI and
            can't wait to try it out.</p>
         <p>The first step is to find a planet with a good amount of resources and build a mine. I will have to be careful landing the ship though,
-          as the ship must be going slow enough and land on it's landing gear, not on the nose cone or it will be damaged.</p>
+          as the ship must be going slow enough and land on it's landing gear or it will be damaged.</p>
         <p> Use the arrow keys or W-A-S-D keys to move the ship, and the spacebar to shoot. X will deploy a secondary weapon.</p>
       </div>
 
