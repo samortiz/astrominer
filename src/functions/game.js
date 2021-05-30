@@ -1,5 +1,6 @@
 import {c, fly, manage, utils} from './';
 import lodash from 'lodash';
+import {randomInt} from "./utils";
 
 /**
  * Creates an empty world object, with only basic properties.
@@ -7,6 +8,7 @@ import lodash from 'lodash';
  */
 export function createEmptyWorld() {
   return {
+    appVersion: c.APP_VERSION,
     saveGameName: null, // name of last game saved/loaded
     ship: null,
     view: { // global XY for current view (in manage mode, always ship.xy in fly mode)
@@ -105,6 +107,7 @@ export function setupWorld() {
   // testPlanet.resources.stored = {titanium: 10000, gold: 10000, uranium: 10000};
 
   createAliens();
+  createExtras();
   setupMiniMap();
   setupExplosionSheet();
 }
@@ -145,7 +148,6 @@ export function createBackground() {
 }
 
 export function createPlanets() {
-  let container = window.world.system.spriteContainers.planets;
   for (let ring of c.UNIVERSE_RINGS) {
     for (let i = 0; i < ring.planetCount; i++) {
       let fileName = ring.planetFiles[utils.randomInt(0, ring.planetFiles.length - 1)];
@@ -166,7 +168,7 @@ export function createPlanets() {
         titanium: utils.randomInt(minResource, maxResource),
         gold: utils.randomInt(minResource, maxResource),
         uranium: utils.randomInt(minResource, maxResource),
-      }, container);
+      });
       let {x, y} = getFreeXy(planet, ring.minDistToOtherPlanet, 0, ring.minDist, ring.maxDist);
       planet.x = x;
       planet.y = y;
@@ -464,6 +466,150 @@ export function createAliens() {
     } // for alienInfo
   } // for ring
 }
+
+export function createExtras() {
+  const planetTrail = [
+    {
+      type: c.PLANET_ROCK_FILE,
+      name: 'X500',
+      x: c.UNIVERSE_RADIUS + 3000,
+      y: 0,
+      radius: 100,
+      mass: 100,
+      resources: {
+        titanium: utils.randomInt(100, 500),
+        gold: utils.randomInt(100, 500),
+        uranium: utils.randomInt(500, 1000),
+      },
+    },
+    {
+      type: c.PLANET_ROCK_FILE,
+      name: 'X400',
+      x: c.UNIVERSE_RADIUS + 5000,
+      y: 0,
+      radius: 200,
+      mass: 100,
+      resources: {
+        titanium: utils.randomInt(100, 500),
+        gold: utils.randomInt(100, 500),
+        uranium: utils.randomInt(500, 1000),
+      },
+    },
+    {
+      type: c.PLANET_RED_FILE,
+      name: 'X300',
+      x: c.UNIVERSE_RADIUS + 10000,
+      y: 0,
+      radius: 300,
+      mass: 150,
+      resources: {
+        titanium: utils.randomInt(200, 500),
+        gold: utils.randomInt(200, 1500),
+        uranium: utils.randomInt(1000, 1500),
+      },
+    },
+    {
+      type: c.PLANET_GREEN_FILE,
+      name: 'X200',
+      x: c.UNIVERSE_RADIUS + 16000,
+      y: 0,
+      radius: 300,
+      mass: 150,
+      resources: {
+        titanium: utils.randomInt(200, 500),
+        gold: utils.randomInt(200, 1500),
+        uranium: utils.randomInt(1000, 1500),
+      },
+    },
+
+    {
+      type: c.PLANET_PURPLE_FILE,
+      name: 'X100',
+      x: c.UNIVERSE_RADIUS + 25000,
+      y: 0,
+      radius: 300,
+      mass: 150,
+      resources: {
+        titanium: utils.randomInt(200, 500),
+        gold: utils.randomInt(200, 1500),
+        uranium: utils.randomInt(1000, 1500),
+      },
+    },
+    {
+      type: c.PLANET_ROCK_FILE,
+      name: 'A',
+      x: c.UNIVERSE_RADIUS + 35000,
+      y: -1500,
+      radius: 400,
+      mass: 500,
+      resources: {
+        titanium: utils.randomInt(3000, 15000),
+        gold: utils.randomInt(3000, 15000),
+        uranium: utils.randomInt(3000, 15000),
+      },
+    },
+    {
+      type: c.PLANET_ROCK_FILE,
+      name: 'B',
+      x: c.UNIVERSE_RADIUS + 35000,
+      y: 1500,
+      radius: 400,
+      mass: 500,
+      resources: {
+        titanium: utils.randomInt(3000, 15000),
+        gold: utils.randomInt(3000, 15000),
+        uranium: utils.randomInt(3000, 15000),
+      },
+    },
+    {
+      type: c.PLANET_ROCK_FILE,
+      name: 'C',
+      x: c.UNIVERSE_RADIUS + 36500,
+      y: 0,
+      radius: 400,
+      mass: 500,
+      resources: {
+        titanium: utils.randomInt(3000, 15000),
+        gold: utils.randomInt(3000, 15000),
+        uranium: utils.randomInt(3000, 15000),
+      },
+    },
+  ];
+  for (const planet of planetTrail) {
+    let newPlanet = createPlanet(planet.type, planet.name, planet.radius, planet.mass, planet.resources);
+    newPlanet.x = planet.x;
+    newPlanet.y = planet.y;
+  }
+
+  createAlien(c.SHIP_ALIEN_MOTHERSHIP, c.UNIVERSE_RADIUS + 35000, 400);
+  createAlien(c.SHIP_ALIEN_MOTHERSHIP, c.UNIVERSE_RADIUS + 35000, -400);
+  createAlien(c.SHIP_ALIEN_MOTHERSHIP, c.UNIVERSE_RADIUS + 34800, 200);
+  createAlien(c.SHIP_ALIEN_MOTHERSHIP, c.UNIVERSE_RADIUS + 34800, -200);
+  const mothershipTemplate = lodash.cloneDeep(c.SHIP_ALIEN_MOTHERSHIP);
+  mothershipTemplate.armorMax = 10000;
+  mothershipTemplate.armor = 10000;
+  mothershipTemplate.imageScale = 2;
+  createAlien(mothershipTemplate, c.UNIVERSE_RADIUS + 35000, 0);
+
+  for (let i=0; i<30; i++) {
+    const x = c.UNIVERSE_RADIUS + 34000 + randomInt(0,20) - 10;
+    const y = (i * 150) - 3000;
+    createAlien(c.SHIP_ALIEN_FIRE, x, y);
+  }
+
+  for (let i=0; i<40; i++) {
+    const x = c.UNIVERSE_RADIUS + 34500;
+    const y = (i * 150) - 3000;
+    createAlien(c.SHIP_ALIEN_STAPLE_TURRET, x, y);
+  }
+  for (let i=0; i<40; i++) {
+    const x = c.UNIVERSE_RADIUS + 35500;
+    const y = (i * 150) - 3000;
+    createAlien(c.SHIP_ALIEN_STAPLE_TURRET, x, y);
+  }
+
+}
+
 
 export function setupMiniMap() {
   let container = window.world.system.spriteContainers.minimap;

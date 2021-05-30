@@ -80,7 +80,10 @@ export function ManageSystem() {
           </div>
         ))}
       </div>
-      <div style={{color:"#909090"}}>Version {c.APP_VERSION}</div>
+      <div style={{color:"#909090"}}>
+        Version {world.appVersion}
+        {world.appVersion !== c.APP_VERSION && <span> in {c.APP_VERSION}</span>}
+      </div>
     </div>);
 }
 
