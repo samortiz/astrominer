@@ -1012,11 +1012,11 @@ export const XP_LEVELS = {
   [SHIP_ALIEN_TURRET.name]: [
     {xp: 1, obj: EQUIP_FAST_BLASTER},
     {xp: 5, obj: EQUIP_ALIEN_BLASTER},
-    {xp: 10, obj: EQUIP_ALIEN_BLASTER_FAST},
+    {xp: 10, obj: EQUIP_DECOY_DEPLOYER},
   ],
   [SHIP_ALIEN.name]: [
     {xp: 1, obj: EQUIP_SHIELD},
-    {xp: 5, obj: EQUIP_DECOY_DEPLOYER},
+    {xp: 5, obj: EQUIP_ALIEN_BLASTER_FAST},
     {xp: 10, obj: EQUIP_SHIELD_LONG},
     {xp: 30, obj: SHIP_ALIEN},
   ],
