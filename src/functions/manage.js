@@ -1,7 +1,7 @@
 import { c, utils, fly, game } from './';
 import lodash from 'lodash';
 import {EQUIP_TYPE_BRAKE, EQUIP_TYPE_PRIMARY_WEAPON, EQUIP_TYPE_THRUSTER} from "./constants";
-import {canAfford} from "./game";
+import {canAfford, payResourceCost} from "./game";
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -247,8 +247,12 @@ export function buildFactory() {
 export function buildShip(shipTemplate) {
   let world = window.world;
   let planet = world.selectedPlanet;
-  let newShip = game.createShip(shipTemplate, c.PLAYER);
-  planet.ships.push(newShip);
+  let ship = window.world.ship;
+  if (canAfford(planet, ship, shipTemplate.cost)) {
+    payResourceCost(planet, ship, shipTemplate.cost);
+    let newShip = game.createShip(shipTemplate, c.PLAYER);
+    planet.ships.push(newShip);
+  }
 }
 
 /**
@@ -328,7 +332,11 @@ export function makeEquip(equipTemplate) {
 
 export function buildEquip(equipTemplate) {
   let planet = window.world.selectedPlanet;
-  planet.equip.push(makeEquip(equipTemplate));
+  let ship = window.world.ship;
+  if (canAfford(planet, ship, equipTemplate.cost)) {
+    payResourceCost(planet, ship, equipTemplate.cost);
+    planet.equip.push(makeEquip(equipTemplate));
+  }
 }
 
 export function costToRepair(ship) {
