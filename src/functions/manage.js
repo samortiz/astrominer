@@ -1,6 +1,7 @@
 import { c, utils, fly, game } from './';
 import lodash from 'lodash';
 import {EQUIP_TYPE_BRAKE, EQUIP_TYPE_PRIMARY_WEAPON, EQUIP_TYPE_THRUSTER} from "./constants";
+import {canAfford} from "./game";
 
 export function enterManageState() {
   console.log("enter manage state");
@@ -73,6 +74,10 @@ export function buildMine() {
   let mine = {type: c.BUILDING_TYPE_MINE};
   let planet = world.selectedPlanet;
   let ship = world.ship;
+  if (!canAfford(planet, ship, c.MINE_COST)) {
+    console.log('Not enough resources to build a mine');
+    return;
+  }
   // Place the mine (to the right of the ship)
   const initRotation = getBuildingPlacementRotation(ship, planet, c.MINE_WIDTH);
   // Calculate an X,Y point near the ship on surface of the planet
@@ -210,8 +215,11 @@ export function buildFactory() {
   let planet = world.selectedPlanet;
   let ship = world.ship;
   let factory = {type: c.BUILDING_TYPE_FACTORY};
-
-  // Place the mine (to the right of the ship)
+  if (!canAfford(planet, ship, c.FACTORY_COST)) {
+    console.log('Not enough resources to build a factory');
+    return;
+  }
+  // Place the factory (to the right of the ship)
   const initialRotation = getBuildingPlacementRotation(ship, planet, c.FACTORY_WIDTH);
   // Calculate an X,Y point near the ship on surface of the planet
   // NOTE: we use sprite.height for width because all sprites face to the right (0 rotation)
@@ -325,6 +333,7 @@ export function buildEquip(equipTemplate) {
 
 export function costToRepair(ship) {
   const damageToRepair = ship.armorMax - ship.armor;
+  // If you change the /5 remember to change the same in repairShip... maybe should be a constant
   return {titanium:(damageToRepair / 5), gold:0, uranium:0};
 }
 
@@ -334,7 +343,7 @@ export function repairShip(ship, planet) {
   if (!game.canAfford(planet, ship, cost)) {
     let titaniumOnHand = planet.resources.stored.titanium + ship.resources.titanium;
     cost.titanium = titaniumOnHand;
-    addArmor = titaniumOnHand;
+    addArmor = titaniumOnHand * 5;
   } 
   game.payResourceCost(planet, ship, cost);
   ship.armor += addArmor;

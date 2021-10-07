@@ -172,7 +172,7 @@ export const EQUIP_BLINK_BRAKE = {
   description: "Stops your ship immediately.",
 };
 export const EQUIP_SPEED_BOOST = {
-  name: "Speed Booster", objType: OBJ_EQUIP, type: EQUIP_TYPE_SPEED, boostSpeed: 0.075,
+  name: "Speed Booster", objType: OBJ_EQUIP, type: EQUIP_TYPE_SPEED, boostSpeed: 0.05,
   cost: {titanium: 0, gold: 20, uranium: 10},
   description: "Increase the ship's acceleration. Helps slow ships take off of large planets.",
 };

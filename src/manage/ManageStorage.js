@@ -19,8 +19,18 @@ export function ManageStorage() {
   }
 
   function salvageShip(selectedShip) {
+    if (!window.confirm("Are you sure you want to salvage your " + selectedShip.name + "?")) {
+      return;
+    }
     manage.salvageShip(planet, selectedShip);
     setSelectedShip(null);
+  }
+
+  function salvageEquip(equip) {
+    if (!window.confirm("Are you sure you want to this " + equip.name + "?")) {
+      return;
+    }
+    manage.salvageEquip(planet, equip)
   }
 
   // Default to selecting the current ship
@@ -72,7 +82,7 @@ export function ManageStorage() {
               &nbsp; Cost {Math.floor(manage.costToRepair(selectedShip).titanium)} titanium
             </div>
             <div className='item-attr'><b>Resources Max</b>{Math.floor(selectedShip.resourcesMax)}</div>
-            <div className='item-attr'><b>Equip</b> (Max {selectedShip.equipMax})
+            <div className='item-attr'><b>Equip</b> ({selectedShip.equip.length} of {selectedShip.equipMax})
               {selectedShipEquip}
             </div>
           </div>
@@ -90,7 +100,7 @@ export function ManageStorage() {
                       disabled={!manage.canEquip(selectedShip, equip)}
               >Equip
               </button>
-              <button onClick={() => manage.salvageEquip(planet, equip)} style={{marginLeft:'10px'}}>Salvage</button>
+              <button onClick={() => salvageEquip(equip)} style={{marginLeft:'10px'}}>Salvage</button>
             </div>
           })}
         </span>
