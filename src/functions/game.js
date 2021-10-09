@@ -82,7 +82,7 @@ export function setupWorld() {
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
   // DEBUG SHIP
-  const debug = true;
+  const debug = false;
   if (debug) {
     world.ship.armorMax = 55000;
     world.ship.armor = 55000;
