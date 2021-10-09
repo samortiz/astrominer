@@ -5,12 +5,9 @@ Minor Bugs
  - fire aliens have duplicate shield images sometimes
  - button images repeatedly loading (when entering fly mode) (cached 304)
 
-TODO
+Ideas :
 - Factory progress bar
 - Redo layout on Storage screen (maybe carousel?)
-- Keyboard help on system or log?
-
-Ideas :
 - Drone, or wing-man?
 - continuous fire wo keypress
 - zoom minimap
