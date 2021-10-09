@@ -20,3 +20,12 @@
 .row-item {
   margin-left:10px;
 }
+
+.resource-table {
+  margin-top:10px;
+}
+
+.resource-table td, .resource-table th {
+  padding-left:5px;
+  padding-right:5px;
+}

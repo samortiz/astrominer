@@ -805,7 +805,7 @@ export const SHIP_ALIEN_MOTHERSHIP = {
   equip: [EQUIP_BRAKE, EQUIP_ALIEN_MISSILE_LAUNCHER, EQUIP_SHIELD_ULTRA, EQUIP_ALIEN_BLASTER_LIGHTNING],
   armorMax: 1000,
   armor: 1000,
-  crashSpeed: 2,
+  crashSpeed: 3,
   crashAngle: 10,
   imageScale: 1.3,
   imageFile: ALIEN_SHIP_RED_LARGE_FILE,

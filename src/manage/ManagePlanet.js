@@ -54,7 +54,7 @@ export function ManagePlanet() {
       <div className="row-item">Gold {Math.floor(planet.resources.raw.gold)}</div>
       <div className="row-item">Uranium {Math.floor(planet.resources.raw.uranium)}</div>
 
-      {shipOnPlanet && <table  className="row-item">
+      {shipOnPlanet && <table className="row-item resource-table">
         <thead>
         <tr>
           <th>Resource</th>

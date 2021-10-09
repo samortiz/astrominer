@@ -52,6 +52,7 @@ export function ManageLog() {
           <div><b>Down arrow</b> to brake</div>
           <div><b>X</b> to use the selected secondary weapon</div>
           <div>You may use WASD instead of the arrow keys</div>
+          <div><b>C</b> to engage/disengage continuous fire</div>
         </div>
       </div>
     </div>

@@ -86,6 +86,7 @@ export default class App extends React.Component {
     window.world.system.keys.q = utils.keyboardListener("q"); // thrust left
     window.world.system.keys.e = utils.keyboardListener("e"); // thrust right
     window.world.system.keys.x = utils.keyboardListener("x"); // secondary weapon
+    window.world.system.keys.c = utils.keyboardListener("c"); // continuous fire
   }
 
   setupWindowResizeListener() {

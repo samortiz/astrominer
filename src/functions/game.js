@@ -60,6 +60,8 @@ export function createEmptyWorld() {
       screenScale: 1, // scale due to window sizing
       miniMapGraphics: null, // used as a canvas for drawing the miniMap
       initializing: true, // set to false when the game fully running (after first draw)
+      continuousFire: false, // set to true by keypress
+      continuousFireUp : false, // set to true to determine when an key-up event happens
     },
   };
 }

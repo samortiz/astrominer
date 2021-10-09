@@ -31,7 +31,16 @@ export function flyLoop(delta) {
     if (world.system.keys.down.isDown || world.system.keys.s.isDown) {
       brakeShip(ship);
     }
-    if (world.system.keys.space.isDown) {
+    if (world.system.keys.c.isUp && !world.system.continuousFireUp) {
+      world.system.continuousFireUp = true;
+    }
+    if (world.system.keys.c.isDown) {
+      if (world.system.continuousFireUp) {
+        world.system.continuousFire = !world.system.continuousFire;
+        world.system.continuousFireUp = false;
+      }
+    }
+    if (world.system.keys.space.isDown || world.system.continuousFire) {
       firePrimaryWeapon(ship, 0.05);
     }
     if (world.system.keys.x.isDown) {
@@ -366,6 +375,8 @@ export function detectCollisionWithAlien(ship, shipSprite, alien) {
  * NOTE: This will cause damage to the ship attempting to land (side-effects)
  */
 function landShip(ship, planet) {
+  // Disengage continuous fire when landing or attempting to land
+  window.world.system.continuousFire = false;
   // atan2 has parameters (y,x)
   let planetDir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
   let dirDiff = Math.abs(ship.rotation - planetDir);
