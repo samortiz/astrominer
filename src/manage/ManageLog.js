@@ -44,6 +44,16 @@ export function ManageLog() {
           </div>
         </div>
       </div>
+      <div className='system-section'>
+        <div className='section'><b>Keyboard Help</b></div>
+        <div style={{paddingLeft:"10px"}}>
+          <div><b>Left / Right arrow keys</b> to turn left and right</div>
+          <div><b>Up arrow</b> to accelerate </div>
+          <div><b>Down arrow</b> to brake</div>
+          <div><b>X</b> to use the selected secondary weapon</div>
+          <div>You may use WASD instead of the arrow keys</div>
+        </div>
+      </div>
     </div>
   );
 }
