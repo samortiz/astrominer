@@ -1,10 +1,11 @@
 // Main Version
-export const APP_VERSION = "0.08a";
+export const APP_VERSION = "0.09";
 // Colors
 export const BLACK = 0X000000;
 export const YELLOW = 0xFFCC55;
 export const BLUE = 0x00AAFF;
 export const WHITE = 0xFFFFFF;
+export const DARKER_GREY = 0x202020;
 export const DARK_GREY = 0x303030;
 export const LIGHT_GREY = 0x909090;
 export const GREY = 0x808080;
@@ -64,6 +65,7 @@ export const PLANET_GREEN_FILE = "planet_green.png";
 export const PLANET_PURPLE_FILE = "planet_purple.png";
 export const PLANET_RED_FILE = "planet_red.png";
 export const PLANET_ROCK_FILE = "planet_rock.png";
+export const WORMHOLE_SPRITE = "wormhole_sprite" // Flag value to do wormhole sprite handling
 export const SHIELD_BLUE_FILE = "shield_blue.png";
 export const SHIELD_GREEN_FILE = "shield_green.png";
 export const SHIELD_WHITE_FILE = "shield_white.png";
@@ -79,6 +81,8 @@ export const SHIP_SKELETON_FILE = "ship_skeleton.png";
 export const STAR_BACKGROUND_FILE = "images/stars.png";
 export const CRASH_JSON = "images/crash.json";
 export const CRASH = "crash"; // animation name in json
+export const SMOKE_JSON = "images/smoke.json"
+export const SMOKE = "smoke";
 
 // Misc
 export const UNIVERSE_RADIUS = 40000;
@@ -101,13 +105,13 @@ export const MINIMAP_BORDER_COLOR = LIGHT_GREY;
 export const MINIMAP_BACKGROUND_COLOR = DARK_GREY;
 export const MINIMAP_BUILDING_COLOR = BLUE;
 export const MINIMAP_SHIP_COLOR = WHITE;
-export const MINIMAP_PLANET_COLOR = LIGHT_GREY;
 export const MINIMAP_SELECTED_PLANET_COLOR = YELLOW;
 export const PLANET_COLORS = {
   [PLANET_ROCK_FILE]: GREY,
   [PLANET_RED_FILE]: RED,
   [PLANET_GREEN_FILE]: GREEN,
-  [PLANET_PURPLE_FILE]: PURPLE
+  [PLANET_PURPLE_FILE]: PURPLE,
+  [WORMHOLE_SPRITE]: DARKER_GREY,
 };
 
 // Buildings
@@ -141,6 +145,7 @@ export const EQUIP_TYPE_SPEED = "Speed";
 export const EQUIP_TYPE_TURN = "Turn";
 export const EQUIP_TYPE_STORAGE = "Storage";
 export const EQUIP_TYPE_AUTOLANDER = "Autolander";
+export const EQUIP_TYPE_GRAVITY_SHIELD = "GravityShield";
 
 export const THRUST_MOMENTUM = "Thrust Momentum";
 export const THRUST_BLINK = "Thrust Blink";
@@ -217,7 +222,11 @@ export const EQUIP_AUTOLANDER = {
   cost: {titanium: 60, gold: 50, uranium: 10},
   description: "Never crash into a planet again!",
 };
-
+export const EQUIP_GRAVITY_SHIELD = {
+  name: "Gravity Shield", objType: OBJ_EQUIP, type: EQUIP_TYPE_GRAVITY_SHIELD,
+  cost: {titanium: 100, gold: 200, uranium: 150},
+  description: "Be free from the effect of gravity.",
+};
 
 // Primary Weapons
 export const EQUIP_BLASTER = {
@@ -972,7 +981,7 @@ export const EQUIP_FRIENDSHIP_GUN = {
 
 
 export const EQUIP_UPGRADES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_ARMOR, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST,
-  EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE, EQUIP_AUTOLANDER];
+  EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE, EQUIP_AUTOLANDER, EQUIP_GRAVITY_SHIELD];
 export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_MELEE_GUN, EQUIP_SNIPER_RIFLE, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN, EQUIP_STAPLE_GUN_HEAVY, EQUIP_ALIEN_BLASTER_FAST, EQUIP_ALIEN_BLASTER_LIGHTNING];
 export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_STREAM_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_ALIEN_MISSILE_LAUNCHER, EQUIP_FRIENDSHIP_GUN, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA, EQUIP_SHIELD_BLINK];
 export const EQUIP_DROIDS = [EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_LIGHTING_DROID, EQUIP_SHIELD_DROID];
@@ -1042,7 +1051,8 @@ export const XP_LEVELS = {
     {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
     {xp: 5, obj: EQUIP_SHIELD_BLINK},
     {xp: 10, obj: EQUIP_STREAM_TURRET_DEPLOYER},
-    {xp: 20, obj: SHIP_ALIEN_FIRE},
+    {xp: 20, obj: EQUIP_GRAVITY_SHIELD},
+    {xp: 30, obj: SHIP_ALIEN_FIRE},
   ],
   [SHIP_ALIEN_MOTHERSHIP.name]: [
     {xp: 1, obj: EQUIP_ALIEN_BLASTER_LIGHTNING},
@@ -1053,10 +1063,11 @@ export const XP_LEVELS = {
 }
 
 export const PLANET_DENSITY = new Map();
-PLANET_DENSITY.set(PLANET_ROCK_FILE, 0.025)
-PLANET_DENSITY.set(PLANET_RED_FILE, 0.02)
-PLANET_DENSITY.set(PLANET_GREEN_FILE, 0.013)
-PLANET_DENSITY.set(PLANET_PURPLE_FILE, 0.010)
+PLANET_DENSITY.set(PLANET_ROCK_FILE, 0.026);
+PLANET_DENSITY.set(PLANET_RED_FILE, 0.021);
+PLANET_DENSITY.set(PLANET_GREEN_FILE, 0.014);
+PLANET_DENSITY.set(PLANET_PURPLE_FILE, 0.011);
+PLANET_DENSITY.set(WORMHOLE_SPRITE, 15);
 
 // Universe Rings
 export const UNIVERSE_RINGS = [
@@ -1093,6 +1104,14 @@ export const UNIVERSE_RINGS = [
     ],
   },
   {
+    planetCount: 20,
+    minDist: 2501, maxDist: 10001,
+    minDistToOtherPlanet: 200,
+    minPlanetRadius: 10, maxPlanetRadius:20,
+    planetFiles: [WORMHOLE_SPRITE],
+    aliens: [],
+  },
+  {
     planetCount: 0,
     minDist: 8000, maxDist: 12000,
     minDistToOtherPlanet: 10,
@@ -1116,6 +1135,14 @@ export const UNIVERSE_RINGS = [
     ],
   },
   {
+    planetCount: 20,
+    minDist: 10001, maxDist: 20001,
+    minDistToOtherPlanet: 200,
+    minPlanetRadius: 10, maxPlanetRadius:20,
+    planetFiles: [WORMHOLE_SPRITE],
+    aliens: [],
+  },
+  {
     planetCount: 2000,
     minDist: 20000, maxDist: 30000,
     minDistToOtherPlanet: 200,
@@ -1135,11 +1162,27 @@ export const UNIVERSE_RINGS = [
     aliens: [{count: 600, file: SHIP_ALIEN_TURRET}],
   },
   {
+    planetCount: 20,
+    minDist: 20001, maxDist: 35001,
+    minDistToOtherPlanet: 200,
+    minPlanetRadius: 10, maxPlanetRadius:20,
+    planetFiles: [WORMHOLE_SPRITE],
+    aliens: [],
+  },
+  {
     planetCount: 900,
     minDist: 35000, maxDist: UNIVERSE_RADIUS,
     minDistToOtherPlanet: 500,
     minPlanetRadius: 80, maxPlanetRadius: 150,
     planetFiles: [PLANET_ROCK_FILE],
+    aliens: [],
+  },
+  {
+    planetCount: 20,
+    minDist: UNIVERSE_RADIUS-300, maxDist: UNIVERSE_RADIUS+800,
+    minDistToOtherPlanet: 500,
+    minPlanetRadius: 10, maxPlanetRadius:20,
+    planetFiles: [WORMHOLE_SPRITE],
     aliens: [],
   },
 ];

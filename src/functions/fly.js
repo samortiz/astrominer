@@ -1,4 +1,5 @@
 import {ai, c, game, manage, utils} from './';
+import {dirComponents} from "./utils";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -62,10 +63,13 @@ export function flyLoop(delta) {
     }
 
     // Gravity
-    for (let planet of planetsInView) {
-      let grav = utils.calcGravity(ship.x, ship.y, planet);
-      ship.vx += grav.x;
-      ship.vy += grav.y;
+    const hasGravityShield = !!getEquip(ship, c.EQUIP_TYPE_GRAVITY_SHIELD);
+    if (!hasGravityShield) {
+      for (let planet of planetsInView) {
+        let grav = utils.calcGravity(ship.x, ship.y, planet);
+        ship.vx += grav.x;
+        ship.vy += grav.y;
+      }
     }
 
     // move the ship
@@ -379,6 +383,19 @@ function landShip(ship, planet) {
   window.world.system.continuousFire = false;
   // atan2 has parameters (y,x)
   let planetDir = utils.normalizeRadian(Math.atan2(ship.y - planet.y, ship.x - planet.x));
+
+  // Landing on a wormhole!
+  if (planet.spriteFile === c.WORMHOLE_SPRITE) {
+    const {xAmt:xPos, yAmt:yPos} = dirComponents(planetDir, 200);
+    const {xAmt:xSpeed, yAmt:ySpeed} = dirComponents((planetDir + (Math.PI / 2)), 5);
+    ship.x = planet.jumpToX + xPos;
+    ship.y = planet.jumpToY + yPos;
+    ship.vx = xSpeed;
+    ship.vy = ySpeed;
+    repositionScreen();
+    return;
+  }
+
   let dirDiff = Math.abs(ship.rotation - planetDir);
   let speed = Math.abs(ship.vx) + Math.abs(ship.vy);
   // 0 and PI*2 are right beside each other, so large values are very close to small values

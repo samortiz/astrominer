@@ -41,6 +41,7 @@ export default class App extends React.Component {
     window.PIXI.loader
       .add(c.SPRITESHEET_JSON)
       .add(c.CRASH_JSON)
+      .add(c.SMOKE_JSON)
       .load(this.setupGame);
     window.world.system.app = app;
   }

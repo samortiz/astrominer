@@ -11,12 +11,14 @@ Ideas :
 - Drone, or wing-man?
 - zoom minimap
 - Self Destruct on FlyInfo
-- Planet change name
 - Storage edit ship name
 - on-screen buttons for mobile support
+  Site does not work at all on my phone, it displays black with a few specs for purple starts, screen sizing is not working.
+  If we get the screen displaying we could add HTML buttons to InfoFly and catch the keyDown/Up and set state in game
 - keyboard select secondary weapon
 
 Maybe someday Ideas:
+- Planet change name
 - Different color planets give different resources : what kinds of resources
 - Aliens destroy buildings
 - Aliens build buildings

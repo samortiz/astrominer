@@ -48,6 +48,7 @@ export function createEmptyWorld() {
       isTyping: false, // used to stop keypress events ('w') when user is typing in input
       gameLoop: null, // loop function in this state
       bgSprite: null, // star background
+      smokeSheet: null, // spritesheet for smoke animation
       explosionSheet: null, // spritesheet for explosions
       explosions: [], //contains sprites
       bullets: [], // contains all the bullets
@@ -71,6 +72,7 @@ export function setupWorld() {
   setupSpriteContainers();
   createBackground();
   createPlanets();
+  createWormholeLinks();
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
@@ -88,7 +90,7 @@ export function setupWorld() {
     world.ship.armor = 55000;
     world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
     world.ship.resourcesMax = 100000;
-    world.ship.equip = [manage.makeEquip(c.EQUIP_BRAKE), manage.makeEquip(c.EQUIP_MELEE_GUN), manage.makeEquip(c.EQUIP_SPEED_BOOST)];
+    world.ship.equip = [manage.makeEquip(c.EQUIP_BLINK_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_STREAM_BLASTER)];
     world.ship.equipMax = world.ship.equip.length;
     world.blueprints.equip = [...c.ALL_EQUIP];
     world.blueprints.ship = [...c.ALL_SHIPS];
@@ -121,8 +123,13 @@ export function setupWorld() {
 export function setupSpriteContainers() {
   let mainStage = window.world.system.app.stage;
   let spriteContainers = window.world.system.spriteContainers;
+
   spriteContainers.background = new window.PIXI.Container();
   mainStage.addChild(spriteContainers.background);
+
+  // Setup the wormhole spritesheet
+  const resource = window.PIXI.Loader.shared.resources[c.SMOKE_JSON];
+  window.world.system.smokeSheet = resource.spritesheet;
 
   spriteContainers.planets = new window.PIXI.Container();
   mainStage.addChild(spriteContainers.planets);
@@ -150,6 +157,7 @@ export function createBackground() {
   container.addChild(window.world.system.bgSprite);
 }
 
+// Go through all the rings and create planet objects
 export function createPlanets() {
   for (let ring of c.UNIVERSE_RINGS) {
     for (let i = 0; i < ring.planetCount; i++) {
@@ -175,8 +183,33 @@ export function createPlanets() {
       let {x, y} = getFreeXy(planet, ring.minDistToOtherPlanet, 0, ring.minDist, ring.maxDist);
       planet.x = x;
       planet.y = y;
-    }
-  }
+    } // for i
+  } // for ring
+}
+
+// Setup the wormhole locations
+function createWormholeLinks() {
+  const planets = window.world.planets;
+  for (const planet of planets) {
+    if (planet.spriteFile === c.WORMHOLE_SPRITE) {
+      let otherPlanet = null;
+      for (let i=planets.length-1; i>=0; i--) {
+        if (planets[i].spriteFile === c.WORMHOLE_SPRITE && !planets[i].jumpToX && !planets[i].jumpToY) {
+          otherPlanet = planets[i];
+          break;
+        }
+      } // for i
+      if (otherPlanet) {
+        planet.jumpToX = otherPlanet.x;
+        planet.jumpToY = otherPlanet.y;
+        otherPlanet.jumpToX = planet.x;
+        otherPlanet.jumpToY = planet.y;
+      } else {
+        // planet.jumpToX = c.PLAYER_START_X;
+        // planet.jumpToY = c.PLAYER_START_Y;
+      }
+    } // for planet
+  } // for planet
 }
 
 /**
@@ -248,6 +281,11 @@ function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, fa
       return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
     }
   }
+  // For wormholes, we don't want any too close to the player's start location - it would be a really bad way to start the game
+  if (planet && planet.spriteFile === c.WORMHOLE_SPRITE &&
+      utils.distanceBetween(x, y, c.PLAYER_START_X, c.PLAYER_START_Y) < c.MINIMAP_VIEW_HEIGHT) {
+    return getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, ++failCount);
+  }
   return {x, y};
 }
 
@@ -269,6 +307,7 @@ export function createPlanet(planetFile, name, radius, mass, resources) {
   planet.lastLandingDir = 0;
   planet.spriteFile = planetFile;
   planet.spriteId = null; // no sprite created yet
+  // jumpToX jumpToY will be set for wormholes
   window.world.planets.push(planet);
   return planet;
 }
@@ -299,19 +338,32 @@ export function getPlanetSprite(planet) {
   window.world.system.spriteContainers.planets.addChild(planetContainer);
 
   // Setup the planet sprite itself
-  const planetSprite = new window.PIXI.Sprite(
-    window.PIXI.loader.resources[c.SPRITESHEET_JSON].textures[planet.spriteFile]);
-  planetSprite.anchor.set(0.5, 0.5);
-  let spriteScale = planet.radius * 2 / planetSprite.width;
-  // Planets with atmosphere are a little smaller than the full image size
-  if ((planet.spriteFile === c.PLANET_PURPLE_FILE) || (planet.spriteFile === c.PLANET_GREEN_FILE)) {
-    spriteScale = spriteScale * 1.08;
-  }
-  planetSprite.scale.set(spriteScale, spriteScale);
-  planetContainer.addChild(planetSprite);
+  if (planet.spriteFile === c.WORMHOLE_SPRITE) {
+    let wormholeSprite = new window.PIXI.AnimatedSprite(window.world.system.smokeSheet.animations[c.SMOKE]);
+    wormholeSprite.animationSpeed = 0.2;
+    wormholeSprite.loop = true;
+    wormholeSprite.anchor.set(0.5, 0.5);
+    const scale = (planet.radius * 2 / wormholeSprite.width) * 10;
+    wormholeSprite.scale.set(scale, scale);
+    wormholeSprite.visible = true;
+    wormholeSprite.play();
+    planetContainer.addChild(wormholeSprite);
 
-  for (const building of planet.buildings) {
-    manage.makeBuildingSprite(building, planet, planetContainer);
+  } else {
+    const planetSprite = new window.PIXI.Sprite(
+        window.PIXI.loader.resources[c.SPRITESHEET_JSON].textures[planet.spriteFile]);
+    planetSprite.anchor.set(0.5, 0.5);
+    let spriteScale = planet.radius * 2 / planetSprite.width;
+    // Planets with atmosphere are a little smaller than the full image size
+    if ((planet.spriteFile === c.PLANET_PURPLE_FILE) || (planet.spriteFile === c.PLANET_GREEN_FILE)) {
+      spriteScale = spriteScale * 1.08;
+    }
+    planetSprite.scale.set(spriteScale, spriteScale);
+    planetContainer.addChild(planetSprite);
+
+    for (const building of planet.buildings) {
+      manage.makeBuildingSprite(building, planet, planetContainer);
+    }
   }
 
   // Cache the new sprite
