@@ -42,6 +42,7 @@ export default class App extends React.Component {
       .add(c.SPRITESHEET_JSON)
       .add(c.CRASH_JSON)
       .add(c.SMOKE_JSON)
+      .add(c.STAR_BACKGROUND_FILE)
       .load(this.setupGame);
     window.world.system.app = app;
   }
@@ -109,6 +110,7 @@ function resizeScreenToWindow() {
   window.world.system.app.stage.scale.set(scale);
   app.renderer.resize(h, h);
   window.world.system.screenHeight = h;
+  window.world.system.screenWidth = w;
   window.world.system.screenScale = scale;
 
   let fontSize = '14px';

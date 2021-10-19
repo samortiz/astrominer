@@ -6,6 +6,10 @@
   border-right: 2px solid #404040;
 }
 
+.viewport canvas {
+  display:block; /* this prevents a few extra pixels from appearing at the bottom of the viewport */
+}
+
 .root-app {
   background-color: #202020;
   color: #ccc;
@@ -14,6 +18,7 @@
 .root-app td {
   vertical-align: top;
   border-spacing: 0;
+  padding:0;
 }
 
 .scroll-box {

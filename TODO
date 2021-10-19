@@ -4,6 +4,7 @@ Minor Bugs
  - planet hugging aliens (maybe created too near planet)
  - fire aliens have duplicate shield images sometimes
  - button images repeatedly loading (when entering fly mode) (cached 304)
+ - Mobile : on my phone the background is stretched horizontally
 
 Ideas :
 - Factory progress bar
@@ -11,13 +12,10 @@ Ideas :
 - Drone, or wing-man?
 - zoom minimap
 - Self Destruct on FlyInfo
-- Storage edit ship name
-- on-screen buttons for mobile support
-  Site does not work at all on my phone, it displays black with a few specs for purple starts, screen sizing is not working.
-  If we get the screen displaying we could add HTML buttons to InfoFly and catch the keyDown/Up and set state in game
 - keyboard select secondary weapon
 
 Maybe someday Ideas:
+- Storage edit ship name
 - Planet change name
 - Different color planets give different resources : what kinds of resources
 - Aliens destroy buildings

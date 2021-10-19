@@ -59,6 +59,7 @@ export function createEmptyWorld() {
       shieldSpriteCache: new Map(), // These sprites are each added to a ship and not reused
       spriteContainers: {background: null, planets: null, bullets: null, ships: null, minimap: null, explosions:null},
       screenHeight: c.SCREEN_HEIGHT, // changed based on window size
+      screenWidth: c.SCREEN_WIDTH, // changed in App.js based on window size
       screenScale: 1, // scale due to window sizing
       miniMapGraphics: null, // used as a canvas for drawing the miniMap
       initializing: true, // set to false when the game fully running (after first draw)
@@ -132,6 +133,7 @@ export function setupSpriteContainers() {
   const resource = window.PIXI.Loader.shared.resources[c.SMOKE_JSON];
   window.world.system.smokeSheet = resource.spritesheet;
 
+  // Add all the containers, the order here will control which images are on top
   spriteContainers.planets = new window.PIXI.Container();
   mainStage.addChild(spriteContainers.planets);
 
