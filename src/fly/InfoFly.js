@@ -124,9 +124,7 @@ export function InfoFly() {
               </tbody>
             </table>
           </td>
-          <td style={{paddingLeft:'10px'}}>
-            what
-          </td>
+          <td style={{paddingLeft:'10px'}}> </td>
         </tr>
         </tbody>
       </table>

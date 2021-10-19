@@ -80,6 +80,7 @@
   top: 0; left: 0; bottom: 0; right: 0;
   height:80vh;
   width:80vw;
+  max-width:800px;
   font-size:1.5em;
   border: 2px solid #909090;
   border-radius: 10px;
@@ -87,7 +88,7 @@
   background-color:rgba(0, 0, 0, 100);
   z-index: 999;
   filter: drop-shadow(0px 10px 15px black);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 /* Funny thing... we don't need to do anything here as clicking on the intro-dialog will close */

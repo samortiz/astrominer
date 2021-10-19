@@ -1,6 +1,7 @@
 Bugs
 
 Minor Bugs
+ - on large screen flyInfo looks empty
  - planet hugging aliens (maybe created too near planet)
  - fire aliens have duplicate shield images sometimes
  - button images repeatedly loading (when entering fly mode) (cached 304)

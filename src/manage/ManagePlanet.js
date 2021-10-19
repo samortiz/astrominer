@@ -145,6 +145,7 @@ export function ManagePlanet() {
 
       <div style={{marginTop:'20px', marginLeft:'5px'}}>
         <button
+            disabled={!shipOnPlanet}
             onClick={() => manage.takeOff(5)}>Take Off</button>
       </div>
     </div>);

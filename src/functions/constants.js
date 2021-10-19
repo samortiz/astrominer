@@ -1,5 +1,5 @@
 // Main Version
-export const APP_VERSION = "0.1m";
+export const APP_VERSION = "0.2";
 // Colors
 export const BLACK = 0X000000;
 export const YELLOW = 0xFFCC55;
@@ -248,9 +248,9 @@ export const EQUIP_FAST_BLASTER = {
   type: EQUIP_TYPE_PRIMARY_WEAPON,
   coolTime: 10,
   cool: 0,
-  damage: 10,
+  damage: 7.5,
   speed: 4,
-  lifetime: 80,
+  lifetime: 75,
   jitter: 0.05,
   bulletFile: BULLET_FILE,
   cost: {titanium: 20, gold: 20, uranium: 40}
