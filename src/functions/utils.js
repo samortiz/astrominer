@@ -205,7 +205,7 @@ export function showToast(text) {
     position:'top-left',
     showConfirmButton: false,
     toast:true,
-    width: Math.floor(c.SCREEN_WIDTH/2)+'px',
+    width: '50vw',
     showClass: {
       popup: 'animate__animated animate__slideInDown'
     },

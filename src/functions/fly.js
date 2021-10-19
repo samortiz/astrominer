@@ -19,17 +19,18 @@ export function flyLoop(delta) {
   // When ship.alive is false the ship is exploding
   if (ship.alive) {
     runDroids(ship);
+    const buttonKeyDown = world.system.buttonKeyDown;
     // Keypress handling
-    if (world.system.keys.left.isDown || world.system.keys.a.isDown) {
+    if (world.system.keys.left.isDown || world.system.keys.a.isDown || buttonKeyDown.left) {
       turnShip(ship, true);
     }
-    if (world.system.keys.right.isDown || world.system.keys.d.isDown) {
+    if (world.system.keys.right.isDown || world.system.keys.d.isDown || buttonKeyDown.right) {
       turnShip(ship, false);
     }
-    if (world.system.keys.up.isDown || world.system.keys.w.isDown) {
+    if (world.system.keys.up.isDown || world.system.keys.w.isDown || buttonKeyDown.up) {
       propelShip(ship);
     }
-    if (world.system.keys.down.isDown || world.system.keys.s.isDown) {
+    if (world.system.keys.down.isDown || world.system.keys.s.isDown || buttonKeyDown.down) {
       brakeShip(ship);
     }
     if (world.system.keys.c.isUp && !world.system.continuousFireUp) {
@@ -41,7 +42,7 @@ export function flyLoop(delta) {
         world.system.continuousFireUp = false;
       }
     }
-    if (world.system.keys.space.isDown || world.system.continuousFire) {
+    if (world.system.keys.space.isDown || world.system.continuousFire || buttonKeyDown.space) {
       firePrimaryWeapon(ship, 0.05);
     }
     if (world.system.keys.x.isDown) {

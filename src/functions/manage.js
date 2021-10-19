@@ -16,13 +16,13 @@ export function manageLoop(delta) {
   }
 }
 
-function takeOff() {
+export function takeOff(boost = 1) {
   let world = window.world;
   let ship = world.ship;
   game.changeGameState(c.GAME_STATE.FLY);
   let gravity = utils.calcGravity(ship.x, ship.y, world.selectedPlanet);
-  ship.vx = gravity.x * -c.TAKEOFF_SPEED;
-  ship.vy = gravity.y * -c.TAKEOFF_SPEED;
+  ship.vx = gravity.x * -c.TAKEOFF_SPEED * boost;
+  ship.vy = gravity.y * -c.TAKEOFF_SPEED * boost;
 }
 
 /**

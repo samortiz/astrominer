@@ -13,41 +13,88 @@ export function InfoFly() {
     window.world.introDialogShown = true;
   }
 
+  function buttonDown(dir) {
+    window.world.system.buttonKeyDown[dir] = true;
+  }
+
+  function buttonUp(dir) {
+    window.world.system.buttonKeyDown[dir] = false;
+  }
+
+  function killContextMenu(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+  }
+
   return (
     <div className='section'
-         style={{backgroundImage: 'url("images/metalbackground.png")', backgroundSize: 'cover', height: '100%'}}>
-      <div>{ship.name}</div>
+         style={{backgroundImage: 'url("images/metalbackground.png")', backgroundSize: 'cover', height: '100%', paddingLeft:'3px'}}>
 
-      <table>
-        <thead>
-        <tr>
-          <th style={{paddingRight: '10px'}}>Armor</th>
-          <th>Shield</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td style={{textAlign: 'center'}}>
-            <Heatbar type={HEATBAR.COLOR} curr={ship.armor} max={ship.armorMax}/>
-          </td>
-          <td>
-            {shield && shield.shield.active &&
-            <span>
-                <Heatbar type={HEATBAR.RED} curr={shield.shield.lifetime} max={shield.shield.lifetimeMax}/>
-                <Heatbar type={HEATBAR.COLOR} curr={shield.shield.armor} max={shield.shield.armorMax}/>
-              </span>
-            }
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {Math.floor(ship.armor)} / {ship.armorMax}
-          </td>
-          <td> </td>
-          <td> </td>
-        </tr>
-        </tbody>
-      </table>
+      <div className='top-row'>
+        <div>
+          <div>{ship.name}</div>
+          <table>
+            <thead>
+            <tr>
+              <th style={{paddingRight: '10px'}}>Armor</th>
+              <th>Shield</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td style={{textAlign: 'center'}}>
+                <Heatbar type={HEATBAR.COLOR} curr={ship.armor} max={ship.armorMax}/>
+              </td>
+              <td>
+                {shield && shield.shield.active &&
+                <span>
+                    <Heatbar type={HEATBAR.RED} curr={shield.shield.lifetime} max={shield.shield.lifetimeMax}/>
+                    <Heatbar type={HEATBAR.COLOR} curr={shield.shield.armor} max={shield.shield.armorMax}/>
+                  </span>
+                }
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {Math.floor(ship.armor)} / {ship.armorMax}
+              </td>
+              <td> </td>
+              <td> </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className='bluescreen-container'>
+          <div className='bluescreen-background'>
+            <img src='images/blue_screen.png' className='stretch' alt='bluescreen'/>
+          </div>
+          <div className='bluescreen-text'>
+            <table cellPadding='4'>
+              <thead>
+              <tr>
+                <th colSpan='100%'>Resources</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>Titatium</td>
+                <td>{Math.floor(ship.resources.titanium)}</td>
+              </tr>
+              <tr>
+                <td>Gold</td>
+                <td>{Math.floor(ship.resources.gold)}</td>
+              </tr>
+              <tr>
+                <td>Uranium</td>
+                <td>{Math.floor(ship.resources.uranium)}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <table>
         <tbody>
@@ -78,46 +125,62 @@ export function InfoFly() {
             </table>
           </td>
           <td style={{paddingLeft:'10px'}}>
-            <table>
-              <tbody>
-              <tr>
-                <td className='bluescreen-container'>
-                  <div className='bluescreen-background'>
-                    <img src='images/blue_screen.png' className='stretch' alt='bluescreen'/>
-                  </div>
-                  <div className='bluescreen-text'>
-                    <table cellPadding='4'>
-                      <thead>
-                      <tr>
-                        <th colSpan='100%'>Resources</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr>
-                        <td>Titatium</td>
-                        <td>{Math.floor(ship.resources.titanium)}</td>
-                      </tr>
-                      <tr>
-                        <td>Gold</td>
-                        <td>{Math.floor(ship.resources.gold)}</td>
-                      </tr>
-                      <tr>
-                        <td>Uranium</td>
-                        <td>{Math.floor(ship.resources.uranium)}</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
+            what
           </td>
         </tr>
         </tbody>
       </table>
 
+      <div className="button-control-container">
+        <div className="space">
+          <button type='button' onMouseDown={() => buttonDown('space')} onMouseUp={() => buttonUp('space')}
+                                onTouchStart={() => buttonDown('space')} onTouchEnd={() => buttonUp('space')}
+                                onContextMenu={(event) => killContextMenu(event)}>
+            <i className="fa fa-crosshairs"> </i>
+          </button>
+        </div>
+        <table>
+          <tbody>
+          <tr>
+            <td> </td>
+            <td>
+              <button type='button' onMouseDown={() => buttonDown('up')} onMouseUp={() => buttonUp('up')}
+                                      onTouchStart={() => buttonDown('up')} onTouchEnd={() => buttonUp('up')}
+                                      onContextMenu={(event) => killContextMenu(event)}>
+                <i className="fa fa-arrow-up"> </i>
+              </button>
+            </td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td>
+              <button type='button' onMouseDown={() => buttonDown('left')} onMouseUp={() => buttonUp('left')}
+                                      onTouchStart={() => buttonDown('left')} onTouchEnd={() => buttonUp('left')}
+                                      onContextMenu={(event) => killContextMenu(event)}>
+                <i className="fa fa-arrow-left"> </i>
+              </button>
+            </td>
+            <td>
+              <button type='button' onMouseDown={() => buttonDown('down')} onMouseUp={() => buttonUp('down')}
+                                      onTouchStart={() => buttonDown('down')} onTouchEnd={() => buttonUp('down')}
+                                      onContextMenu={(event) => killContextMenu(event)}>
+                <i className="fa fa-arrow-down"> </i>
+              </button>
+            </td>
+            <td>
+              <button type='button' onMouseDown={() => buttonDown('right')} onMouseUp={() => buttonUp('right')}
+                                      onTouchStart={() => buttonDown('right')} onTouchEnd={() => buttonUp('right')}
+                                      onContextMenu={(event) => killContextMenu(event)}>
+                <i className="fa fa-arrow-right"> </i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div className="intro-dialog" onClick={() => closeIntroDialog()} style={{display: window.world.introDialogShown ? "none": "block"}}>
+        <span className="close-intro-dialog">X</span>
         <p>Ship's Log: Day 348</p>
         <p> After a long trip through deep space, I have finally made it to the edge of the asteroid field that until now I wasn't certain actually existed.
           We will see if it lives up to the rumors from old men in taverns of asteroids full of titanium, gold and uranium, a place where a man can make

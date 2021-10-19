@@ -6,10 +6,16 @@
   padding-left: 10px;
 }
 
+.top-row {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .bluescreen-container {
   position: relative;
-  width: 300px;
-  height: 200px;
+  width: 200px;
+  height: 150px;
 }
 
 .bluescreen-background {
@@ -36,16 +42,57 @@
   padding: 15px;
 }
 
+.button-control-container {
+  position:absolute;
+  right: 5px;
+  bottom : 5px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.button-control-container td {
+  text-align: center;
+  padding:8px;
+}
+
+.button-control-container button {
+  width: 50px;
+  height: 30px;
+  text-align: center;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+
+.space {
+  padding: 8px;
+}
+
 .intro-dialog {
   position:absolute;
   margin: auto;
   top: 0; left: 0; bottom: 0; right: 0;
-  height:500px;
-  width:700px;
+  height:80vh;
+  width:80vw;
+  font-size:1.5em;
   border: 2px solid #909090;
   border-radius: 10px;
   padding:15px;
   background-color:rgba(0, 0, 0, 100);
   z-index: 999;
   filter: drop-shadow(0px 10px 15px black);
+  overflow-y: scroll;
+}
+
+/* Funny thing... we don't need to do anything here as clicking on the intro-dialog will close */
+.close-intro-dialog {
+  position:relative;
+  float:right;
+  font-weight:bold;
 }

@@ -43,6 +43,7 @@ export function createEmptyWorld() {
     // everything in system is transient and not serialized when saving the game
     system: {
       keys: {}, // Global keypress handlers
+      buttonKeyDown : {up:false, right:false, down:false, left:false, shoot:false}, // true when a button is depressed
       app: null, // Pixi App
       gameState: c.GAME_STATE.INIT, // Current game state
       isTyping: false, // used to stop keypress events ('w') when user is typing in input

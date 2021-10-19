@@ -98,11 +98,26 @@ export default class App extends React.Component {
 
 function resizeScreenToWindow() {
   const app = window.world.system.app;
-  const h = Math.max(window.innerHeight - 10, 550);
+  let h = window.innerHeight;
+  const w = window.innerWidth;
+  let aspectRatio = w/h;
+  // We need some space on the right for the info screens
+  if (aspectRatio < 1.8) {
+    h = w / 1.8;
+  }
   const scale = h / 1000;
   window.world.system.app.stage.scale.set(scale);
   app.renderer.resize(h, h);
   window.world.system.screenHeight = h;
   window.world.system.screenScale = scale;
+
+  let fontSize = '14px';
+  if (w < 1300) {
+    fontSize = '12px';
+  } else if (w < 1000) {
+    fontSize = '8px';
+  }
+  document.body.style.fontSize = fontSize;
+
 }
 

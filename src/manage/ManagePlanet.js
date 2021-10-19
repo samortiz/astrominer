@@ -30,29 +30,33 @@ export function ManagePlanet() {
         Cost: T:{c.FACTORY_COST.titanium} G:{c.FACTORY_COST.gold} U:{c.FACTORY_COST.uranium}
       </div>
 
-      <div style={{display:ship.alive?'block':'none'}} className='build-button'>
+      <div style={{display:ship.alive?'block':'none'}} >
         <div className='section'><b>Ship</b> ({Math.round(ship.armor) +' / '+ ship.armorMax}) </div>
-        <button style={{marginLeft:'10px'}}
-                onClick={() => manage.unloadShip(ship, planet)}>
-          Unload
-        </button>
-        <button style={{marginLeft:'10px'}}
-                onClick={() => manage.resupplyShip(ship, planet)}>
-            Resupply
-        </button>
-        <button style={{marginLeft:'10px'}}
-                onClick={() => manage.repairShip(ship, planet)}
-                disabled={ship.armorMax <= ship.armor}>
-          Repair
-        </button>
+        <div className='section'>
+          <button style={{marginLeft:'10px'}}
+                  onClick={() => manage.unloadShip(ship, planet)}>
+            Unload
+          </button>
+          <button style={{marginLeft:'10px'}}
+                  onClick={() => manage.resupplyShip(ship, planet)}>
+              Resupply
+          </button>
+          <button style={{marginLeft:'10px'}}
+                  onClick={() => manage.repairShip(ship, planet)}
+                  disabled={ship.armorMax <= ship.armor}>
+            Repair
+          </button>
+        </div>
       </div>
 
       <div className='section'>
-        <b>Resources</b>
+        <div className='section'>
+          <b>Resources</b>
+        </div>
+        <div className="row-item">Titanium {Math.floor(planet.resources.raw.titanium)}</div>
+        <div className="row-item">Gold {Math.floor(planet.resources.raw.gold)}</div>
+        <div className="row-item">Uranium {Math.floor(planet.resources.raw.uranium)}</div>
       </div>
-      <div className="row-item">Titanium {Math.floor(planet.resources.raw.titanium)}</div>
-      <div className="row-item">Gold {Math.floor(planet.resources.raw.gold)}</div>
-      <div className="row-item">Uranium {Math.floor(planet.resources.raw.uranium)}</div>
 
       {shipOnPlanet && <table className="row-item resource-table">
         <thead>
@@ -138,6 +142,11 @@ export function ManagePlanet() {
         </tr>
         </tbody>
       </table>}
+
+      <div style={{marginTop:'20px', marginLeft:'5px'}}>
+        <button
+            onClick={() => manage.takeOff(5)}>Take Off</button>
+      </div>
     </div>);
 }
 

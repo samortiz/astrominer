@@ -4,3 +4,4 @@ explosion by facebook/sinestesiaguy
 bullets: rAum, jackFlower, DrZoliparia, Neil2D
 alien ship : surt on opengameart.org
 shields :Bonsaiheldin | http://bonsaiheld.org
+smoke : https://opengameart.org/content/smoke-aura
