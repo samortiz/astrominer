@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {c, game, manage} from '../functions';
+import {c, game, manage, ai} from '../functions';
 import './ManagePlanet.css';
 import 'font-awesome/css/font-awesome.min.css';
 
@@ -12,6 +12,7 @@ export function ManagePlanet() {
   let planet = window.world.selectedPlanet;
   let ship = window.world.ship;
   let shipOnPlanet = ((planet === window.world.lastPlanetLanded) && ship.alive);
+
   return (
     <div className='planet-info'>
       <div className='section'><b>Planet Name: </b> {world.selectedPlanet.name}</div>
@@ -144,9 +145,15 @@ export function ManagePlanet() {
       </table>}
 
       <div style={{marginTop:'20px', marginLeft:'5px'}}>
-        <button
-            disabled={!shipOnPlanet}
-            onClick={() => manage.takeOff(5)}>Take Off</button>
+        <button disabled={!shipOnPlanet}
+                onClick={() => manage.takeOff(5)}>
+          Take Off
+        </button>
+        { ai.hasDroids() &&
+        <button onClick={() => ai.summonAllDroids()} style={{marginLeft: '10px'}}>
+          Summon all resource droids
+        </button>
+        }
       </div>
     </div>);
 }

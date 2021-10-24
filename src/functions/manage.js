@@ -1,4 +1,4 @@
-import { c, utils, fly, game } from './';
+import { c, utils, fly, game, ai } from './';
 import lodash from 'lodash';
 import {EQUIP_TYPE_BRAKE, EQUIP_TYPE_PRIMARY_WEAPON, EQUIP_TYPE_THRUSTER} from "./constants";
 import {canAfford, payResourceCost} from "./game";
@@ -248,8 +248,15 @@ export function buildShip(shipTemplate) {
   let world = window.world;
   let planet = world.selectedPlanet;
   let ship = window.world.ship;
-  if (canAfford(planet, ship, shipTemplate.cost)) {
-    payResourceCost(planet, ship, shipTemplate.cost);
+  if (!canAfford(planet, ship, shipTemplate.cost)) {
+    return;
+  }
+  payResourceCost(planet, ship, shipTemplate.cost);
+
+  if (shipTemplate.autonomousShip) {
+    // Special equip that creates an autonomous ship
+    launchDroidShip(shipTemplate);
+  } else {
     let newShip = game.createShip(shipTemplate, c.PLAYER);
     planet.ships.push(newShip);
   }
@@ -337,6 +344,34 @@ export function buildEquip(equipTemplate) {
     payResourceCost(planet, ship, equipTemplate.cost);
     planet.equip.push(makeEquip(equipTemplate));
   }
+}
+
+export function launchDroidShip(equipTemplate) {
+  const planet = window.world.selectedPlanet;
+  const ship = window.world.ship;
+  const child = game.createShip(equipTemplate, ship.owner);
+  const childSprite = game.getShipSprite(child);
+  const childDistFromShip = planet.radius + child.spriteWidth + 10;
+  child.aiData = {homePlanet: planet, targetPlanet:null};
+  child.x = planet.x;
+  child.y = planet.y;
+  childSprite.x = (child.x - window.world.ship.x) + c.HALF_SCREEN_WIDTH;
+  childSprite.y = (child.y - window.world.ship.y) + c.HALF_SCREEN_HEIGHT;
+  childSprite.visible = true;
+  window.world.ships.push(child);
+  // Find a targetPlanet (has to be done after x,y is set
+  child.aiData.targetPlanet = ai.getTargetPlanetWithResources(child);
+  // Adjust the x,y so the ship points towards the destination
+  let dir = null;
+  if (child.aiData.targetPlanet) {
+    dir = utils.directionTo(child.aiData.targetPlanet.x, child.aiData.targetPlanet.y, planet.x, planet.y);
+  } else {
+    dir = ship.rotation + (Math.PI / 2);
+  }
+  const {xAmt, yAmt} = utils.dirComponents(dir, childDistFromShip);
+  child.x = planet.x - xAmt;
+  child.y = planet.y - yAmt;
+  child.rotation = utils.normalizeRadian(dir - Math.PI);
 }
 
 export function costToRepair(ship) {

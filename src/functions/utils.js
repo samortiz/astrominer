@@ -53,7 +53,7 @@ export function directionTo(x1,y1, x2,y2) {
 }
 
 /**
- * @return {xAmt, yAmt} splitting the dir and amount into x,y portions
+ * @return {{xAmt: number, yAmt: number}} splitting the dir and amount into x,y portions
  */
 export function dirComponents(dir, amount) {
   let xAmt = amount * Math.cos(dir);
@@ -205,7 +205,7 @@ export function showToast(text) {
     position:'top-left',
     showConfirmButton: false,
     toast:true,
-    width: '50vw',
+    width: '40vw',
     showClass: {
       popup: 'animate__animated animate__slideInDown'
     },

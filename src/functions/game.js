@@ -295,6 +295,7 @@ function getFreeXy(planet, minDistToPlanet, minDistToAlien, minDist, maxDist, fa
 // Creates and returns a planet (and adds it to the app)
 export function createPlanet(planetFile, name, radius, mass, resources) {
   let planet = {};
+  planet.id = window.world.nextId++;
   planet.name = name;
   planet.x = 0; // temp should get reset
   planet.y = 0; // temp should get reset

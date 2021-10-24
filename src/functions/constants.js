@@ -1,5 +1,5 @@
 // Main Version
-export const APP_VERSION = "0.2";
+export const APP_VERSION = "0.3";
 // Colors
 export const BLACK = 0X000000;
 export const YELLOW = 0xFFCC55;
@@ -160,6 +160,7 @@ export const ALIEN_AI_KAMIKAZI = "ALIEN_AI_KAMIKAZI";
 export const EQUIP_AI_MINE = "EQUIP_AI_MINE";
 export const EQUIP_AI_TURRET = "EQUIP_AI_TURRET";
 export const EQUIP_AI_MISSILE = "EQUIP_AI_MISSILE";
+export const EQUIP_AI_RESOURCE_DROID = "EQUIP_AI_RESOURCE_DROID";
 
 export const DIR_AHEAD_OF_SHIP = "ahead";
 export const DIR_BEHIND_SHIP = "behind";
@@ -943,8 +944,33 @@ export const SHIP_FRIENDSHIP_MISSILE = {
   description: "A missile that turns enemies into friends.",
 };
 
+export const SHIP_RESOURCE_DROID = {
+  name: "Resource Droid",
+  objType: OBJ_SHIP,
+  propulsion: 0.1,
+  turnSpeed: 0.1,
+  resourcesMax: 50,
+  resources: {
+    titanium: 0,
+    gold: 0,
+    uranium: 0,
+  },
+  equipMax: 0,
+  equip: [],
+  armorMax: 10,
+  armor: 10,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1,
+  imageFile: SHIP_MISSILE_FILE,
+  cost: {titanium: 30, gold: 20, uranium: 0},
+  aiType: EQUIP_AI_RESOURCE_DROID,
+  autonomousShip: true, // Used to launch the ship
+  description: "Self-piloting ship that brings resources to this planet.",
+};
+
 export const ALL_ALIENS = [SHIP_ALIEN_TURRET, SHIP_ALIEN, SHIP_ALIEN_LARGE, SHIP_ALIEN_STEALTH,  SHIP_ALIEN_STAPLE_TURRET, SHIP_ALIEN_FIRE, SHIP_ALIEN_MOTHERSHIP];
-export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_SKELETON, SHIP_HEAVY, SHIP_FIGHTER, SHIP_WING, ...ALL_ALIENS];
+export const ALL_SHIPS = [SHIP_EXPLORER, SHIP_CARGO, SHIP_FAST, SHIP_RESOURCE_DROID, SHIP_SKELETON, SHIP_HEAVY, SHIP_FIGHTER, SHIP_WING, ...ALL_ALIENS];
 
 // This equipment needs to go after the ships (ugh)
 export const EQUIP_DECOY_DEPLOYER = {
@@ -1002,14 +1028,14 @@ export const XP_LEVELS = {
     {xp: 50, obj: EQUIP_BLINK_BRAKE},
     {xp: 100, obj: EQUIP_THRUSTER},
     {xp: 500, obj: SHIP_FAST},
-    {xp: 1000, obj: EQUIP_BLINK_THRUSTER},
+    {xp: 1000, obj: EQUIP_AUTOLANDER},
     {xp: 2000, obj: EQUIP_TURN_BOOST},
   ],
   [PLANET_GREEN_FILE]: [
     {xp: 10, obj: SHIP_SKELETON},
     {xp: 50, obj: EQUIP_R2D2},
     {xp: 500, obj: SHIP_HEAVY},
-    {xp: 1000, obj: EQUIP_AUTOLANDER},
+    {xp: 1000, obj: EQUIP_BLINK_THRUSTER},
   ],
   [PLANET_PURPLE_FILE]: [
     {xp: 300, obj: EQUIP_SHIELD_STRONG},
@@ -1025,8 +1051,9 @@ export const XP_LEVELS = {
   ],
   [SHIP_ALIEN.name]: [
     {xp: 1, obj: EQUIP_SHIELD},
-    {xp: 5, obj: EQUIP_ALIEN_BLASTER_FAST},
-    {xp: 10, obj: EQUIP_SHIELD_LONG},
+    {xp: 5, obj: SHIP_RESOURCE_DROID},
+    {xp: 10, obj: EQUIP_ALIEN_BLASTER_FAST},
+    {xp: 20, obj: EQUIP_SHIELD_LONG},
     {xp: 30, obj: SHIP_ALIEN},
   ],
   [SHIP_ALIEN_LARGE.name]: [
