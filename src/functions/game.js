@@ -88,19 +88,19 @@ export function setupWorld() {
   // DEBUG SHIP
   const debug = false;
   if (debug) {
-    world.ship.armorMax = 55000;
-    world.ship.armor = 55000;
+    world.ship.armorMax = 500;
+    world.ship.armor = 500;
     world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
     world.ship.resourcesMax = 100000;
-    world.ship.equip = [manage.makeEquip(c.EQUIP_BLINK_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_STREAM_BLASTER)];
+    world.ship.equip = [manage.makeEquip(c.EQUIP_BLINK_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_STREAM_BLASTER), manage.makeEquip(c.EQUIP_SHIELD)];
     world.ship.equipMax = world.ship.equip.length;
     world.blueprints.equip = [...c.ALL_EQUIP];
     world.blueprints.ship = [...c.ALL_SHIPS];
     world.introDialogShown = true;
 
     // DEBUG test alien
-    // createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
-    // createAlien(c.SHIP_ALIEN_LARGE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);
+    createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
+    createAlien(c.SHIP_RED_MISSILE, c.PLAYER_START_X + 450, c.PLAYER_START_Y - 70);
 
     // DEBUG Planet
     let testPlanet = createPlanet(c.PLANET_ROCK_FILE, "home", 100, 200, {

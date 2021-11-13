@@ -112,12 +112,11 @@ export function resourceDroidAi(droid) {
       counter++;
     }
     droid.aiData.targetPlanet = newTarget;
-    console.log('unsticking - maybe get a different destination ',  droid.aiData.targetPlanet);
   }
 
   let dirToTarget = utils.directionTo(droid.x, droid.y, targetPlanet.x, targetPlanet.y);
   droid.rotation = dirToTarget;
-  let {xAmt, yAmt} = getXYToMoveTowards(droid, targetPlanet.x, targetPlanet.y)
+  let {xAmt, yAmt} = getXYToMoveTowards(droid, targetPlanet.x, targetPlanet.y, false)
   if (xAmt && yAmt) {
     droid.x += xAmt;
     droid.y += yAmt;
@@ -173,7 +172,7 @@ export function summonAllDroids() {
   const currPlanet = window.world.selectedPlanet;
   let droidCount = 0;
   for (let droid of window.world.ships) {
-    if (droid.aiType === c.EQUIP_AI_RESOURCE_DROID) {
+    if (droid.aiType === c.EQUIP_AI_RESOURCE_DROID && droid.alive) {
       droid.aiData.homePlanet = currPlanet;
       droid.aiData.targetPlanet = currPlanet;
       droidCount++;
@@ -203,7 +202,7 @@ export function getTargetPlanetWithResources(droid) {
   // Calculate planet scores
   const minPlanetDist = planetsWithResources.length ? planetsWithResources[0].dist : 0;
   for (let planetInfo of planetsWithResources) {
-    const distScore = 1 / (planetInfo.dist / minPlanetDist);
+    const distScore = 1 / (planetInfo.dist / minPlanetDist) * 2;
     const resourceScore = Math.min(planetInfo.totalResources / (droid.resourcesMax * 3), 1);
     const score = distScore * resourceScore * 100;
     planetInfo.score = score;
@@ -286,9 +285,10 @@ export function goAround(x, y, propulsion, obstacleX, obstacleY, dirToTarget) {
  * @param shipToMove : ship that will be moving - NOTE: This function does NOT move the ship, you need to do that.
  * @param targetX amount to move in X
  * @param targetY amount to move in Y
+ * @param crashIntoEnemy if true will crash into enemy ships, if false will avoid all ships
  * @ret {xAmt, yAmt} amount to add to the X/y coord to move in the right direction
  */
-export function getXYToMoveTowards(shipToMove, targetX, targetY) {
+export function getXYToMoveTowards(shipToMove, targetX, targetY, crashIntoEnemy) {
   if (!shipToMove || !shipToMove.alive) {
     return;
   }
@@ -310,8 +310,9 @@ export function getXYToMoveTowards(shipToMove, targetX, targetY) {
   } // for planet
 
   // Check for ships we should go around
-  const nearestShip = getNearestShip(shipToMove.x + xAmt, shipToMove.y + yAmt, shipToMove.id);
-  if (nearestShip.target && nearestShip.dist <= nearestShip.target.radius + shipToMove.radius) {
+  const nearestShip = crashIntoEnemy ? getNearestFriendlyTarget(shipToMove) :
+      getNearestShip(shipToMove.x + xAmt, shipToMove.y + yAmt, shipToMove.id);
+  if (nearestShip.target && nearestShip.dist <= nearestShip.target.radius + shipToMove.radius + 20) {
     const moveAmt = goAround(shipToMove.x, shipToMove.y, shipToMove.propulsion, nearestShip.target.x, nearestShip.target.y, dirToTarget);
     if (willCollideWithShip(shipToMove.x + moveAmt.xAmt, shipToMove.y + moveAmt.yAmt, shipToMove.id, shipToMove.radius)) {
       xAmt = 0;
@@ -363,7 +364,7 @@ export function creeperAi(alien, crashIntoPlayer=false) {
   }
   if (distToOpponent < viewRange) {
     let dirToTarget = utils.directionTo(alien.x, alien.y, playerTarget.x, playerTarget.y);
-    let {xAmt, yAmt} = getXYToMoveTowards(alien, playerTarget.x, playerTarget.y)
+    let {xAmt, yAmt} = getXYToMoveTowards(alien, playerTarget.x, playerTarget.y, crashIntoPlayer);
     // Too close to an enemy, don't move as you might crash
     if (!crashIntoPlayer && distToOpponent < (ship.spriteWidth + alien.radius + 20)) {
       xAmt = 0;
@@ -431,10 +432,10 @@ export function getNearestPlayerTarget(x, y, shipId='none') {
   return {target: target, dist: minDist};
 }
 
-export function getNearestShip(x,y, shipId) {
+export function getNearestShip(x, y, shipId, ) {
   let minDist = 99999999999;
   let target = null;
-  for (let ship of window.world.ships) {
+  for (let ship of [...window.world.ships, window.world.ship]) {
     if (ship.alive && ship.id !== shipId) {
       let dist = utils.distanceBetween(x, y, ship.x, ship.y);
       if (!target || (dist < minDist)) {

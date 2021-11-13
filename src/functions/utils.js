@@ -160,14 +160,14 @@ function dot(u, v) {
  */
 export function keyboardListener(value) {
   let key = {};
-  key.value = value;
+  key.value = value.toLowerCase();
   key.isDown = false;
   key.isUp = true;
   key.press = undefined;
   key.release = undefined;
   //The `downHandler`
   key.downHandler = event => {
-    if (event.key === key.value) {
+    if (event.key.toLowerCase() === key.value) {
       if (key.isUp && key.press) key.press();
       key.isDown = true;
       key.isUp = false;
@@ -175,7 +175,7 @@ export function keyboardListener(value) {
   };
   //The `upHandler`
   key.upHandler = event => {
-    if (event.key === key.value) {
+    if (event.key.toLowerCase() === key.value) {
       if (key.isDown && key.release) key.release();
       key.isDown = false;
       key.isUp = true;

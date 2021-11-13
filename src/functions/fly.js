@@ -415,7 +415,7 @@ function landShip(ship, planet) {
     }
     let dmgPct = (speedDiff / 3) + dirDiffAdj;
     let dmg = dmgPct * ship.armorMax;
-    damageShip(ship, dmg, resetGame);
+    damageShip(ship, dmg, resetGame, true);
   }
   // Disable shields when landing
   const shield = getActiveShield(ship);
@@ -495,6 +495,7 @@ function resetGame() {
   ship.equip = [];
   ship.armorMax = 0;
   ship.armor = 0;
+  window.world.system.continuousFire = false;
 
   // If the most recently used planet doesn't have any buildings
   if (!planet || (planet.buildings.length === 0)) {
@@ -814,16 +815,16 @@ function checkForBulletCollision(bullet) {
  * Apply damage from bullet to ship, also kills the bullet
  */
 function bulletHitShip(bullet, ship, afterExplosion) {
-  damageShip(ship, bullet.damage, afterExplosion);
+  damageShip(ship, bullet.damage, afterExplosion, true);
   killBullet(bullet);
 }
 
 /**
  * applies damage to the ship, destroying the ship if needed
  */
-export function damageShip(ship, damage, afterExplosion) {
+export function damageShip(ship, damage, afterExplosion, useShield) {
   const shield = getActiveShield(ship);
-  if (shield) {
+  if (useShield && shield) {
     shield.armor -= damage;
     if (shield.armor <= 0) {
       shield.armor = 0;
@@ -847,8 +848,8 @@ export function shipsCollide(ship, alien) {
   }
   let shipDamage = ship.armor;
   let alienDamage = alien.armor;
-  damageShip(alien, shipDamage, (window.world.ship === alien) ? resetGame : null);
-  damageShip(ship, alienDamage, (window.world.ship === ship) ? resetGame : null);
+  damageShip(alien, shipDamage, (window.world.ship === alien) ? resetGame : null, false);
+  damageShip(ship, alienDamage, (window.world.ship === ship) ? resetGame : null, false);
   // If you died hitting an alien, stop moving
   if (!ship.alive) {
     ship.vx = 0;
