@@ -8,12 +8,21 @@ Minor Bugs
  - Mobile : on my phone the background is stretched horizontally
 
 Ideas :
+- Messaging system: map of messages and keys, currentlyShowingMessageId, displayedMessages
+- keyboard select secondary weapon
 - Factory progress bar
 - Redo layout on Storage screen (maybe carousel?)
 - Drone, or wing-man?
 - zoom minimap
 - Self Destruct on FlyInfo
-- keyboard select secondary weapon
+
+New Area :
+ - armada has black hole to new system
+ - Change progression of lighting droid and wingship to later
+ - fast creeper with melee gun
+ - chain lightning turret
+ - enemy wingship
+ - new planet colors?
 
 Maybe Someday Ideas:
 - Storage edit ship name

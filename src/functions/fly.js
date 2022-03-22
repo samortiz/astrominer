@@ -1,5 +1,5 @@
 import {ai, c, game, manage, utils} from './';
-import {dirComponents} from "./utils";
+import {dirComponents, distanceBetween} from "./utils";
 
 export function enterFlyState() {
   console.log("Take off");
@@ -460,6 +460,30 @@ export function getExplosionSprite(ship) {
   return sprite
 }
 
+export function bigExplosion(ship) {
+  const explosionSize = 300;
+  const explosionSprite = getExplosionSprite(ship);
+  explosionSprite.scale.set(6, 6);
+  explosionSprite.play();
+
+  // find ships in range
+  for (let nearbyShip of window.world.system.nearby.ships) {
+    if (nearbyShip.alive && nearbyShip.id !== ship.id && nearbyShip.name !== c.SHIP_BOMB.name) {
+      const distToShip = distanceBetween(nearbyShip.x, nearbyShip.y, ship.x, ship.y);
+      if (distToShip <= explosionSize) {
+        damageShip(nearbyShip, (explosionSize - distToShip), null, true);
+      }
+    }
+  } // for nearby
+
+  // This function runs after the animation finishes a loop
+  explosionSprite.onLoop = () => {
+    explosionSprite.stop(); // pause until we crash again
+    explosionSprite.visible = false;
+    explosionSprite.scale.set(2, 2);
+  };
+}
+
 /**
  * Destroys the ship playing an explosion animation
  * @param ship: the one to explode
@@ -470,6 +494,9 @@ export function destroyShip(ship, afterExplosion) {
     game.addAlienXp(ship);
   }
   let explosionSprite = getExplosionSprite(ship);
+  if (ship.name === c.SHIP_BOMB.name) {
+    bigExplosion(ship);
+  }
   const shipSprite = game.getShipSprite(ship);
   shipSprite.visible = false;
   ship.alive = false;

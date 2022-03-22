@@ -752,6 +752,30 @@ export const SHIP_ALIEN_STAPLE_TURRET = {
   description: "A hard-to-hit turret with a heavy staple gun.",
 };
 
+export const SHIP_ALIEN_LIGHTNING_TURRET = {
+  name: "Alien Lightning Turret",
+  objType: OBJ_SHIP,
+  propulsion: 0.00,
+  turnSpeed: 0.001,
+  resourcesMax: 100,
+  resources: {
+    titanium: 0,
+    gold: 0,
+    uranium: 0,
+  },
+  equipMax: 1,
+  equip: [EQUIP_ALIEN_BLASTER_LIGHTNING],
+  armorMax: 300,
+  armor: 300,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1.5,
+  imageFile: ALIEN_SHIP_BLUE_SMALL_FILE,
+  cost: {titanium: 100, gold: 200, uranium: 300},
+  aiType: ALIEN_AI_TURRET,
+  description: "A turret that shoots lightning bolts.",
+};
+
 export const SHIP_ALIEN_FIRE = {
   name: "Alien Fire",
   objType: OBJ_SHIP,
@@ -909,8 +933,8 @@ export const SHIP_MISSILE = {
   },
   equipMax: 0,
   equip: [],
-  armorMax: 220,
-  armor: 220,
+  armorMax: 250,
+  armor: 250,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 1,
@@ -918,6 +942,30 @@ export const SHIP_MISSILE = {
   cost: {titanium: 0, gold: 15, uranium: 15},
   aiType: EQUIP_AI_MISSILE,
   description: "An enemy seeking missile.",
+};
+
+export const SHIP_BOMB = {
+  name: "Bomb",
+  objType: OBJ_SHIP,
+  propulsion: 0.05,
+  turnSpeed: 0.10, // not really used
+  resourcesMax: 0,
+  resources: {
+    titanium: 0,
+    gold: 0,
+    uranium: 0,
+  },
+  equipMax: 0,
+  equip: [],
+  armorMax: 70,
+  armor: 70,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 0.5,
+  imageFile: ALIEN_SHIP_RED_FILE,
+  cost: {titanium: 0, gold: 0, uranium: 30},
+  aiType: EQUIP_AI_MISSILE,
+  description: "When it dies it detonates damaging everything nearby",
 };
 
 export const SHIP_FRIENDSHIP_MISSILE = {
@@ -991,12 +1039,17 @@ export const EQUIP_STREAM_TURRET_DEPLOYER = {
   cost: {titanium: 100, gold: 400, uranium: 400},
   description: "Drops a turret with a stream blaster.",
 };
-
 export const EQUIP_MISSILE_LAUNCHER = {
   name: "Missile Launcher", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 100, cool: 0,
   createShip: {type: SHIP_MISSILE, dir: DIR_AHEAD_OF_SHIP},
   cost: {titanium: 50, gold: 250, uranium: 300},
   description: "Fires enemy-seeking missiles.",
+};
+export const EQUIP_BOMB_LAUNCHER = {
+  name: "Bomb Launcher", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 80, cool: 0,
+  createShip: {type: SHIP_BOMB, dir: DIR_AHEAD_OF_SHIP},
+  cost: {titanium: 250, gold: 300, uranium: 400},
+  description: "Fires explosive missiles.",
 };
 export const EQUIP_FRIENDSHIP_GUN = {
   name: "Friendship Gun", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 100, cool: 0,
@@ -1009,7 +1062,7 @@ export const EQUIP_FRIENDSHIP_GUN = {
 export const EQUIP_UPGRADES = [EQUIP_BRAKE, EQUIP_BLINK_BRAKE, EQUIP_THRUSTER, EQUIP_BLINK_THRUSTER, EQUIP_ARMOR, EQUIP_SPEED_BOOST, EQUIP_TURN_BOOST,
   EQUIP_STORAGE, EQUIP_ENHANCED_ARMOR, EQUIP_ENHANCED_STORAGE, EQUIP_AUTOLANDER, EQUIP_GRAVITY_SHIELD];
 export const EQUIP_PRIMARY_WEAPONS = [EQUIP_BLASTER, EQUIP_FAST_BLASTER, EQUIP_STREAM_BLASTER, EQUIP_SPRINKLER_BLASTER, EQUIP_MELEE_GUN, EQUIP_SNIPER_RIFLE, EQUIP_ALIEN_BLASTER, EQUIP_STAPLE_GUN, EQUIP_STAPLE_GUN_HEAVY, EQUIP_ALIEN_BLASTER_FAST, EQUIP_ALIEN_BLASTER_LIGHTNING];
-export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_STREAM_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_ALIEN_MISSILE_LAUNCHER, EQUIP_FRIENDSHIP_GUN, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA, EQUIP_SHIELD_BLINK];
+export const EQUIP_SECONDARY_WEAPONS = [EQUIP_DECOY_DEPLOYER, EQUIP_TURRET_DEPLOYER, EQUIP_STREAM_TURRET_DEPLOYER, EQUIP_MISSILE_LAUNCHER, EQUIP_BOMB_LAUNCHER, EQUIP_ALIEN_MISSILE_LAUNCHER, EQUIP_FRIENDSHIP_GUN, EQUIP_SHIELD, EQUIP_SHIELD_LONG, EQUIP_SHIELD_STRONG, EQUIP_SHIELD_ULTRA, EQUIP_SHIELD_BLINK];
 export const EQUIP_DROIDS = [EQUIP_R2D2, EQUIP_GUNNERY_DROID, EQUIP_LIGHTING_DROID, EQUIP_SHIELD_DROID];
 export const ALL_EQUIP = [...EQUIP_UPGRADES, ...EQUIP_PRIMARY_WEAPONS, ...EQUIP_SECONDARY_WEAPONS, ...EQUIP_DROIDS];
 
@@ -1072,6 +1125,7 @@ export const XP_LEVELS = {
     {xp: 1, obj: EQUIP_STAPLE_GUN},
     {xp: 5, obj: EQUIP_MELEE_GUN},
     {xp: 10, obj: EQUIP_ENHANCED_ARMOR},
+    {xp: 15, obj: EQUIP_BOMB_LAUNCHER},
     {xp: 20, obj: EQUIP_SHIELD_DROID},
   ],
   [SHIP_ALIEN_FIRE.name]: [
