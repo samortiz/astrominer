@@ -130,7 +130,14 @@ export function InfoFly() {
       </table>
 
       <div className="button-control-container">
-        <div className="space">
+        <div className="button-space">
+          <button type='button' onMouseDown={() => buttonDown('x')} onMouseUp={() => buttonUp('x')}
+                  onTouchStart={() => buttonDown('x')} onTouchEnd={() => buttonUp('x')}
+                  onContextMenu={(event) => killContextMenu(event)}>
+          <b>X</b>
+          </button>
+        </div>
+        <div className="button-space">
           <button type='button' onMouseDown={() => buttonDown('space')} onMouseUp={() => buttonUp('space')}
                                 onTouchStart={() => buttonDown('space')} onTouchEnd={() => buttonUp('space')}
                                 onContextMenu={(event) => killContextMenu(event)}>

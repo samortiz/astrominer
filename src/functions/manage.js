@@ -148,6 +148,9 @@ export function buildingFits(planet, ship, rotation, buildingWidth) {
  */
 export function transferResource(source, target, resourceType, requestedAmtStr, maxCapacity) {
   let requestedAmt = Number(requestedAmtStr);
+  if (requestedAmt < 0) {
+    requestedAmt = 0;
+  }
   if (isNaN(requestedAmt)) {
     requestedAmt = 0;
   }

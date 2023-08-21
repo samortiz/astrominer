@@ -43,7 +43,7 @@ export function createEmptyWorld() {
     // everything in system is transient and not serialized when saving the game
     system: {
       keys: {}, // Global keypress handlers
-      buttonKeyDown : {up:false, right:false, down:false, left:false, shoot:false}, // true when a button is depressed
+      buttonKeyDown : {up:false, right:false, down:false, left:false, shoot:false, x:false}, // true when a button is depressed
       app: null, // Pixi App
       gameState: c.GAME_STATE.INIT, // Current game state
       isTyping: false, // used to stop keypress events ('w') when user is typing in input
@@ -78,32 +78,37 @@ export function setupWorld() {
   // Default selectedPlanet, shouldn't be displayed
   world.selectedPlanet = world.planets[0];
   window.world.shipStartX = c.PLAYER_START_X;
-  // window.world.shipStartX = -2500;
+  // window.world.shipStartX = -1800;
   window.world.shipStartY = c.PLAYER_START_Y;
   world.ship = createShip(c.SHIP_EXPLORER, c.PLAYER);
   const shipSprite = getShipSprite(world.ship);
   shipSprite.visible = true;
   world.ship.resources = c.PLAYER_STARTING_RESOURCES;
 
-  // DEBUG SHIP
-  const debug = true;
+  const debug = false;
   if (debug) {
-    world.ship.armorMax = 500;
-    world.ship.armor = 500;
+    // DEBUG SHIP
+    world.ship.armorMax = 10000;
+    world.ship.armor = 10000;
     world.ship.resources = {titanium: 10000, gold: 10000, uranium: 10000};
     world.ship.resourcesMax = 100000;
-    world.ship.equip = [manage.makeEquip(c.EQUIP_BLINK_BRAKE), manage.makeEquip(c.EQUIP_AUTOLANDER), manage.makeEquip(c.EQUIP_STREAM_BLASTER), manage.makeEquip(c.EQUIP_BOMB_LAUNCHER),
-    manage.makeEquip(c.EQUIP_SHIELD_DROID), manage.makeEquip(c.EQUIP_SHIELD_ULTRA), manage.makeEquip(c.EQUIP_SHIELD_BLINK)];
+    world.ship.equip = [
+      manage.makeEquip(c.EQUIP_BLINK_BRAKE),
+      manage.makeEquip(c.EQUIP_AUTOLANDER),
+      manage.makeEquip(c.EQUIP_STREAM_BLASTER),
+      manage.makeEquip(c.EQUIP_SHIELD_DROID),
+      manage.makeEquip(c.EQUIP_FRIENDSHIP_GUN),
+      manage.makeEquip(c.EQUIP_SHIELD_BLINK),
+      manage.makeEquip(c.EQUIP_SHIELD_BLINK),
+    ];
     world.ship.equipMax = world.ship.equip.length;
     world.blueprints.equip = [...c.ALL_EQUIP];
     world.blueprints.ship = [...c.ALL_SHIPS];
     world.introDialogShown = true;
 
     // DEBUG test alien
-    createAlien(c.SHIP_ALIEN_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
-
+    createAlien(c.SHIP_ALIEN_STAPLE_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 70);
     createAlien(c.SHIP_ALIEN_LIGHTNING_TURRET, c.PLAYER_START_X + 450, c.PLAYER_START_Y + 350);
-
 
     // DEBUG Planet
     let testPlanet = createPlanet(c.PLANET_ROCK_FILE, "home", 100, 200, {
@@ -558,7 +563,7 @@ export function createExtras() {
       },
     },
     {
-      type: c.PLANET_RED_FILE,
+      type: c.PLANET_ROCK_FILE,
       name: 'X300',
       x: c.UNIVERSE_RADIUS + 10000,
       y: 0,
@@ -571,7 +576,7 @@ export function createExtras() {
       },
     },
     {
-      type: c.PLANET_GREEN_FILE,
+      type: c.PLANET_ROCK_FILE,
       name: 'X200',
       x: c.UNIVERSE_RADIUS + 16000,
       y: 0,
@@ -585,7 +590,7 @@ export function createExtras() {
     },
 
     {
-      type: c.PLANET_PURPLE_FILE,
+      type: c.PLANET_ROCK_FILE,
       name: 'X100',
       x: c.UNIVERSE_RADIUS + 25000,
       y: 0,

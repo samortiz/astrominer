@@ -1,6 +1,7 @@
 import React from 'react';
 import {c} from '../functions';
 import './ManageLog.css';
+import {CodeEntry} from "./CodeEntry";
 
 export function ManageLog() {
   const xp = window.world.blueprints.xp;
@@ -12,7 +13,6 @@ export function ManageLog() {
     timeSpentHr = Math.floor(timeSpentMin / 60);
     timeSpentMin = Math.floor(timeSpentMin - (timeSpentHr * 60));
   }
-
   const translations = {
     [c.PLANET_ROCK_FILE]: 'Rock Planet',
     [c.PLANET_RED_FILE]: 'Red Planet',
@@ -44,6 +44,7 @@ export function ManageLog() {
           </div>
         </div>
       </div>
+
       <div className='system-section'>
         <div className='section'><b>Keyboard Help</b></div>
         <div style={{paddingLeft:"10px"}}>
@@ -55,6 +56,7 @@ export function ManageLog() {
           <div><b>C</b> to engage/disengage continuous fire</div>
         </div>
       </div>
+      <CodeEntry />
     </div>
   );
 }

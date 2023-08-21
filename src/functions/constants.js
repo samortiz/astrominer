@@ -388,6 +388,20 @@ export const EQUIP_SHIELD = {
   },
   cost: {titanium: 0, gold: 100, uranium: 10}
 };
+// This isn't a shield you want to buy
+export const EQUIP_SHIELD_WEAK = {
+  name: "Weak Shield", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 800,
+  shield: {
+    active: false,
+    armor: 175,
+    armorMax: 175,
+    lifetime: 300,
+    lifetimeMax: 300,
+    spriteFile: SHIELD_BLUE_FILE,
+    radius: 0
+  },
+  cost: {titanium: 0, gold: 50, uranium: 10}
+};
 export const EQUIP_SHIELD_LONG = {
   name: "Long Shield", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, cool: 0, coolTime: 1200,
   shield: {
@@ -980,14 +994,14 @@ export const SHIP_FRIENDSHIP_MISSILE = {
     uranium: 0,
   },
   equipMax: 0,
-  equip: [],
+  equip: [EQUIP_SHIELD_WEAK],
   armorMax: 40,
   armor: 40,
   crashSpeed: 2,
   crashAngle: 10,
   imageScale: 0.5,
   imageFile: ALIEN_SHIP_BLUE_FILE,
-  cost: {titanium: 0, gold: 5, uranium: 5},
+  cost: {titanium: 5, gold: 30, uranium: 0},
   aiType: EQUIP_AI_MISSILE,
   description: "A missile that turns enemies into friends.",
 };
@@ -1052,7 +1066,7 @@ export const EQUIP_BOMB_LAUNCHER = {
   description: "Fires explosive missiles.",
 };
 export const EQUIP_FRIENDSHIP_GUN = {
-  name: "Friendship Gun", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 100, cool: 0,
+  name: "Friendship Gun", objType: OBJ_EQUIP, type: EQUIP_TYPE_SECONDARY_WEAPON, coolTime: 150, cool: 0,
   createShip: {type: SHIP_FRIENDSHIP_MISSILE, dir: DIR_AHEAD_OF_SHIP},
   cost: {titanium: 100, gold: 300, uranium: 100},
   description: "Fires a missile that turns your enemies into allies.",

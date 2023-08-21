@@ -45,7 +45,7 @@ export function flyLoop(delta) {
     if (world.system.keys.space.isDown || world.system.continuousFire || buttonKeyDown.space) {
       firePrimaryWeapon(ship, 0.05);
     }
-    if (world.system.keys.x.isDown) {
+    if (world.system.keys.x.isDown || buttonKeyDown.x) {
       fireSecondaryWeapon(ship);
     }
     if (world.system.keys.q.isDown) {
@@ -490,6 +490,10 @@ export function bigExplosion(ship) {
  * @param afterExplosion: function to run after exploding (or null if nothing to do)
  */
 export function destroyShip(ship, afterExplosion) {
+  const shield = getActiveShield(ship);
+  if (shield) {
+    disableShield(ship, shield);
+  }
   if (ship.owner === c.ALIEN) {
     game.addAlienXp(ship);
   }
@@ -806,7 +810,7 @@ function checkForBulletCollision(bullet) {
     const shipSprite = game.getShipSprite(ship);
     const bulletWillHitShip = utils.pointInSprite(ship.x, ship.y, shipSprite, bullet.x, bullet.y);
     let shield = getActiveShield(ship);
-    if (!shield && hasShieldDroid(ship)) {
+    if (!shield && hasShieldDroid(ship) && (window.world.system.gameState === c.GAME_STATE.FLY)) {
       const shieldEquip = getAvailableShieldEquip(ship);
       if (shieldEquip && bulletWillHitShip) {
         shieldEquip.cool = shieldEquip.coolTime;

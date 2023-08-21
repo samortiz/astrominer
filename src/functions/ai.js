@@ -256,6 +256,9 @@ export function missileAi(missile) {
     missile.vy += yAmt;
     missile.x += missile.vx;
     missile.y += missile.vy;
+    if (missile.armor < missile.armorMax) {
+      enableShieldIfNeeded(missile);
+    }
     return true;
   }
   // Don't move if there's nobody to move towards

@@ -1,0 +1,68 @@
+.code-title {
+  font-weight: bold;
+  text-align: center;
+}
+
+.code-text {
+  margin-top: 20px;
+}
+
+.code-input {
+  margin-top: 30px;
+  margin-left: 150px;
+}
+
+.code-input input {
+  margin-left: 10px;
+  width: 200px;
+}
+
+.code-good {
+  color: green;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.code-wrong {
+  color: red;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.code-submit {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.code-dialog {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 450px;
+  width: 800px;
+  max-width: 800px;
+  font-size: 1.5em;
+  border: 2px solid #909090;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 100);
+  z-index: 999;
+  filter: drop-shadow(0px 10px 15px black);
+  overflow-y: auto;
+}
+
+.close-code-dialog {
+  position: relative;
+  float: right;
+  font-weight: bold;
+}
+
+.code-answer {
+  margin: 30px;
+  padding: 10px;
+  background-color: #EEFFEE;
+  color: black;
+}
