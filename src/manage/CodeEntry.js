@@ -3,7 +3,11 @@ import './CodeEntry.css';
 
 export function CodeEntry() {
   const [showCodeEntry, setShowCodeEntry] = useState(false);
-  const onCenterPlanet = window.world?.selectedPlanet?.x < 10 && window.world?.selectedPlanet?.y < 10;
+  const planet = window.world.selectedPlanet;
+  const ship = window.world.ship;
+  const shipOnPlanet = ((planet === window.world.lastPlanetLanded) && ship.alive);
+  const onCenterPlanet = shipOnPlanet && (planet?.id === 100);
+
   const [steep, setSteep] = useState('');
   const [heap, setHeap] = useState('');
   const [deep, setDeep] = useState('');
