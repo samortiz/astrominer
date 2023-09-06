@@ -1,3 +1,7 @@
+.code-section  {
+  margin-left: 20px;
+}
+
 .code-title {
   font-weight: bold;
   text-align: center;
@@ -41,7 +45,7 @@
   left: 0;
   bottom: 0;
   right: 0;
-  height: 450px;
+  height: 600px;
   width: 800px;
   max-width: 800px;
   font-size: 1.5em;

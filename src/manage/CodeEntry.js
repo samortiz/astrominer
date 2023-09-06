@@ -16,19 +16,20 @@ export function CodeEntry() {
   function submitCodes() {
     setSteepOk((steep.toUpperCase() === 'H2401') ? 'good' : 'wrong');
     setHeapOk((heap === '4194304') ? 'good' : 'wrong');
-    setDeepOk((deep === '3187') ? 'good' : 'wrong');
+    setDeepOk((deep === '2187') ? 'good' : 'wrong');
   }
 
   return (
       <Fragment>
         {onCenterPlanet &&
-        <div className='system-section'>
+        <div className='system-section code-section'>
           <button type='button' onClick={() => setShowCodeEntry(true)}> Enter Codes</button>
+
           <div className="code-dialog" style={{display: showCodeEntry ? "block" : "none"}}>
             <span className="close-code-dialog" onClick={() => setShowCodeEntry(false)}>X</span>
             <div className='code-title code-center'>Code Entry</div>
             <div className='code-text'>
-              Enter the codes you have found here. You may have to do a little math as they were shortened.
+              Enter the calculated values for codes you have found here.
             </div>
             <div className='code-input'>
               The Steep
@@ -57,8 +58,11 @@ export function CodeEntry() {
 
             {codesAllGood &&
             <div className='code-answer'>
-              Congratulations, you have found all the codes! <br/>
-              The treasure is hidden at 44.625491, -63.642425
+              <b>Congratulations</b>, you have found all the codes! <br/>
+              The treasure is almost yours.<br/>
+              Go to the thinking rock at <a href='https://goo.gl/maps/Bkh6o5eDeKKaC7ey9'>44.478953, -63.673837</a> <br/>
+              The entrance is 30m east of the thinking rock at the bottom of the cliff.<br/>
+              Once you go in the entrance follow the hallway until you get to the hard right turn and then look in the cellar.<br/>
             </div>
             }
           </div>
