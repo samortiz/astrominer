@@ -6,8 +6,11 @@ INSTALL
 
 RUN 
 To run the app use: 
-npm start 
+ npm start 
 
-To build the app use:
-npm run build
+BUILD
+ To build the app use:
+ npm run build
+ Then you can copy the contents of the build directory to deploy
+
 
