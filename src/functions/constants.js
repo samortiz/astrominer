@@ -154,7 +154,9 @@ export const OBJ_EQUIP = "Equip";
 export const OBJ_SHIP = "Ship";
 
 export const ALIEN_AI_TURRET = "ALIEN_AI_TURRET";
+export const ALIEN_AI_TURRET_AIMED = "ALIEN_AI_TURRET_AIMED";
 export const ALIEN_AI_CREEPER = "ALIEN_AI_CREEPER";
+export const ALIEN_AI_CREEPER_AIMED = "ALIEN_AI_CREEPER_AIMED";
 export const ALIEN_AI_MOTHERSHIP = "ALIEN_AI_MOTHERSHIP";
 export const ALIEN_AI_KAMIKAZI = "ALIEN_AI_KAMIKAZI";
 export const EQUIP_AI_MINE = "EQUIP_AI_MINE";
@@ -742,6 +744,30 @@ export const SHIP_ALIEN_LARGE = {
   description: "A large heavily armored alien.",
 };
 
+export const SHIP_ALIEN_LARGE_AIMED = {
+  name: "Alien Large",
+  objType: OBJ_SHIP,
+  propulsion: 0.05, // best between 0.02 - 0.1
+  turnSpeed: 0.06, // // best between 0.3 - 0.07
+  resourcesMax: 100,
+  resources: {
+    titanium: 0,
+    gold: 0,
+    uranium: 0,
+  },
+  equipMax: 8,
+  equip: [EQUIP_BRAKE, EQUIP_ALIEN_BLASTER_FAST],
+  armorMax: 300,
+  armor: 300,
+  crashSpeed: 2,
+  crashAngle: 10,
+  imageScale: 1,
+  imageFile: ALIEN_SHIP_GREEN_LARGE_FILE,
+  cost: {titanium: 150, gold: 100, uranium: 80},
+  aiType: ALIEN_AI_CREEPER_AIMED,
+  description: "A large heavily armored alien with better aim.",
+};
+
 export const SHIP_ALIEN_STAPLE_TURRET = {
   name: "Alien Staple Turret",
   objType: OBJ_SHIP,
@@ -786,7 +812,7 @@ export const SHIP_ALIEN_LIGHTNING_TURRET = {
   imageScale: 1.5,
   imageFile: ALIEN_SHIP_BLUE_SMALL_FILE,
   cost: {titanium: 100, gold: 200, uranium: 300},
-  aiType: ALIEN_AI_TURRET,
+  aiType: ALIEN_AI_TURRET_AIMED,
   description: "A turret that shoots lightning bolts.",
 };
 
@@ -802,7 +828,7 @@ export const SHIP_ALIEN_FIRE = {
     uranium: 0,
   },
   equipMax: 8,
-  equip: [EQUIP_BRAKE, EQUIP_STAPLE_GUN_HEAVY, EQUIP_SHIELD_LONG],
+  equip: [EQUIP_BRAKE, EQUIP_STREAM_BLASTER, EQUIP_SHIELD_LONG],
   armorMax: 450,
   armor: 450,
   crashSpeed: 2,
@@ -810,7 +836,7 @@ export const SHIP_ALIEN_FIRE = {
   imageScale: 1.5,
   imageFile: ALIEN_SHIP_FIRE_FILE,
   cost: {titanium: 250, gold: 200, uranium: 80},
-  aiType: ALIEN_AI_CREEPER,
+  aiType: ALIEN_AI_CREEPER_AIMED,
   description: "A tough alien ship with a shield and heavy staple gun.",
 };
 
@@ -834,7 +860,7 @@ export const SHIP_ALIEN_STEALTH = {
   imageScale: 1.5,
   imageFile: ALIEN_SHIP_BLACK_FILE,
   cost: {titanium: 100, gold: 200, uranium: 150},
-  aiType: ALIEN_AI_CREEPER,
+  aiType: ALIEN_AI_CREEPER_AIMED,
   description: "An alien with a cloak making it hard to see.",
 };
 
@@ -1123,7 +1149,7 @@ export const XP_LEVELS = {
     {xp: 20, obj: EQUIP_SHIELD_LONG},
     {xp: 30, obj: SHIP_ALIEN},
   ],
-  [SHIP_ALIEN_LARGE.name]: [
+  [SHIP_ALIEN_LARGE.name]: [ // Includes alien large aimed as they share the same name
     {xp: 1, obj: EQUIP_TURRET_DEPLOYER},
     {xp: 5, obj: EQUIP_STREAM_BLASTER},
     {xp: 10, obj: EQUIP_ENHANCED_STORAGE},
@@ -1137,10 +1163,12 @@ export const XP_LEVELS = {
   ],
   [SHIP_ALIEN_STAPLE_TURRET.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN},
-    {xp: 5, obj: EQUIP_MELEE_GUN},
     {xp: 10, obj: EQUIP_ENHANCED_ARMOR},
     {xp: 15, obj: EQUIP_BOMB_LAUNCHER},
-    {xp: 20, obj: EQUIP_SHIELD_DROID},
+  ],
+  [SHIP_ALIEN_LIGHTNING_TURRET.name]: [
+    {xp: 1, obj: EQUIP_MELEE_GUN},
+    {xp: 10, obj: EQUIP_SHIELD_DROID},
   ],
   [SHIP_ALIEN_FIRE.name]: [
     {xp: 1, obj: EQUIP_STAPLE_GUN_HEAVY},
@@ -1183,7 +1211,7 @@ export const UNIVERSE_RINGS = [
     aliens: [
       {count: 50, file: SHIP_ALIEN_STEALTH},
       {count: 75, file: SHIP_ALIEN_FIRE},
-      {count: 30, file: SHIP_ALIEN_STAPLE_TURRET},
+      {count: 35, file: SHIP_ALIEN_LIGHTNING_TURRET},
     ],
   },
   {
@@ -1194,7 +1222,8 @@ export const UNIVERSE_RINGS = [
     planetFiles: [PLANET_RED_FILE, PLANET_PURPLE_FILE, PLANET_GREEN_FILE],
     aliens: [
       {count: 400, file: SHIP_ALIEN_STAPLE_TURRET},
-      {count: 500, file: SHIP_ALIEN_LARGE},
+      {count: 50, file: SHIP_ALIEN_LIGHTNING_TURRET},
+      {count: 500, file: SHIP_ALIEN_LARGE_AIMED},
       {count: 500, file: SHIP_ALIEN_STEALTH},
     ],
   },

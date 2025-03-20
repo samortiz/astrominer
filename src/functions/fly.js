@@ -7,7 +7,7 @@ export function enterFlyState() {
 
 // Main play mode - flying
 export function flyLoop(delta) {
-  if (delta > 1.005) {
+  if (delta > 2) {
     console.log('Lagging with delta=' + delta);
   }
   let world = window.world;
@@ -486,8 +486,8 @@ export function bigExplosion(ship) {
 
 /**
  * Destroys the ship playing an explosion animation
- * @param ship: the one to explode
- * @param afterExplosion: function to run after exploding (or null if nothing to do)
+ * @param ship the one to explode
+ * @param afterExplosion function to run after exploding (or null if nothing to do)
  */
 export function destroyShip(ship, afterExplosion) {
   const shield = getActiveShield(ship);
@@ -630,7 +630,7 @@ export function fireWeapon(weapon, ship, jitter) {
 export function firePrimaryWeapon(ship, jitter) {
   let gun = getEquip(ship, c.EQUIP_TYPE_PRIMARY_WEAPON);
   if (gun) {
-    fireWeapon(gun, ship, gun.jitter ? gun.jitter : jitter);
+    fireWeapon(gun, ship, gun.jitter > jitter ? gun.jitter : jitter);
   }
 }
 

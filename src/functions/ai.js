@@ -1,5 +1,6 @@
-import {c, fly, manage, utils, game} from './';
+import {c, fly, game, manage, utils} from './';
 import {showToast} from "./utils";
+import {getEquip} from "./fly";
 
 export function moveAliens() {
   let ship = window.world.ship;
@@ -9,13 +10,17 @@ export function moveAliens() {
     }
     let hasMoved = false;
     if (alien.aiType === c.ALIEN_AI_CREEPER) {
-      hasMoved = creeperAi(alien, false);
+      hasMoved = creeperAi(alien, false, false);
+    } else if (alien.aiType === c.ALIEN_AI_CREEPER_AIMED) {
+      hasMoved = creeperAi(alien, false, true);
     } else if (alien.aiType === c.ALIEN_AI_KAMIKAZI) {
-      hasMoved = creeperAi(alien, true);
-    } else if (alien.aiType === c.EQUIP_AI_TURRET) {
-      hasMoved = turretAi(alien, 0.7);
+      hasMoved = creeperAi(alien, true, false);
     } else if (alien.aiType === c.ALIEN_AI_TURRET) {
-      hasMoved = turretAi(alien, 0.25);
+      hasMoved = turretAi(alien, 0.3, false);
+    } else if (alien.aiType === c.ALIEN_AI_TURRET_AIMED) {
+      hasMoved = turretAi(alien, 0, true);
+    } else if (alien.aiType === c.EQUIP_AI_TURRET) {
+      hasMoved = turretAi(alien, 0, true);
     } else if (alien.aiType === c.EQUIP_AI_MISSILE) {
       hasMoved = missileAi(alien);
     } else if (alien.aiType === c.ALIEN_AI_MOTHERSHIP) {
@@ -55,7 +60,7 @@ export function moveAliens() {
 
 /**
  * Fire primary weapon in the direction of x,y
- * @ship ship with gun to fire
+ * @shooter ship with gun to fire
  * @x/y  the location to aim at
  * @jitter amount (in radians) of randomness added to direction component
  *         0 - shoots directly at player
@@ -66,13 +71,81 @@ export function shootAt(shooter, x, y, jitter) {
   fly.firePrimaryWeapon(shooter, jitter);
 }
 
-export function turretAi(turretShip, jitter) {
+/**
+ * Fire primary weapon in a best attempt to hit target ship
+ * This will take into account the target's movement and lead the shot
+ * @shooter ship with gun to fire
+ * @target ship to try to hit
+ * @jitter amount (in radians) of randomness added to direction component
+ *         0 - shoots directly at player
+ *         PI - shoot completely randomly
+ */
+export function aimShotAt(shooter, target, jitter) {
+  const gun = getEquip(shooter, c.EQUIP_TYPE_PRIMARY_WEAPON);
+  if (!gun) {
+    return;
+  }
+  const bulletSpeed = gun.speed;
+  const deltaX = target.x - shooter.x;
+  const deltaY = target.y - shooter.y;
+
+  // Target speed squared (v_t^2)
+  const targetSpeedSquared = target.vx * target.vx + target.vy * target.vy;
+
+  // Quadratic coefficients: a*t^2 + b*t + c = 0
+  const a = targetSpeedSquared - bulletSpeed * bulletSpeed;
+  const b = 2 * (deltaX * target.vx + deltaY * target.vy);
+  const cee = deltaX * deltaX + deltaY * deltaY;
+
+  // Calculate discriminant
+  const discriminant = b * b - 4 * a * cee;
+
+  // Check if a solution exists (discriminant >= 0)
+  if (discriminant < 0) {
+    // We can't make a shot, so shoot in their general direction
+    fly.firePrimaryWeapon(shooter, jitter);
+    return;
+  }
+
+  // Solve quadratic equation for time (take the positive root)
+  const t1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+  const t2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+  const t = (t1 > 0 && (t2 < 0 || t1 < t2)) ? t1 : t2;
+
+  if (t <= 0) {
+    // We can't make the shot, so shoot generally over that-a-way
+    fly.firePrimaryWeapon(shooter, jitter);
+    return;
+  }
+
+  // Calculate interception point
+  const interceptX = target.x + target.vx * t;
+  const interceptY = target.y + target.vy * t;
+
+  // Calculate direction vector and angle (in radians)
+  const dirX = interceptX - shooter.x;
+  const dirY = interceptY - shooter.y;
+  const angle = Math.atan2(dirY, dirX); // Angle in radians
+
+  // Fire
+  shooter.rotation = utils.normalizeRadian(angle);
+  fly.firePrimaryWeapon(shooter, 0);
+}
+
+
+export function turretAi(turretShip, jitter, aimed=false) {
   const {target, dist} = getNearestOpponentTarget(turretShip);
   if (!target || !target.alive) {
     return false;
   }
   if (dist < fly.primaryWeaponRange(turretShip)) {
-    shootAt(turretShip, target.x, target.y, jitter);
+    if (aimed) {
+      console.log('aimed');
+      aimShotAt(turretShip, target, jitter);
+    } else {
+      shootAt(turretShip, target.x, target.y, jitter)
+      console.log('not aimed');
+    }
   }
   return false;
 }
@@ -84,7 +157,7 @@ export function mothershipAi(alien) {
   }
   const distanceToPlayer = utils.distanceBetween(alien.x, alien.y, ship.x, ship.y);
   if (distanceToPlayer < fly.primaryWeaponRange(alien)) {
-    shootAt(alien, ship.x, ship.y, 0.3);
+    aimShotAt(alien, ship, 0);
   }
   if (distanceToPlayer < c.SCREEN_WIDTH*3) {
     fly.fireSecondaryWeapon(alien);
@@ -114,8 +187,7 @@ export function resourceDroidAi(droid) {
     droid.aiData.targetPlanet = newTarget;
   }
 
-  let dirToTarget = utils.directionTo(droid.x, droid.y, targetPlanet.x, targetPlanet.y);
-  droid.rotation = dirToTarget;
+  droid.rotation = utils.directionTo(droid.x, droid.y, targetPlanet.x, targetPlanet.y);
   let {xAmt, yAmt} = getXYToMoveTowards(droid, targetPlanet.x, targetPlanet.y, false)
   if (xAmt && yAmt) {
     droid.x += xAmt;
@@ -204,8 +276,7 @@ export function getTargetPlanetWithResources(droid) {
   for (let planetInfo of planetsWithResources) {
     const distScore = 1 / (planetInfo.dist / minPlanetDist) * 2;
     const resourceScore = Math.min(planetInfo.totalResources / (droid.resourcesMax * 3), 1);
-    const score = distScore * resourceScore * 100;
-    planetInfo.score = score;
+    planetInfo.score = distScore * resourceScore * 100;
   }
 
   // Sort by score, take the top 10
@@ -352,9 +423,10 @@ export function willCollideWithPlanet(x, y, shipRadius) {
 
 /**
  * AI for aliens that move toward the player and shoots
+ * @ aimed : use good aim
  * @return true if alien moved false otherwise
  */
-export function creeperAi(alien, crashIntoPlayer=false) {
+export function creeperAi(alien, crashIntoPlayer=false, aimed=false) {
   let ship = window.world.ship;
   if (!ship.alive) {
     return;
@@ -389,7 +461,11 @@ export function creeperAi(alien, crashIntoPlayer=false) {
     moved = true;
   }
   if (distToOpponent < fly.primaryWeaponRange(alien)) {
-    shootAt(alien, playerTarget.x, playerTarget.y, 0.15);
+    if (aimed) {
+      aimShotAt(alien, playerTarget, 0.15);
+    } else {
+      shootAt(alien, playerTarget.x, playerTarget.y, 0.15);
+    }
   }
   return moved;
 }
